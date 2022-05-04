@@ -29,13 +29,9 @@ def solver(partition_coefficient_model, rees, proton, ao_ratio, n_cells):
         - pH for each cell
         - D for each ree for each cell
     """
-
     guesses = create_guesses(n_cells, rees, proton)
-    #create_system_of_equations(guesses, partition_coefficient_model, ao_ratio, n_cells, rees, proton)
     results = fsolve(create_system_of_equations, guesses, args=(partition_coefficient_model, ao_ratio, n_cells, rees, proton))
-
-    test = organize_results(results, n_cells, rees, proton)
-    return test
+    return organize_results(results, n_cells, rees, proton)
 
 def create_system_of_equations(guesses, *args) -> Vector:
 
@@ -94,7 +90,7 @@ def create_partition_coefficient_equations(partition_coefficient_model, n_cells:
     equations: Vector = []
     for cell_number in range(0, n_cells):
         for ree in rees:
-            equation = ree.cells_aq_concentrations[cell_number] - partition_coefficient_model(cell_number, ree, proton)
+            equation = ree.partition_coefficients[cell_number] - partition_coefficient_model(cell_number, ree, proton)
             equations.append(equation)
 
     return equations
@@ -116,7 +112,7 @@ def create_proton_guesses(n_cells: int, proton: Proton):
     return np.linspace(proton.feed_concentration, proton.feed_concentration * 1.2, n_cells)
 
 def create_partition_coefficient_guesses(n_cells, ree: Ree):
-    return np.linspace(np.random.randint(200)/200, 2, n_cells)
+    return np.linspace(1, 1, n_cells)
 
 def unpack_values(vars: Vector, n_cells: int, rees: Rees, proton: Proton):
     """Unpack guesses into the rees and proton.
@@ -141,8 +137,8 @@ def organize_results(results: Vector, n_cells: int, rees: Rees, proton: Proton):
 
 from partition_coefficient_models import logD_x_pH
 
-dysprosium = Ree(3.19, 'Dysprosium', 372.998, 'Dy', model_coefficients=[3.22552, -0.99999])
-holmium = Ree(6.71, 'Holmium', 377.858, 'Ho', model_coefficients=[3.05008, -0.68760])
+dysprosium = Ree(0.00855232467, 'Dysprosium', 372.998, 'Dy', model_coefficients=[3.22552, -0.99999])
+holmium = Ree(0.01775799374, 'Holmium', 377.858, 'Ho', model_coefficients=[3.05008, -0.68760])
 proton = Proton(0.55)
 
 solver(logD_x_pH, [dysprosium, holmium], proton, ao_ratio=0.6, n_cells=40)
