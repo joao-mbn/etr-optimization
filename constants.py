@@ -1,0 +1,1 @@
+REE_VALENCY = 3

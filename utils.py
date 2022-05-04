@@ -1,0 +1,1 @@
+default_to = lambda a, b: a if a is not None else b
