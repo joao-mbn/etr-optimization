@@ -1,4 +1,4 @@
-from classes import Proton
+from _classes import Proton
 
 
 def logD_x_pH(cell_number: int, ree, proton: Proton):

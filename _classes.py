@@ -1,7 +1,4 @@
-from numbers import Number
-#from types import Vector
-
-Vector = list[Number]
+from _types import Vector, Number
 
 class Element():
     def __init__(self, name, symbol=None, atomic_number=None):
@@ -21,7 +18,7 @@ class Ree(Element):
 
     def __init__(self, aq_feed_concentration, name, oxide_molar_mass, symbol = None, atomic_number = None, stoichiometric_proportion = 3,
         org_feed_concentration = 0, model_coefficients = [], cells_aq_concentrations = [], cells_org_concentrations = [],
-        partition_coefficients = []):
+        distribution_ratios = []):
 
         super().__init__(name=name, symbol=symbol, atomic_number=atomic_number)
         self.aq_feed_concentration: Number = aq_feed_concentration
@@ -31,4 +28,4 @@ class Ree(Element):
         self.model_coefficients: Vector = model_coefficients
         self.cells_aq_concentrations: Vector = cells_aq_concentrations
         self.cells_org_concentrations: Vector = cells_org_concentrations
-        self.partition_coefficients: Vector = partition_coefficients
+        self.distribution_ratios: Vector = distribution_ratios
