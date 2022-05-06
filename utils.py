@@ -1,7 +1,7 @@
 from functools import reduce
 from _types import Vector, Number, T, Z
 
-def default_to(a: T, b: Z):
+def default_to(a: T, b: Z) -> T | Z:
     return a if a is not None else b
 
 def _sum(items: Vector) -> Number:

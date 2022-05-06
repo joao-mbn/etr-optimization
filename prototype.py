@@ -18,6 +18,6 @@ dysprosium, holmium = rees
 dysprosium.cells_org_concentrations = org_concentrations(dysprosium.cells_aq_concentrations, dysprosium.distribution_ratios)
 holmium.cells_org_concentrations = org_concentrations(holmium.cells_aq_concentrations, holmium.distribution_ratios)
 
-isotherm_chart([dysprosium, holmium])
+#isotherm_chart([dysprosium, holmium])
 
 

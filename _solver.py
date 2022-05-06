@@ -3,8 +3,8 @@ from typing import TypeAlias
 import numpy as np
 from scipy.optimize import fsolve
 
-from _types import Number, Vector
 from _classes import Proton, Ree
+from _types import Number, Vector
 from constants import REE_VALENCY
 from utils import _sum
 
@@ -13,7 +13,8 @@ Rees: TypeAlias = list[Ree]
 def solver(distribution_ratio_model, rees, proton, ao_ratio, n_cells):
     """
     Solves the system of equations for a given isotherm.
-    Note: Cells are enumerated from 0 to N, so that 10 cells of extration goes from Cell 0 to Cell 9.
+    Note 1: Cells are enumerated from 0 to N, so that 10 cells of extration goes from Cell 0 to Cell 9.
+    Note 2: Charge Balance assumes that the REE concentrations are in mol/L of the atom.
 
     [Input]:
         - Nº of cells
