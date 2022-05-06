@@ -1,12 +1,11 @@
 from _types import Number, Vector
+from _classes import Ree
 import math as m
 import numpy as np
+from constants import SEPARATION_ORDER
+from utils import is_residue
 
-def pH_from_H(proton_concentration: Number) -> Number:
-    return - m.log10(proton_concentration)
-
-def H_from_pH(pH: Number) -> Number:
-    return 10 ** -pH
+# ----------------- Conversions
 
 def g_from_mol(mol: Number, molecular_weight: Number) -> Number:
     return mol * molecular_weight
@@ -22,5 +21,48 @@ def atom_from_oxide(oxide: Number, stoichiometric_proportion: Number, atomic_wei
     """stoichiometric_proportion is the number of that atom in the oxide. e.g. Nd -> Nd2O3 = 2. Pr -> Pr6O11 = 6."""
     return oxide * atomic_weight / oxide_weight / stoichiometric_proportion
 
+# ----------------- Parameters Calculation
+
+def pH_from_H(proton_concentration: Number) -> Number:
+    return - m.log10(proton_concentration)
+
+def H_from_pH(pH: Number) -> Number:
+    return 10 ** -pH
+
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
+
+# ----------------- Indicators Calculation
+
+def purity(products: Number, contaminants: Number) -> float:
+    return 0 if products == 0 else products / (products + contaminants)
+
+def recovery(initially: Number, lastly: Number) -> float:
+    return lastly / initially
+
+def separation_factor(distribution_ratio_of_lighter: Number, distribution_ratio_of_heavier: Number) -> float:
+    return distribution_ratio_of_heavier / distribution_ratio_of_lighter
+
+def are_results_absurd(rees: list[Ree]) -> bool:
+    return any(
+        not is_residue(ree.cells_aq_concentrations[-1], ree.aq_feed_concentration) and
+        ree.cells_aq_concentrations[-1] < 0 or
+        ree.cells_aq_concentrations[-1] > ree.aq_feed_concentration
+        for ree in rees)
+
+def are_all_residues(rees: list[Ree]) -> bool:
+    return all(is_residue(ree.cells_aq_concentrations[-1], ree.aq_feed_concentration) for ree in rees)
+
+# ----------------- Data Manipulation
+
+def resolve_cut(cut: str):
+    heavier = cut.split('/')[1]
+    heavier_index = SEPARATION_ORDER.index(heavier)
+    lighter_fraction = SEPARATION_ORDER[:heavier_index]
+    heavier_fraction = SEPARATION_ORDER[heavier_index:]
+    return lighter_fraction, heavier_fraction
+
+def classify_rees(rees: list[Ree], lighter_fraction: list[str], heavier_fraction: list[str]) -> tuple[list[Ree], list[Ree]]:
+    lighter_cut = [ree for ree in rees if ree.symbol in lighter_fraction]
+    heavier_cut = [ree for ree in rees if ree.symbol in heavier_fraction]
+    return lighter_cut, heavier_cut

@@ -1,16 +1,16 @@
-from typing import TypeAlias
+from typing import Any, Callable, TypeAlias
 
 import numpy as np
+import math as m
 from scipy.optimize import fsolve
 
 from _classes import Proton, Ree
 from _types import Number, Vector
 from constants import REE_VALENCY
-from utils import _sum
 
 Rees: TypeAlias = list[Ree]
 
-def solver(distribution_ratio_model, rees, proton, ao_ratio, n_cells):
+def solver(distribution_ratio_model: Callable[..., Number], rees: Rees, proton: Proton, ao_ratio: Number, n_cells: int):
     """
     Solves the system of equations for a given isotherm.
     Note 1: Cells are enumerated from 0 to N, so that 10 cells of extration goes from Cell 0 to Cell 9.
@@ -33,7 +33,8 @@ def solver(distribution_ratio_model, rees, proton, ao_ratio, n_cells):
     results: Vector = fsolve(
         create_system_of_equations, guesses, args=(distribution_ratio_model, ao_ratio, n_cells, rees, proton)
     ).tolist()
-    return organize_results(results, n_cells, rees, proton)
+
+    unpack_values(results, n_cells, rees, proton)
 
 def create_system_of_equations(guesses, *args) -> Vector:
 
@@ -53,7 +54,7 @@ def create_system_of_equations(guesses, *args) -> Vector:
 
 def get_total_charges(ree_initial_concentrations: Vector, proton_initial_concentration: Number) -> float:
     """ From initial [H+] and sum([REE 3+]) values, gets total charge concentration on the solution."""
-    return proton_initial_concentration + REE_VALENCY * _sum(ree_initial_concentrations)
+    return proton_initial_concentration + REE_VALENCY * m.fsum(ree_initial_concentrations)
 
 def create_cell_mass_balance_equations(cell_number: int, n_cells: int, ao_ratio: Number, rees: Rees) -> Vector:
     """Generate mass balance for each ree in a given cell."""
@@ -83,7 +84,7 @@ def create_cell_charge_balance_equations(charge_constant: Number, n_cells: int, 
     """Generate charge balance for each cell."""
     equations: Vector = []
     for i in range(0, n_cells):
-        equation = charge_constant - proton.cells_concentrations[i] - REE_VALENCY * _sum([ree.cells_aq_concentrations[i] for ree in rees])
+        equation = charge_constant - proton.cells_concentrations[i] - REE_VALENCY * m.fsum([ree.cells_aq_concentrations[i] for ree in rees])
         equations.append(equation)
     return equations
 
@@ -131,7 +132,3 @@ def unpack_values(vars: Vector, n_cells: int, rees: Rees, proton: Proton):
         ree.distribution_ratios = vars[(2 * i + 1) * n_cells: (2 * i + 2) * n_cells]
 
     proton.cells_concentrations = vars[-n_cells:]
-
-def organize_results(results: Vector, n_cells: int, rees: Rees, proton: Proton):
-    unpack_values(results, n_cells, rees, proton)
-    return rees, proton

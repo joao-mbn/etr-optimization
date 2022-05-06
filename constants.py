@@ -1,5 +1,33 @@
 REE_VALENCY = 3
 REE_OXIDE_STOICHIOMETRIC_PROPORTION = 2
+SEPARATION_ORDER = ['La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Y', 'Er', 'Tm', 'Yb', 'Lu']
+
+PRASEODYMIUM = {
+    "NAME": "Praseodímio",
+    "SYMBOL": "Pr",
+    "ATOMIC_WEIGHT": 140.90765, # g/mol
+    "OXIDE_WEIGHT": 1021.44, # g/mol
+    "VALENCY": REE_VALENCY,
+    "OXIDE_STOICHIOMETRIC_PROPORTION": 6
+}
+
+NEODYMIUM = {
+    "NAME": "Neodímio",
+    "SYMBOL": "Nd",
+    "ATOMIC_WEIGHT": 144.242, # g/mol
+    "OXIDE_WEIGHT": 336.48, # g/mol
+    "VALENCY": REE_VALENCY,
+    "OXIDE_STOICHIOMETRIC_PROPORTION": REE_OXIDE_STOICHIOMETRIC_PROPORTION
+}
+
+SAMARIUM = {
+    "NAME": "Samário",
+    "SYMBOL": "Sm",
+    "ATOMIC_WEIGHT": 150.36, # g/mol
+    "OXIDE_WEIGHT": 348.72, # g/mol
+    "VALENCY": REE_VALENCY,
+    "OXIDE_STOICHIOMETRIC_PROPORTION": REE_OXIDE_STOICHIOMETRIC_PROPORTION
+}
 
 DYSPROSIUM = {
     "NAME": "Disprósio",
