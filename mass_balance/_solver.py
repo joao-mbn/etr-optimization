@@ -1,12 +1,11 @@
-from typing import Any, Callable, TypeAlias
+import math as m
+from typing import Callable, TypeAlias
 
 import numpy as np
-import math as m
+from helpers._constants import REE_VALENCY
 from scipy.optimize import fsolve
-
-from _classes import Proton, Ree
-from _types import Number, Vector
-from constants import REE_VALENCY
+from templates._classes import Proton, Ree
+from templates._types import Number, Vector
 
 Rees: TypeAlias = list[Ree]
 

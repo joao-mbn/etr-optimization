@@ -1,9 +1,14 @@
-from _types import Number, Vector
-from _classes import Ree
 import math as m
+from typing import TypeAlias
+
 import numpy as np
-from constants import SEPARATION_ORDER
-from utils import is_residue
+
+from templates._classes import Ree
+from templates._types import Number, Vector
+from helpers._utils import is_residue
+from helpers._constants import SEPARATION_ORDER
+
+Rees: TypeAlias = list[Ree]
 
 # ----------------- Conversions
 
@@ -43,14 +48,14 @@ def recovery(initially: Number, lastly: Number) -> float:
 def separation_factor(distribution_ratio_of_lighter: Number, distribution_ratio_of_heavier: Number) -> float:
     return distribution_ratio_of_heavier / distribution_ratio_of_lighter
 
-def are_results_absurd(rees: list[Ree]) -> bool:
+def are_results_absurd(rees: Rees) -> bool:
     return any(
         not is_residue(ree.cells_aq_concentrations[-1], ree.aq_feed_concentration) and
         ree.cells_aq_concentrations[-1] < 0 or
         ree.cells_aq_concentrations[-1] > ree.aq_feed_concentration
         for ree in rees)
 
-def are_all_residues(rees: list[Ree]) -> bool:
+def are_all_residues(rees: Rees) -> bool:
     return all(is_residue(ree.cells_aq_concentrations[-1], ree.aq_feed_concentration) for ree in rees)
 
 # ----------------- Data Manipulation
@@ -62,7 +67,7 @@ def resolve_cut(cut: str):
     heavier_fraction = SEPARATION_ORDER[heavier_index:]
     return lighter_fraction, heavier_fraction
 
-def classify_rees(rees: list[Ree], lighter_fraction: list[str], heavier_fraction: list[str]) -> tuple[list[Ree], list[Ree]]:
+def classify_rees(rees: Rees, lighter_fraction: list[str], heavier_fraction: list[str]) -> tuple[Rees, Rees]:
     lighter_cut = [ree for ree in rees if ree.symbol in lighter_fraction]
     heavier_cut = [ree for ree in rees if ree.symbol in heavier_fraction]
     return lighter_cut, heavier_cut

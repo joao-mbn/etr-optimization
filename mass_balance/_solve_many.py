@@ -2,13 +2,13 @@ from statistics import mean, median
 from typing import Any, Callable
 
 import numpy as np
+from helpers._common import (H_from_pH, are_all_residues, are_results_absurd,
+                             classify_rees, purity, recovery, resolve_cut,
+                             separation_factor)
+from templates._classes import Proton, Ree
+from templates._types import Number
 
-from _classes import Proton, Ree
-from _solver import solver
-from _types import Number
-from common import (H_from_pH, are_all_residues, are_results_absurd,
-                    classify_rees, purity, recovery, resolve_cut,
-                    separation_factor)
+from mass_balance._solver import solver
 
 
 def solve_many(cut: str, distribution_ratio_model: Callable[..., Number],

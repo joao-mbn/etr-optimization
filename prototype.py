@@ -1,15 +1,18 @@
-from _classes import Proton, Ree
-from _solver import solver
-from charts_builder import isotherm_chart
-from common import atom_from_oxide, mol_from_g, org_concentrations
-from distribution_ratio_models import logD_x_pH
-from constants import PRASEODYMIUM as PR, NEODYMIUM as ND, SAMARIUM as SM, DYSPROSIUM as DY, HOLMIUM as HO
-from solve_many import solve_many
+from visualization._charts_builder import isotherm_chart
+from mass_balance._distribution_ratio_models import logD_x_pH
+from mass_balance._solve_many import solve_many
+from mass_balance._solver import solver
+from helpers._common import atom_from_oxide, mol_from_g, org_concentrations
+from helpers._constants import DYSPROSIUM as DY
+from helpers._constants import HOLMIUM as HO
+from helpers._constants import NEODYMIUM as ND
+from helpers._constants import PRASEODYMIUM as PR
+from helpers._constants import SAMARIUM as SM
+from templates._classes import Proton, Ree
 
 pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
 nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
 sm_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.923, SM['OXIDE_WEIGHT']), SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['ATOMIC_WEIGHT'], SM['OXIDE_WEIGHT'])
-
 praseodymium = Ree(pr_feed_aq_mols_atom, PR["NAME"], PR["OXIDE_WEIGHT"], PR["SYMBOL"], model_coefficients=[0.4026, -1.5661])
 neodymium = Ree(nd_feed_aq_mols_atom, ND["NAME"], ND["OXIDE_WEIGHT"], ND["SYMBOL"], model_coefficients=[0.8569, -1.9035])
 samarium = Ree(sm_feed_aq_mols_atom, SM["NAME"], SM["OXIDE_WEIGHT"], SM["SYMBOL"], model_coefficients=[1.1924, -1.2654])

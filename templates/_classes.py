@@ -1,4 +1,4 @@
-from _types import Vector, Number
+from templates._types import Vector, Number
 
 class Element():
     def __init__(self, name, symbol=None, atomic_number=None):

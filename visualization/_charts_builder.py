@@ -2,8 +2,8 @@ import math as m
 
 from matplotlib import pyplot as plt
 
-from _classes import Ree
-from utils import flatten
+from helpers._utils import flatten
+from templates._classes import Ree
 
 
 def isotherm_chart(rees: list[Ree]):

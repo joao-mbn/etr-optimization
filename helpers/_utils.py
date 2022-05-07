@@ -1,4 +1,4 @@
-from _types import T, Z, Number
+from templates._types import T, Z, Number
 
 
 def default_to(a: T, b: Z) -> T | Z:
