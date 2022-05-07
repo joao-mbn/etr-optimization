@@ -21,9 +21,9 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number],
     lighter_fraction, heavier_fraction = resolve_cut(cut)
     rees_of_interest, contaminants = classify_rees(rees, lighter_fraction, heavier_fraction)
 
-    cells_range = np.arange(*max_cells_interval)
-    ao_ratio_range = np.arange(*ao_ratio_interval, 0.1)
-    pHi_range = np.arange(*pHi_interval, 0.05)
+    cells_range = np.arange(max_cells_interval[0], max_cells_interval[1] + 1)
+    ao_ratio_range = np.arange(ao_ratio_interval[0], ao_ratio_interval[1] + 0.1, 0.1)
+    pHi_range = np.arange(pHi_interval[0],pHi_interval[1] + 0.05, 0.05)
 
     for n_cells in cells_range:
         for ao_ratio in ao_ratio_range:
@@ -49,9 +49,9 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number],
 
     data_to_pivot_table['number_of_tests'] = cells_range.__len__() * ao_ratio_range.__len__() * pHi_range.__len__()
     data_to_pivot_table['total_of_approveds'] = approveds.__len__()
-    data_to_pivot_table['approved']['average_separation_factor'] = mean([condition['separation factor'] for condition in approveds])
+    data_to_pivot_table['approved']['average_separation_factor'] = mean([condition['separation_factor'] for condition in approveds])
     data_to_pivot_table['approved']['average_recovery'] = mean([condition['recovery'] for condition in approveds])
-    data_to_pivot_table['approved']['separation_factor_median'] = median([condition['separation factor'] for condition in approveds])
+    data_to_pivot_table['approved']['separation_factor_median'] = median([condition['separation_factor'] for condition in approveds])
     data_to_pivot_table['approved']['recovery_median'] = median([condition['recovery'] for condition in approveds])
 
     return data_to_pivot_table, approveds

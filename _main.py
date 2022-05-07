@@ -1,10 +1,11 @@
-from mass_balance._solve_many import solve_many
-from templates._ree_factory import ree_factory
-from templates._classes import Proton
-from helpers._utils import value_or_default
-from cost._costs import calculate_cost
-
 from statistics import mean, median
+
+from cost._costs import calculate_cost
+from helpers._utils import value_or_default
+from mass_balance._solve_many import solve_many
+from templates._classes import Proton
+from templates._ree_factory import ree_factory
+
 
 def main(projects: list[dict]):
 

@@ -19,12 +19,15 @@ pr = dict(symbol='Pr', aq_feed_concentration=pr_feed_aq_mols_atom, model_coeffic
 nd = dict(symbol='Nd', aq_feed_concentration=nd_feed_aq_mols_atom, model_coefficients=[0.8569, -1.9035])
 sm = dict(symbol='Sm', aq_feed_concentration=sm_feed_aq_mols_atom, model_coefficients=[1.1924, -1.2654])
 
+rees = ree_factory([pr, nd, sm])
+rees.sort(key=lambda ree: ree.atom_molar_mass)
+
 proton = Proton(0.01)
 
 n_cells = 5
 ao_ratio = 2
 
-summary, approved = solve_many('Nd/Sm', logD_x_pH, ree_factory([pr, nd, sm]), proton, (2, 7), (1, 2), (0.5, 2), 0.99)
+summary, approved = solve_many('Nd/Sm', logD_x_pH, rees, proton, (2, 7), (1, 2), (0.5, 2), 0.99)
 
 # rees, proton = solver(logD_x_pH, [praseodymium, neodymium, samarium], proton, ao_ratio=ao_ratio, n_cells=n_cells)
 # praseodymium, neodymium, samarium = rees
