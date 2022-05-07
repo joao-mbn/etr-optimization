@@ -2,11 +2,11 @@ import math as m
 from typing import TypeAlias
 
 import numpy as np
-
+from fixed_values._constants import SEPARATION_ORDER
 from templates._classes import Ree
 from templates._types import Number, Vector
+
 from helpers._utils import is_residue
-from helpers._constants import SEPARATION_ORDER
 
 Rees: TypeAlias = list[Ree]
 

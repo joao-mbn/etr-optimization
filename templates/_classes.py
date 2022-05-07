@@ -8,21 +8,35 @@ class Element():
 
 
 class Proton(Element):
-    def __init__(self, feed_concentration, cells_concentrations = []):
+    def __init__(self, feed_concentration=0.5, cells_concentrations = []):
+
         super().__init__(name='proton', symbol='H', atomic_number=1)
+
         self.feed_concentration: Number = feed_concentration
         self.cells_concentrations: Vector = cells_concentrations
 
 
 class Ree(Element):
 
-    def __init__(self, aq_feed_concentration, name, oxide_molar_mass, symbol = None, atomic_number = None, stoichiometric_proportion = 3,
-        org_feed_concentration = 0, model_coefficients = [], cells_aq_concentrations = [], cells_org_concentrations = [],
-        distribution_ratios = []):
+    def __init__(self,
+                 aq_feed_concentration,
+                 name,
+                 symbol = None,
+                 atom_molar_mass = None,
+                 oxide_molar_mass = None,
+                 atomic_number = None,
+                 stoichiometric_proportion = 3,
+                 org_feed_concentration = 0,
+                 model_coefficients = [],
+                 cells_aq_concentrations = [],
+                 cells_org_concentrations = [],
+                 distribution_ratios = []):
 
         super().__init__(name=name, symbol=symbol, atomic_number=atomic_number)
+
         self.aq_feed_concentration: Number = aq_feed_concentration
         self.org_feed_concentration: Number = org_feed_concentration
+        self.atom_molar_mass: Number = atom_molar_mass
         self.oxide_molar_mass: Number = oxide_molar_mass
         self.stoichiometric_proportion: Number = stoichiometric_proportion
         self.model_coefficients: Vector = model_coefficients

@@ -47,10 +47,12 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number],
 
                     clear_result(rees, proton)
 
-    data_to_pivot_table['number of tests'] = cells_range.__len__() * ao_ratio_range.__len__() * pHi_range.__len__()
-    data_to_pivot_table['total of approveds'] = approveds.__len__()
-    data_to_pivot_table['approved']['separation factor median'] = median([condition['separation factor'] for condition in approveds])
-    data_to_pivot_table['approved']['recovery median'] = median([condition['recovery'] for condition in approveds])
+    data_to_pivot_table['number_of_tests'] = cells_range.__len__() * ao_ratio_range.__len__() * pHi_range.__len__()
+    data_to_pivot_table['total_of_approveds'] = approveds.__len__()
+    data_to_pivot_table['approved']['average_separation_factor'] = mean([condition['separation factor'] for condition in approveds])
+    data_to_pivot_table['approved']['average_recovery'] = mean([condition['recovery'] for condition in approveds])
+    data_to_pivot_table['approved']['separation_factor_median'] = median([condition['separation factor'] for condition in approveds])
+    data_to_pivot_table['approved']['recovery_median'] = median([condition['recovery'] for condition in approveds])
 
     return data_to_pivot_table, approveds
 
@@ -72,29 +74,29 @@ def calculate_average_border_separation_factor(upper_lighter, lower_heavier) -> 
 def build_data_to_pivot_table():
     return {
         'approved': {
-            'highest average separation factor': -np.inf,
-            'lowest average separation factor': np.inf,
-            'highest recovery': -np.inf,
-            'lowest recovery': np.inf,
-            'highest purity': -np.inf,
+            'highest_average_separation_factor': -np.inf,
+            'lowest_average_separation_factor': np.inf,
+            'highest_recovery': -np.inf,
+            'lowest_recovery': np.inf,
+            'highest_purity': -np.inf,
         }
     }
 
 def update_data_to_pivot_table(data_to_pivot_table: dict, purity: float, recovery: float, separation_factor: float):
-    data_to_pivot_table['approved']['highest average separation factor'] = max(data_to_pivot_table['approved']['highest average separation factor'], separation_factor)
-    data_to_pivot_table['approved']['lowest average separation factor'] = min(data_to_pivot_table['approved']['lowest average separation factor'], separation_factor)
-    data_to_pivot_table['approved']['highest recovery'] = max(data_to_pivot_table['approved']['highest recovery'], recovery)
-    data_to_pivot_table['approved']['lowest recovery'] = min(data_to_pivot_table['approved']['lowest recovery'], recovery)
-    data_to_pivot_table['approved']['highest purity'] = max(data_to_pivot_table['approved']['highest purity'], purity)
+    data_to_pivot_table['approved']['highest_average_separation_factor'] = max(data_to_pivot_table['approved']['highest_average_separation_factor'], separation_factor)
+    data_to_pivot_table['approved']['lowest_average_separation_factor'] = min(data_to_pivot_table['approved']['lowest_average_separation_factor'], separation_factor)
+    data_to_pivot_table['approved']['highest_recovery'] = max(data_to_pivot_table['approved']['highest_recovery'], recovery)
+    data_to_pivot_table['approved']['lowest_recovery'] = min(data_to_pivot_table['approved']['lowest_recovery'], recovery)
+    data_to_pivot_table['approved']['highest_purity'] = max(data_to_pivot_table['approved']['highest_purity'], purity)
 
 def store_condition(n_cells: int, ao_ratio: Number, pHi: Number, purity: Number, recovery: Number, separation_factor: Number) -> dict:
     return {
-        'number of cells': n_cells,
-        'a/o ratio': ao_ratio,
-        'initial pHi': pHi,
+        'number_of_cells': n_cells,
+        'a/o_ratio': ao_ratio,
+        'initial_pHi': pHi,
         'purity': purity,
         'recovery': recovery,
-        'separation factor': separation_factor,
+        'separation_factor': separation_factor,
     }
 
 def clear_result(rees: list[Ree], proton: Proton):

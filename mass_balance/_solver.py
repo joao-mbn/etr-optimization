@@ -2,7 +2,7 @@ import math as m
 from typing import Callable, TypeAlias
 
 import numpy as np
-from helpers._constants import REE_VALENCY
+from fixed_values._constants import REE_VALENCY
 from scipy.optimize import fsolve
 from templates._classes import Proton, Ree
 from templates._types import Number, Vector
