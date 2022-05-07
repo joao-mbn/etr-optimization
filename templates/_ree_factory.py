@@ -1,4 +1,4 @@
-from fixed_values._constants import REES
+from static_values._constants import REES
 from helpers._utils import value_or_default
 
 from templates._classes import Ree

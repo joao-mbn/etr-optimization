@@ -2,7 +2,7 @@ import math as m
 from typing import TypeAlias
 
 import numpy as np
-from fixed_values._constants import SEPARATION_ORDER
+from static_values._constants import SEPARATION_ORDER
 from templates._classes import Ree
 from templates._types import Number, Vector
 
@@ -10,7 +10,13 @@ from helpers._utils import is_residue
 
 Rees: TypeAlias = list[Ree]
 
-# ----------------- Conversions
+# ----------------- Time Conversions
+def minutes_in_year(years: Number) -> Number:
+    return years * 365 * 24 * 60
+
+# ----------------- Mass Conversions
+def g_in_ton(ton: Number) -> Number:
+    return ton * 1e9
 
 def g_from_mol(mol: Number, molecular_weight: Number) -> Number:
     return mol * molecular_weight
@@ -36,6 +42,9 @@ def H_from_pH(pH: Number) -> Number:
 
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
+
+def volume(height: Number, width: Number, depth: Number) -> Number:
+    return height * width * depth
 
 # ----------------- Indicators Calculation
 

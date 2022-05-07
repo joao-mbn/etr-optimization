@@ -91,9 +91,9 @@ def update_data_to_pivot_table(data_to_pivot_table: dict, purity: float, recover
 
 def store_condition(n_cells: int, ao_ratio: Number, pHi: Number, purity: Number, recovery: Number, separation_factor: Number) -> dict:
     return {
-        'number_of_cells': n_cells,
-        'a/o_ratio': ao_ratio,
-        'initial_pHi': pHi,
+        'n_cells': n_cells,
+        'ao_ratio': ao_ratio,
+        'pHi': pHi,
         'purity': purity,
         'recovery': recovery,
         'separation_factor': separation_factor,
