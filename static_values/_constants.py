@@ -1,5 +1,7 @@
 REE_VALENCY = 3
 REE_OXIDE_STOICHIOMETRIC_PROPORTION = 2
+REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION = 6
+
 SEPARATION_ORDER = ['La', 'Ce', 'Pr', 'Nd', 'Pm', 'Sm', 'Eu', 'Gd', 'Tb', 'Dy', 'Ho', 'Y', 'Er', 'Tm', 'Yb', 'Lu']
 
 PRASEODYMIUM = {

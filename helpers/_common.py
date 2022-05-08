@@ -2,7 +2,7 @@ import math as m
 from typing import TypeAlias
 
 import numpy as np
-from static_values._constants import SEPARATION_ORDER
+from static_values._constants import SEPARATION_ORDER, REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
 from templates._classes import Ree
 from templates._types import Number, Vector
 
@@ -40,8 +40,21 @@ def pH_from_H(proton_concentration: Number) -> Number:
 def H_from_pH(pH: Number) -> Number:
     return 10 ** -pH
 
+def pKa_from_Ka(Ka: Number) -> Number:
+    return - m.log10(Ka)
+
+def Ka_from_pKa(pKa: Number) -> Number:
+    return 10 ** -pKa
+
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
+
+def current_extractant_concentration(ree: Ree, cell: int, extractant_initial_concentration: Number) -> Number:
+    return extractant_initial_concentration \
+        - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION * (ree.aq_feed_concentration - ree.cells_aq_concentrations[cell])
+
+def area(height: Number, width: Number) -> Number:
+    return height * width
 
 def volume(height: Number, width: Number, depth: Number) -> Number:
     return height * width * depth

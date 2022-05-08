@@ -1,17 +1,18 @@
 TOTAL_PRODUCTION = 100 # ton/year Ree
 
-PRICES = {
-    'EXTRACTANTS': {
-        'P507': 1,
-        'D2EHPA': 1,
-        'CYANEX_572': 1,
-    },
-    'ISOPARAFFIN': 1,
-    'HCL': 1,
+ENERGY_COST_PER_KWH = 0.1 # $/kWh
+OPERATORS_COST = 1
+
+FEED_LIQUOR = {
+    'PRICE': 1,
 }
 
-MIXER_SETTLERS = {
-    1: {
+ISOPARAFFIN = {
+    'PRICE': 1
+}
+
+MIXER_SETTLERS = [
+    {
         'PRICE': 1,
         'MIXER': {
             'HEIGHT': 1,
@@ -24,7 +25,7 @@ MIXER_SETTLERS = {
             'DEPTH': 1,
         }
     },
-    2: {
+    {
         'PRICE': 1,
         'MIXER': {
             'HEIGHT': 1,
@@ -37,7 +38,7 @@ MIXER_SETTLERS = {
             'DEPTH': 1,
         }
     },
-    3: {
+    {
         'PRICE': 1,
         'MIXER': {
             'HEIGHT': 1,
@@ -50,7 +51,7 @@ MIXER_SETTLERS = {
             'DEPTH': 1,
         }
     }
-}
+]
 
 HCL_DENSITY = 1.17 # g/mL
 HCL_MOLAR_MASS = 35.453 # g/mol

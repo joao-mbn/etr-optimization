@@ -1,118 +1,63 @@
-from helpers._common import H_from_pH, g_in_ton, minutes_in_year, volume
-from static_values._cost_assumptions import (HCL_MOLAR_CONCENTRATION,
+from helpers._common import (H_from_pH, Ka_from_pKa, area,
+                             current_extractant_concentration, g_in_ton,
+                             minutes_in_year, volume)
+from helpers._utils import default_if_none
+from static_values._cost_assumptions import (ENERGY_COST_PER_KWH, FEED_LIQUOR,
+                                             HCL_MOLAR_CONCENTRATION,
+                                             ISOPARAFFIN, OPERATORS_COST,
                                              PHASE_SETTLING_TIME,
                                              REE_SX_EQUILIBRIUM_TIME,
                                              TOTAL_PRODUCTION)
 from templates._types import Number
 
-
-def calculate_cost(condition, extractant) -> Number:
-
-    preliminary_calculations(condition, extractant)
-
-    return capital_cost() + operating_cost()
-
-def preliminary_calculations(condition, extractant):
-
-    # Note: Note all keys actually exist in the condition dictionary
-
-    # Annual Volumes Output (L/year)
-
-        # Wasted
-    total_aq_volume = g_in_ton(TOTAL_PRODUCTION) / condition['product_concentration_in_raffinate']
-    acid_volume = total_aq_volume * H_from_pH(condition['pHi']) / HCL_MOLAR_CONCENTRATION
-
-        # Inventory
-    total_org_volume = total_aq_volume / condition['ao_ratio']
-    extractant_volume = total_org_volume / extractant['concentration'] / extractant['purity']
-    solvent_volume = total_org_volume - extractant_volume
-
-    # Flow rates (L/min)
-    aq_flow_rate = total_aq_volume / minutes_in_year(1)
-    org_flow_rate = total_org_volume / minutes_in_year(1)
-
-    # Equipment Dimensions
-
-        # The fastest flow should still have a residence time great enough to meet equilibrium
-    reference_flow = max(aq_flow_rate, org_flow_rate)
-
-    smallest_mixer_possible = reference_flow * REE_SX_EQUILIBRIUM_TIME
-    smallest_settler_possible = reference_flow * PHASE_SETTLING_TIME
-    cell = get_adequate_mixer_settler(smallest_mixer_possible, smallest_settler_possible)
-
-    # Equilibrium Times (min)
-
-    mixer = cell['MIXER']
-    settler = cell['SETTLER']
-
-    actual_mixing_time = volume(mixer['HEIGHT'], mixer['WIDTH'], mixer['DEPTH']) / reference_flow
-    actual_settling_time = volume(settler['HEIGHT'], settler['WIDTH'], settler['DEPTH']) / reference_flow
-    time_until_permanent_state = (actual_mixing_time + actual_settling_time) * condition['n_cells']
-    wasted_ree = condition['aq_feed_concentration'] * time_until_permanent_state
-
-    # Pump Calculations
-        # based on price, efficiency and potency requirements
-
-    needed_energy = 0 # energy for the pumps and mixers
-
-    aq_pump = get_adequate_pump(aq_flow_rate)
-    org_pump = get_adequate_pump(org_flow_rate)
-
-    pass
+from cost._preliminary_calculations import preliminary_calculations
 
 
+def calculate_cost(condition, extractant, solvent = None) -> Number:
 
+    data = preliminary_calculations(condition, extractant)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def get_adequate_mixer_settler(smallest_mixer_possible: Number, smallest_settler_possible: Number) -> Number:
-    pass
-
-def get_adequate_pump(flow_rate: Number) -> Number:
-    pass
+    return capital_cost() + operating_cost(data, condition, extractant, default_if_none(solvent, ISOPARAFFIN))
 
 def capital_cost() -> Number:
     pass
 
-def operating_cost(total_aq_volume = 1) -> Number:
-
+def operating_cost(data, condition, extractant, solvent) -> Number:
     return (
-        ree_loss_per_liter()
-        + extractant_loss_per_liter()
-        + solvent_loss_per_liter()
-    ) * total_aq_volume + energy_cost()
+        calculate_ree_loss(data, condition)
+        + calculate_extractant_loss(data, condition, extractant)
+        + calculate_solvent_loss(data, condition, solvent)
+        + energy_cost(data['actual_consumed_energy'])
+        + OPERATORS_COST
+    )
 
-def ree_loss_per_liter() -> Number:
-    loss_loaded_organic = 0
-    pass
+def calculate_ree_loss(data, condition) -> Number:
+    loss_on_loaded_organic = condition['aq_feed_concentration'] * (1 - condition['recovery']) * data['total_aq_volume']
+    return (loss_on_loaded_organic + data['wasted_ree_until_permanent_state']) * FEED_LIQUOR['PRICE']
 
-def extractant_loss_per_liter() -> Number:
+def calculate_extractant_loss(data, condition, extractant) -> Number:
+    drag_loss = 0
+    crude_loss = 0
+    dissociation_loss = (Ka_from_pKa(extractant['pKa'])
+                         * H_from_pH(condition['raffinate_pH'])
+                         / current_extractant_concentration(condition['ree'], condition['n_cells'] - 1, extractant['initial_concentration']))
+    settler = data['cell']['SETTLER']
+    volatilization_loss = (area(settler['HEIGHT'], settler['WIDTH'])
+                           * extractant['VOLATILIZATION_RATE']
+                           * extractant['initial_concentration']
+                           * data['settling_time'])
+    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) * extractant['PRICE']
+
+def calculate_solvent_loss(data, condition, solvent) -> Number:
     drag_loss = 0
     crude_loss = 0
     dissociation_loss = 0
-    volatilization_loss = 0
-    pass
+    settler = data['cell']['SETTLER']
+    volatilization_loss = (area(settler['HEIGHT'], settler['WIDTH'])
+                           * solvent['VOLATILIZATION_RATE']
+                           * solvent['initial_concentration']
+                           * data['settling_time'])
+    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) * solvent['PRICE']
 
-def solvent_loss_per_liter() -> Number:
-    drag_loss = 0
-    crude_loss = 0
-    dissociation_loss = 0
-    volatilization_loss = 0
-    pass
-
-def energy_cost() -> Number:
-    pump_energy_consumption = 0
-    mixer_energy_consumption = 0
-    pass
+def energy_cost(energy_consumption) -> Number:
+    return ENERGY_COST_PER_KWH * energy_consumption
