@@ -49,9 +49,11 @@ def Ka_from_pKa(pKa: Number) -> Number:
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
 
-def current_extractant_concentration(ree: Ree, cell: int, extractant_initial_concentration: Number) -> Number:
-    return extractant_initial_concentration \
-        - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION * (ree.aq_feed_concentration - ree.cells_aq_concentrations[cell])
+def current_extractant_concentration(ree: Ree, cell_number: int, ao_ratio: Number, extractant_initial_concentration: Number) -> Number:
+    return (extractant_initial_concentration
+            - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
+            * ao_ratio
+            * (ree.aq_feed_concentration - ree.cells_aq_concentrations[cell_number]))
 
 def area(height: Number, width: Number) -> Number:
     return height * width

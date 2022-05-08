@@ -2,6 +2,7 @@ TOTAL_PRODUCTION = 100 # ton/year Ree
 
 ENERGY_COST_PER_KWH = 0.1 # $/kWh
 OPERATORS_COST = 1
+HCL_PRICE = 1 # $/ton
 
 FEED_LIQUOR = {
     'PRICE': 1,

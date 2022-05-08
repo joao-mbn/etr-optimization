@@ -1,63 +1,75 @@
-from helpers._common import (H_from_pH, Ka_from_pKa, area,
-                             current_extractant_concentration, g_in_ton,
-                             minutes_in_year, volume)
+from functools import reduce
+
 from helpers._utils import default_if_none
 from static_values._cost_assumptions import (ENERGY_COST_PER_KWH, FEED_LIQUOR,
-                                             HCL_MOLAR_CONCENTRATION,
-                                             ISOPARAFFIN, OPERATORS_COST,
-                                             PHASE_SETTLING_TIME,
-                                             REE_SX_EQUILIBRIUM_TIME,
-                                             TOTAL_PRODUCTION)
+                                             HCL_PRICE, ISOPARAFFIN,
+                                             OPERATORS_COST)
 from templates._types import Number
 
-from cost._preliminary_calculations import preliminary_calculations
+from cost._equipments import get_equipments
+from cost._material import (calculate_acid_loss, calculate_extractant_loss,
+                            calculate_flows, calculate_org_phase_composition,
+                            calculate_phase_volumes, calculate_ree_loss,
+                            calculate_solvent_loss,
+                            calculate_wasted_ree_until_permanent_state)
 
 
 def calculate_cost(condition, extractant, solvent = None) -> Number:
 
-    data = preliminary_calculations(condition, extractant)
+    # Annual Volumes Output (L/year)
+    total_aq_volume, total_org_volume = calculate_phase_volumes(condition)
+    extractant_volume, solvent_volume = calculate_org_phase_composition(total_org_volume, extractant)
 
-    return capital_cost() + operating_cost(data, condition, extractant, default_if_none(solvent, ISOPARAFFIN))
+    # Flow rates (L/min)
+    aq_flow_rate, org_flow_rate, reference_flow = calculate_flows(total_aq_volume, total_org_volume)
 
-def capital_cost() -> Number:
-    pass
+    # Equipments
+    equipments = get_equipments(aq_flow_rate, org_flow_rate, reference_flow)
 
-def operating_cost(data, condition, extractant, solvent) -> Number:
+    capital_cost = calculate_capital_cost(equipments,
+                                          condition,
+                                          extractant_volume,
+                                          solvent_volume,
+                                          extractant,
+                                          default_if_none(solvent, ISOPARAFFIN))
+
+    operating_cost = calculate_operating_cost(equipments['cell'],
+                                              reference_flow,
+                                              total_aq_volume,
+                                              condition,
+                                              extractant,
+                                              default_if_none(solvent, ISOPARAFFIN))
+
+    return capital_cost + operating_cost
+
+def calculate_capital_cost(equipments, condition, extractant_volume, solvent_volume, extractant, solvent) -> Number:
+    inventory_cost = solvent_volume * solvent['PRICE'] + extractant_volume * extractant['PRICE']
+
+    equipments_cost = reduce(lambda x, y: x + y,
+                             [value['PRICE'] * condition['n_cells'] if key in ('cell', 'agitator') else value['PRICE']
+                              for key, value in equipments.items()])
+
+    return inventory_cost + equipments_cost
+
+def calculate_operating_cost(cell, reference_flow, total_aq_volume, condition, extractant, solvent) -> Number:
+
+    settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
+        cell['MIXER'], cell['SETTLER'], reference_flow, condition)
+
     return (
-        calculate_ree_loss(data, condition)
-        + calculate_extractant_loss(data, condition, extractant)
-        + calculate_solvent_loss(data, condition, solvent)
-        + energy_cost(data['actual_consumed_energy'])
+        calculate_ree_loss(wasted_ree_until_permanent_state, total_aq_volume, condition) * FEED_LIQUOR['PRICE']
+        + calculate_extractant_loss(settling_time, cell['SETTLER'], condition, extractant) * extractant['PRICE']
+        + calculate_solvent_loss(settling_time, cell['SETTLER'], solvent) * solvent['PRICE']
+        + calculate_acid_loss(total_aq_volume, condition) * HCL_PRICE
+        + energy_cost() * ENERGY_COST_PER_KWH
         + OPERATORS_COST
     )
 
-def calculate_ree_loss(data, condition) -> Number:
-    loss_on_loaded_organic = condition['aq_feed_concentration'] * (1 - condition['recovery']) * data['total_aq_volume']
-    return (loss_on_loaded_organic + data['wasted_ree_until_permanent_state']) * FEED_LIQUOR['PRICE']
+def energy_cost() -> Number:
 
-def calculate_extractant_loss(data, condition, extractant) -> Number:
-    drag_loss = 0
-    crude_loss = 0
-    dissociation_loss = (Ka_from_pKa(extractant['pKa'])
-                         * H_from_pH(condition['raffinate_pH'])
-                         / current_extractant_concentration(condition['ree'], condition['n_cells'] - 1, extractant['initial_concentration']))
-    settler = data['cell']['SETTLER']
-    volatilization_loss = (area(settler['HEIGHT'], settler['WIDTH'])
-                           * extractant['VOLATILIZATION_RATE']
-                           * extractant['initial_concentration']
-                           * data['settling_time'])
-    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) * extractant['PRICE']
+    # TODO
+    equipment_efficiency = 1 # efficiency of the pumps and agitators
+    needed_energy = 0 # energy requirement for the pumps and agitators
+    actual_consumed_energy = needed_energy * equipment_efficiency
 
-def calculate_solvent_loss(data, condition, solvent) -> Number:
-    drag_loss = 0
-    crude_loss = 0
-    dissociation_loss = 0
-    settler = data['cell']['SETTLER']
-    volatilization_loss = (area(settler['HEIGHT'], settler['WIDTH'])
-                           * solvent['VOLATILIZATION_RATE']
-                           * solvent['initial_concentration']
-                           * data['settling_time'])
-    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) * solvent['PRICE']
-
-def energy_cost(energy_consumption) -> Number:
-    return ENERGY_COST_PER_KWH * energy_consumption
+    return actual_consumed_energy
