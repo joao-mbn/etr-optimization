@@ -1,11 +1,11 @@
 from functools import reduce
 
 from helpers._utils import default_if_none
-from static_values._cost_assumptions import (ENERGY_COST_PER_KWH, FEED_LIQUOR,
-                                             HCL_PRICE, ISOPARAFFIN,
-                                             OPERATORS_COST)
+from static_values._miscellaneous import ENERGY_COST_PER_KWH, OPERATORS_COST
+from static_values._substances import FEED_LIQUOR, HCL, ISOPARAFFIN
 from templates._types import Number
 
+from cost._energy import energy_consumption
 from cost._equipments import get_equipments
 from cost._material import (calculate_acid_loss, calculate_extractant_loss,
                             calculate_flows, calculate_org_phase_composition,
@@ -23,22 +23,10 @@ def calculate_cost(condition, extractant, solvent = None) -> Number:
     # Flow rates (L/min)
     aq_flow_rate, org_flow_rate, reference_flow = calculate_flows(total_aq_volume, total_org_volume)
 
-    # Equipments
-    equipments = get_equipments(aq_flow_rate, org_flow_rate, reference_flow)
+    equipments, operating_powers = get_equipments(aq_flow_rate, org_flow_rate, reference_flow, extractant, solvent, condition['ao_ratio'])
 
-    capital_cost = calculate_capital_cost(equipments,
-                                          condition,
-                                          extractant_volume,
-                                          solvent_volume,
-                                          extractant,
-                                          default_if_none(solvent, ISOPARAFFIN))
-
-    operating_cost = calculate_operating_cost(equipments['cell'],
-                                              reference_flow,
-                                              total_aq_volume,
-                                              condition,
-                                              extractant,
-                                              default_if_none(solvent, ISOPARAFFIN))
+    capital_cost = calculate_capital_cost(equipments, condition, extractant_volume, solvent_volume, extractant, default_if_none(solvent, ISOPARAFFIN))
+    operating_cost = calculate_operating_cost(equipments['cell'], reference_flow, total_aq_volume, total_org_volume, condition, extractant, default_if_none(solvent, ISOPARAFFIN), operating_powers)
 
     return capital_cost + operating_cost
 
@@ -51,7 +39,8 @@ def calculate_capital_cost(equipments, condition, extractant_volume, solvent_vol
 
     return inventory_cost + equipments_cost
 
-def calculate_operating_cost(cell, reference_flow, total_aq_volume, condition, extractant, solvent) -> Number:
+def calculate_operating_cost(cell, reference_flow, total_aq_volume, total_org_volume, condition, extractant, solvent, operating_powers) -> Number:
+    """All operating costs are in terms of the TIME_REFERENCE"""
 
     settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
         cell['MIXER'], cell['SETTLER'], reference_flow, condition)
@@ -60,16 +49,7 @@ def calculate_operating_cost(cell, reference_flow, total_aq_volume, condition, e
         calculate_ree_loss(wasted_ree_until_permanent_state, total_aq_volume, condition) * FEED_LIQUOR['PRICE']
         + calculate_extractant_loss(settling_time, cell['SETTLER'], condition, extractant) * extractant['PRICE']
         + calculate_solvent_loss(settling_time, cell['SETTLER'], solvent) * solvent['PRICE']
-        + calculate_acid_loss(total_aq_volume, condition) * HCL_PRICE
-        + energy_cost() * ENERGY_COST_PER_KWH
+        + calculate_acid_loss(total_aq_volume, total_org_volume, condition) * HCL['PRICE']
+        + energy_consumption(condition['n_cells'], **operating_powers) * ENERGY_COST_PER_KWH
         + OPERATORS_COST
     )
-
-def energy_cost() -> Number:
-
-    # TODO
-    equipment_efficiency = 1 # efficiency of the pumps and agitators
-    needed_energy = 0 # energy requirement for the pumps and agitators
-    actual_consumed_energy = needed_energy * equipment_efficiency
-
-    return actual_consumed_energy

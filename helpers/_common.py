@@ -2,7 +2,7 @@ import math as m
 from typing import TypeAlias
 
 import numpy as np
-from static_values._constants import SEPARATION_ORDER, REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
+from static_values._rees import SEPARATION_ORDER, REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
 from templates._classes import Ree
 from templates._types import Number, Vector
 
@@ -55,10 +55,13 @@ def current_extractant_concentration(ree: Ree, cell_number: int, ao_ratio: Numbe
             * ao_ratio
             * (ree.aq_feed_concentration - ree.cells_aq_concentrations[cell_number]))
 
-def area(height: Number, width: Number) -> Number:
+def area_of_rectangle(height: Number, width: Number) -> Number:
     return height * width
 
-def volume(height: Number, width: Number, depth: Number) -> Number:
+def area_of_circle(diameter: Number, radius: Number = None) -> Number:
+    return m.pi * radius ** 2 if radius is not None else m.pi * diameter ** 2 / 4
+
+def volume_of_parallelepiped(height: Number, width: Number, depth: Number) -> Number:
     return height * width * depth
 
 # ----------------- Indicators Calculation

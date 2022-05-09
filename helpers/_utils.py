@@ -1,4 +1,4 @@
-from templates._types import T, Z, Number
+from templates._types import T, Z, Number, Vector
 
 
 def default_if_none(a: T, b: Z) -> T | Z:
@@ -12,3 +12,6 @@ def flatten(list_of_lists: list[list[T]]) -> list[T]:
 
 def is_residue(value: Number, referencial: Number, tolerance: Number = 1e-4) -> bool:
     return True if abs(value / referencial) < tolerance else False
+
+def weighted_average(values: Vector, weights: Vector) -> Number:
+    return sum(value * weight for value, weight in zip(values, weights)) / sum(weights)

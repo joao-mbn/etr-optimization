@@ -1,16 +1,22 @@
-TOTAL_PRODUCTION = 100 # ton/year Ree
+PIPES = [
+    {
+        'DIAMETER': 0.5,
+        'PRICE_PER_LENGTH': 1,
+    }
+]
 
-ENERGY_COST_PER_KWH = 0.1 # $/kWh
-OPERATORS_COST = 1
-HCL_PRICE = 1 # $/ton
-
-FEED_LIQUOR = {
-    'PRICE': 1,
-}
-
-ISOPARAFFIN = {
-    'PRICE': 1
-}
+PUMPS = [
+    {
+        'PRICE': 1,
+        'EFFICIENCY': 1,
+        'MAX_POWER': 1,
+    },
+        {
+        'PRICE': 2,
+        'EFFICIENCY': 0.8,
+        'MAX_POWER': 2,
+    }
+]
 
 MIXER_SETTLERS = [
     {
@@ -54,10 +60,30 @@ MIXER_SETTLERS = [
     }
 ]
 
-HCL_DENSITY = 1.17 # g/mL
-HCL_MOLAR_MASS = 35.453 # g/mol
-HCL_VOLUMETRIC_CONCENTRATION = 0.37 # v/v
-HCL_MOLAR_CONCENTRATION = 1000 * HCL_VOLUMETRIC_CONCENTRATION * HCL_DENSITY / HCL_MOLAR_MASS
+AGITATORS = [
+    {
+        'PRICE': 1,
+        'EFFICIENCY': 1,
+        'MAX_POWER': 1,
+        'MAX_RPM': 1,
+        'OPTIMAL_TORQUE': 1,
+    }
+]
 
-REE_SX_EQUILIBRIUM_TIME = 15 # min
-PHASE_SETTLING_TIME = 10 # min
+LEVEL_INDICATORS = [
+    {
+        'PRICE': 1,
+    }
+]
+
+LEVEL_CONTROLLERS = [
+    {
+        'PRICE': 1,
+    }
+]
+
+TANKS = [
+    {
+        'PRICE': 1,
+    }
+]

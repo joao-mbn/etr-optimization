@@ -1,12 +1,12 @@
-from static_values._constants import DYSPROSIUM as DY
-from static_values._constants import HOLMIUM as HO
-from static_values._constants import NEODYMIUM as ND
-from static_values._constants import PRASEODYMIUM as PR
-from static_values._constants import SAMARIUM as SM
 from helpers._common import atom_from_oxide, mol_from_g, org_concentrations
 from mass_balance._distribution_ratio_models import logD_x_pH
 from mass_balance._solve_many import solve_many
 from mass_balance._solver import solver
+from static_values._rees import DYSPROSIUM as DY
+from static_values._rees import HOLMIUM as HO
+from static_values._rees import NEODYMIUM as ND
+from static_values._rees import PRASEODYMIUM as PR
+from static_values._rees import SAMARIUM as SM
 from templates._classes import Proton, Ree
 from templates._ree_factory import ree_factory
 from visualization._charts_builder import isotherm_chart
