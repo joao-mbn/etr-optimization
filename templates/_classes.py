@@ -7,6 +7,20 @@ class Element():
         self.atomic_number: int = atomic_number
 
 
+class Substance():
+
+    def __init__(self, price, name) -> None:
+        self.price: Number = price
+        self.name: str = name
+
+
+class Equipment():
+
+    def __init__(self, price, name = None) -> None:
+        self.price: Number = price
+        self.name: str = name
+
+
 class Proton(Element):
     def __init__(self, feed_concentration=0.5, cells_concentrations = []):
 
