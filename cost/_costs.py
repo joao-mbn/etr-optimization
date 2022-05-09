@@ -31,6 +31,7 @@ def calculate_cost(condition, extractant, solvent = None) -> Number:
     return capital_cost + operating_cost
 
 def calculate_capital_cost(equipments, condition, extractant_volume, solvent_volume, extractant, solvent) -> Number:
+
     inventory_cost = solvent_volume * solvent['PRICE'] + extractant_volume * extractant['PRICE']
 
     equipments_cost = reduce(lambda x, y: x + y,
@@ -49,7 +50,7 @@ def calculate_operating_cost(cell, reference_flow, total_aq_volume, total_org_vo
         calculate_ree_loss(wasted_ree_until_permanent_state, total_aq_volume, condition) * FEED_LIQUOR['PRICE']
         + calculate_extractant_loss(settling_time, cell['SETTLER'], condition, extractant) * extractant['PRICE']
         + calculate_solvent_loss(settling_time, cell['SETTLER'], solvent) * solvent['PRICE']
-        + calculate_acid_loss(total_aq_volume, total_org_volume, condition) * HCL['PRICE']
+        + calculate_acid_loss(total_aq_volume, total_org_volume, condition['pHi']) * HCL['PRICE']
         + energy_consumption(condition['n_cells'], **operating_powers) * ENERGY_COST_PER_KWH
         + OPERATORS_COST
     )

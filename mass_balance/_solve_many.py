@@ -38,11 +38,12 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number],
                 purity = calculate_raffinate_purity(rees_of_interest, contaminants)
                 if purity >= required_raffinate_purity:
 
-                    recovery = calculate_raffinate_recovery(rees_of_interest)
+                    product_at_feed, product_at_raffinate, recovery = calculate_raffinate_recovery(rees_of_interest)
                     separation_factor = calculate_average_border_separation_factor(rees_of_interest[-1], contaminants[0])
 
                     update_data_to_pivot_table(data_to_pivot_table, purity, recovery, separation_factor)
-                    condition_summary = store_condition(n_cells, ao_ratio, pHi, purity, recovery, separation_factor)
+                    condition_summary = store_condition(n_cells, ao_ratio, pHi, purity, recovery,
+                                                        separation_factor, product_at_feed, product_at_raffinate)
                     approveds.append(condition_summary)
 
                     clear_result(rees, proton)
@@ -61,10 +62,10 @@ def calculate_raffinate_purity(rees_of_interest: list[Ree], contaminants: list[R
     contaminants_raffinate_concentration = sum(ree.cells_aq_concentrations[-1] for ree in contaminants)
     return purity(rees_of_interest_raffinate_concentration, contaminants_raffinate_concentration)
 
-def calculate_raffinate_recovery(rees_of_interest: list[Ree]) -> float:
+def calculate_raffinate_recovery(rees_of_interest: list[Ree]) -> tuple[Number, Number, float]:
     at_feed = sum(ree.aq_feed_concentration for ree in rees_of_interest)
     at_raffinate = sum(ree.cells_aq_concentrations[-1] for ree in rees_of_interest)
-    return recovery(at_feed, at_raffinate)
+    return at_feed, at_raffinate, recovery(at_feed, at_raffinate)
 
 def calculate_average_border_separation_factor(upper_lighter, lower_heavier) -> float:
     avg_distribution_ratio_of_lighter = mean(upper_lighter.distribution_ratios)
@@ -89,7 +90,8 @@ def update_data_to_pivot_table(data_to_pivot_table: dict, purity: float, recover
     data_to_pivot_table['approved']['lowest_recovery'] = min(data_to_pivot_table['approved']['lowest_recovery'], recovery)
     data_to_pivot_table['approved']['highest_purity'] = max(data_to_pivot_table['approved']['highest_purity'], purity)
 
-def store_condition(n_cells: int, ao_ratio: Number, pHi: Number, purity: Number, recovery: Number, separation_factor: Number) -> dict:
+def store_condition(n_cells: int, ao_ratio: Number, pHi: Number, purity: Number, recovery: Number,
+                    separation_factor: Number, product_at_feed: Number, product_at_raffinate: Number) -> dict:
     return {
         'n_cells': n_cells,
         'ao_ratio': ao_ratio,
@@ -97,6 +99,8 @@ def store_condition(n_cells: int, ao_ratio: Number, pHi: Number, purity: Number,
         'purity': purity,
         'recovery': recovery,
         'separation_factor': separation_factor,
+        'product_at_feed': product_at_feed,
+        'product_at_raffinate': product_at_raffinate
     }
 
 def clear_result(rees: list[Ree], proton: Proton):

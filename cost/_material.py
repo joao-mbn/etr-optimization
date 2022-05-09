@@ -10,7 +10,7 @@ from templates._types import Number
 # ------------------ Phase Volumes
 
 def calculate_phase_volumes(condition):
-    total_aq_volume = g_in_ton(TOTAL_PRODUCTION) / condition['product_concentration_in_raffinate']
+    total_aq_volume = g_in_ton(TOTAL_PRODUCTION) / condition['product_at_raffinate']
     total_org_volume = total_aq_volume / condition['ao_ratio']
     return total_aq_volume, total_org_volume
 
@@ -34,11 +34,11 @@ def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, c
     actual_mixing_time = value_or_default(mixer, 'VOLUME', volume_of_parallelepiped(mixer['HEIGHT'], mixer['WIDTH'], mixer['DEPTH'])) / reference_flow
     actual_settling_time = value_or_default(settler, 'VOLUME', volume_of_parallelepiped(settler['HEIGHT'], settler['WIDTH'], settler['DEPTH'])) / reference_flow
     time_until_permanent_state = (actual_mixing_time + actual_settling_time) * condition['n_cells']
-    wasted_ree = condition['aq_feed_concentration'] * time_until_permanent_state
+    wasted_ree = condition['product_at_feed'] * time_until_permanent_state
     return actual_settling_time, wasted_ree
 
 def calculate_ree_loss(wasted_ree_until_permanent_state, total_aq_volume, condition) -> Number:
-    loss_on_loaded_organic = condition['aq_feed_concentration'] * (1 - condition['recovery']) * total_aq_volume
+    loss_on_loaded_organic = condition['product_at_feed'] * (1 - condition['recovery']) * total_aq_volume
     return loss_on_loaded_organic + wasted_ree_until_permanent_state
 
 def calculate_extractant_loss(settling_time, settler, condition, extractant) -> Number:
@@ -46,7 +46,7 @@ def calculate_extractant_loss(settling_time, settler, condition, extractant) -> 
     crude_loss = 0
     dissociation_loss = (Ka_from_pKa(extractant['pKa']) * H_from_pH(condition['raffinate_pH'])
                          / current_extractant_concentration(condition['ree'],
-                                                            condition['n_cells'] - 1,
+                                                            condition['n_cells'] - 1, # cells begin to count at 0
                                                             condition['ao_ratio'],
                                                             extractant['initial_concentration']))
     volatilization_loss = (area_of_rectangle(settler['HEIGHT'], settler['WIDTH'])
@@ -65,11 +65,11 @@ def calculate_solvent_loss(settling_time, settler, solvent) -> Number:
                            * settling_time)
     return drag_loss + crude_loss + dissociation_loss + volatilization_loss
 
-def calculate_acid_loss(total_aq_volume, total_org_volume, condition) -> Number:
+def calculate_acid_loss(total_aq_volume, total_org_volume, pHi) -> Number:
     """
     The stripping occurs with ao_ratio = 1 between stripping solution and organic phase.
     It is assumed that the stripping solution is enough to clear organic phase from REEs.
     """
-    acid_volume_to_pHi = (total_aq_volume * H_from_pH(condition['pHi']) / HCL['MOLAR_CONCENTRATION'])
+    acid_volume_to_pHi = (total_aq_volume * H_from_pH(pHi) / HCL['MOLAR_CONCENTRATION'])
     acid_to_stripping = total_org_volume * STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION']
     return acid_volume_to_pHi + acid_to_stripping

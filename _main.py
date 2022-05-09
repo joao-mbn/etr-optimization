@@ -24,7 +24,7 @@ def main(projects: list[dict]):
 
         for condition in project['conditions_with_pure_enough_raffinate']:
 
-            condition['cost'] = calculate_cost(condition, project['extractant'])
+            condition['cost'] = calculate_cost(condition, project['extractant'], value_or_default(project, 'solvent', None))
             project['data_to_pivot_table']['highest_cost'] = max(project['data_to_pivot_table']['highest_cost'], condition['cost'])
             project['data_to_pivot_table']['lowest_cost'] = min(project['data_to_pivot_table']['lowest_cost'], condition['cost'])
 
