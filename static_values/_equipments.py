@@ -20,7 +20,7 @@ PUMPS = [
 
 MIXER_SETTLERS = [
     {
-        'PRICE': 1,
+        'PRICE': 54200, # R$/Un.
         'MIXER': {
             'HEIGHT': 1,
             'WIDTH': 1,

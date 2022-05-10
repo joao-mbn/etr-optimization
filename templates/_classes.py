@@ -1,5 +1,7 @@
 from templates._types import Vector, Number
 
+# Classes make physical sense, where models do not.
+
 class Element():
     def __init__(self, name, symbol=None, atomic_number=None):
         self.name: str = name
@@ -57,3 +59,36 @@ class Ree(Element):
         self.cells_aq_concentrations: Vector = cells_aq_concentrations
         self.cells_org_concentrations: Vector = cells_org_concentrations
         self.distribution_ratios: Vector = distribution_ratios
+
+
+class Extractant(Substance):
+
+    volume: Number = 0
+
+    def __init__(self, price, name, volumetric_concentration, molecular_weight, purity, density, volatilization_rate, pKa):
+        super().__init__(price, name)
+
+        self.volumetric_concentration: float = volumetric_concentration
+        self.purity: float = purity
+        self.density: Number = density
+        self.volatilization_rate: Number = volatilization_rate
+        self.molar_weight: Number = molecular_weight
+        self.pKa = pKa
+        self.mass_concentration: Number = volumetric_concentration * density * purity
+        self.molar_concentration: Number = self.mass_concentration / molecular_weight
+
+
+class Solvent(Substance):
+
+    volume: Number = 0
+
+    def __init__(self, price, name, volumetric_concentration, molecular_weight, purity, density, volatilization_rate):
+        super().__init__(price, name)
+
+        self.volumetric_concentration: float = volumetric_concentration
+        self.purity: float = purity
+        self.density: Number = density
+        self.volatilization_rate: Number = volatilization_rate
+        self.molar_weight: Number = molecular_weight
+        self.mass_concentration: Number = volumetric_concentration * density * purity
+        self.molar_concentration: Number = self.mass_concentration / molecular_weight

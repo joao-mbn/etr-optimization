@@ -5,7 +5,8 @@ from static_values._miscellaneous import ACCELERATION_OF_GRAVITY
 from templates._types import Number
 
 
-def energy_consumption(n_cells: int, aq_pump_operating_power, org_pump_operating_power, agitator_operating_power) -> Number:
+def energy_consumption(n_cells: int, aq_pump_operating_power: Number,
+                       org_pump_operating_power: Number, agitator_operating_power: Number) -> Number:
     hours_in_year = 365 * 24
     return hours_in_year * (aq_pump_operating_power + org_pump_operating_power + agitator_operating_power * n_cells)
 
@@ -34,7 +35,7 @@ def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Nu
     power = velocity_head * flow_rate * fluid_density * ACCELERATION_OF_GRAVITY
     return power
 
-def calculate_required_agitator_power(flow_rate, fluid_density, head_loss) -> Number:
+def calculate_required_agitator_power(flow_rate: Number, fluid_density: Number, head_loss: Number) -> Number:
     """
     This calculates the power required to pump the fluid from one cell to another.
 
@@ -55,7 +56,7 @@ def calculate_required_agitator_power(flow_rate, fluid_density, head_loss) -> Nu
     power = head_to_add * flow_rate * fluid_density * ACCELERATION_OF_GRAVITY
     return power
 
-def calculate_rpm(motor_torque, operating_power) -> Number:
+def calculate_rpm(motor_torque: Number, operating_power: Number) -> Number:
     """
     This calculates the RPM of the agitator.
     While the pump allows you to set flow rate, which is given by the required output,

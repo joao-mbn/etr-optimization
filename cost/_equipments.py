@@ -5,43 +5,54 @@ from helpers._utils import value_or_default, weighted_average
 from static_values._equipments import (AGITATORS, LEVEL_CONTROLLERS,
                                        LEVEL_INDICATORS, MIXER_SETTLERS, PIPES,
                                        PUMPS, TANKS)
-from static_values._miscellaneous import (HEAD_LOSS_BETWEEN_CELLS,
-                                          PHASE_SETTLING_TIME,
-                                          REE_SX_EQUILIBRIUM_TIME)
+from static_values._miscellaneous import (
+    DISTANCE_BETWEEN_AQ_TANK_AND_FEED_CELL, DISTANCE_BETWEEN_CELLS,
+    DISTANCE_BETWEEN_ORG_TANK_AND_RAFFINATE_CELL, HEAD_LOSS_BETWEEN_CELLS,
+    PHASE_SETTLING_TIME, REE_SX_EQUILIBRIUM_TIME)
 from static_values._substances import WATER
 from templates._types import Number
+from templates._classes import Extractant, Solvent
 
 from cost._energy import (calculate_required_agitator_power,
                           calculate_required_pump_power, calculate_rpm)
 
 
-def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_rate: Number, extractant, solvent, ao_ratio: Number):
+def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_rate: Number,
+                   extractant: Extractant, solvent: Solvent, condition) -> tuple[Any, dict[str, Number], Number]:
 
-    org_avg_density = weighted_average([extractant['DENSITY'], solvent['DENSITY']], [extractant['CONCENTRATION'], 1 - extractant['CONCENTRATION']])
+    ao_ratio, n_cells = condition['ao_ratio'], condition['n_cells']
+    org_avg_density = weighted_average([extractant.density, solvent.density],
+                                       [extractant.volumetric_concentration, solvent.volumetric_concentration])
 
     cell = get_adequate_cell(reference_flow_rate)
-    pipe = get_adequate_pipe()
+    pipe, total_pipe_length = get_adequate_pipe(n_cells)
     aq_pump, aq_pump_operating_power = get_adequate_pump(aq_flow_rate, WATER['DENSITY'], pipe['DIAMETER'])
     org_pump, org_pump_operating_power = get_adequate_pump(org_flow_rate, org_avg_density, pipe['DIAMETER'])
     agitator, agitator_operating_power = get_adequate_agitator(aq_flow_rate, org_flow_rate, org_avg_density, ao_ratio)
-    level_indicator = get_adequate_level_indicator()
-    level_controller = get_adequate_level_controller()
-    tank = get_adequate_tank()
+    aq_level_indicator, org_level_indicator = get_adequate_level_indicator(), get_adequate_level_indicator()
+    aq_level_controller = get_adequate_level_controller()    # The two phases do not need to be controlled, only the ao_ratio.
+    aq_tank, org_tank = get_adequate_tank(), get_adequate_tank()
 
-    return dict(
+    equipments = dict(
         cell=cell,
         agitator=agitator,
         aq_pump=aq_pump,
         org_pump=org_pump,
         pipe=pipe,
-        level_indicator=level_indicator,
-        level_controller=level_controller,
-        tank=tank
-    ), dict(
+        aq_level_indicator=aq_level_indicator,
+        org_level_indicator=org_level_indicator,
+        aq_level_controller=aq_level_controller,
+        aq_tank=aq_tank,
+        org_tank=org_tank,
+    )
+
+    operating_powers = dict(
         aq_pump_operating_power=aq_pump_operating_power,
         org_pump_operating_power=org_pump_operating_power,
         agitator_operating_power=agitator_operating_power
     )
+
+    return equipments, operating_powers, total_pipe_length
 
 def get_adequate_cell(reference_flow_rate: Number):
     smallest_mixer_possible = reference_flow_rate * REE_SX_EQUILIBRIUM_TIME # Volume in L
@@ -92,12 +103,15 @@ def get_adequate_agitator(aq_flow_rate: Number, org_flow_rate: Number, org_avg_d
     operating_power = required_power / cheapest_agitator['EFFICIENCY']
     return cheapest_agitator
 
-def get_adequate_pipe():
+def get_adequate_pipe(n_cells: int):
     """
     There isn't yet a criteria for pipe selection.
     Knowledge of the pipe is necessary to estimate fluid velocity, which is used to estimate pump's power.
     """
-    return PIPES[0]
+    pipe_length_aq = n_cells * DISTANCE_BETWEEN_CELLS + DISTANCE_BETWEEN_AQ_TANK_AND_FEED_CELL
+    pipe_length_org = n_cells * DISTANCE_BETWEEN_CELLS + DISTANCE_BETWEEN_ORG_TANK_AND_RAFFINATE_CELL
+    total_pipe_length = pipe_length_aq + pipe_length_org
+    return PIPES[0], total_pipe_length
 
 def get_adequate_level_indicator():
     """

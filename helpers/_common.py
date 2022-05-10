@@ -24,13 +24,13 @@ def g_from_mol(mol: Number, molecular_weight: Number) -> Number:
 def mol_from_g(g: Number, molecular_weight: Number) -> Number:
     return g / molecular_weight
 
-def oxide_from_atom(atom: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
+def oxide_from_atom(atom_concentration: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
     """stoichiometric_proportion is the number of that atom in the oxide. e.g. Nd -> Nd2O3 = 2. Pr -> Pr6O11 = 6."""
-    return atom * stoichiometric_proportion * oxide_weight / atomic_weight
+    return atom_concentration * stoichiometric_proportion * oxide_weight / atomic_weight
 
-def atom_from_oxide(oxide: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
+def atom_from_oxide(oxide_concentration: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
     """stoichiometric_proportion is the number of that atom in the oxide. e.g. Nd -> Nd2O3 = 2. Pr -> Pr6O11 = 6."""
-    return oxide * atomic_weight / oxide_weight / stoichiometric_proportion
+    return oxide_concentration * atomic_weight / oxide_weight / stoichiometric_proportion
 
 # ----------------- Parameters Calculation
 
@@ -49,16 +49,17 @@ def Ka_from_pKa(pKa: Number) -> Number:
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
 
-def current_extractant_concentration(ree: Ree, cell_number: int, ao_ratio: Number, extractant_initial_concentration: Number) -> Number:
+def free_extractant_on_last_cell(feed_concentration: Number, raffinate_concentration: Number,
+                                 ao_ratio: Number, extractant_initial_concentration: Number) -> Number:
     return (extractant_initial_concentration
             - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
             * ao_ratio
-            * (ree.aq_feed_concentration - ree.cells_aq_concentrations[cell_number]))
+            * (feed_concentration - raffinate_concentration))
 
 def area_of_rectangle(height: Number, width: Number) -> Number:
     return height * width
 
-def area_of_circle(diameter: Number, radius: Number = None) -> Number:
+def area_of_circle(diameter: Number, radius: Number | None = None) -> Number:
     return m.pi * radius ** 2 if radius is not None else m.pi * diameter ** 2 / 4
 
 def volume_of_parallelepiped(height: Number, width: Number, depth: Number) -> Number:
