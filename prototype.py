@@ -11,6 +11,7 @@ from templates._classes import Proton, Ree
 from templates._factories import rees_factory
 from visualization._charts_builder import isotherm_chart
 from templates._models import Project
+from _main import main
 
 pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
 nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
@@ -24,26 +25,28 @@ p507 = dict(name='P507', concentration=0.1)
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (2, 7)
-pHi_interval = (1, 2)
-ao_ratio_interval = (0.5, 2)
+max_cells_interval = (5, 5)
+pHi_interval = (1.4, 1.4)
+ao_ratio_interval = (0.5, 0.5)
 required_raffinate_purity = 0.995
 
-# project = Project(
-#     **dict(
-#         rees = [pr, nd, sm],
-#         extractant = p507,
-#         cut = cut,
-#         distribution_ratio_model = distribution_ratio_model,
-#         max_cells_interval = max_cells_interval,
-#         pHi_interval = pHi_interval,
-#         ao_ratio_interval = ao_ratio_interval,
-#         required_raffinate_purity = required_raffinate_purity,
-#     )
-# )
+project = Project(
+    **dict(
+        rees = [pr, nd, sm],
+        extractant = p507,
+        cut = cut,
+        distribution_ratio_model = distribution_ratio_model,
+        max_cells_interval = max_cells_interval,
+        pHi_interval = pHi_interval,
+        ao_ratio_interval = ao_ratio_interval,
+        required_raffinate_purity = required_raffinate_purity,
+    )
+)
 
-rees = rees_factory([pr, nd, sm])
-rees.sort(key=lambda ree: ree.atom_molar_mass)
+main([project])
+
+# rees = rees_factory([pr, nd, sm])
+# rees.sort(key=lambda ree: ree.atom_molar_mass)
 
 # summary, approved = solve_many(cut, logD_x_pH, rees, Proton(), max_cells_interval,
 #                                pHi_interval, ao_ratio_interval, required_raffinate_purity)

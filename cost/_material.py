@@ -1,32 +1,40 @@
+from pint import Quantity
 from helpers._common import (H_from_pH, Ka_from_pKa, area_of_rectangle,
                              free_extractant_on_last_cell, g_in_ton,
                              minutes_in_year, volume_of_parallelepiped)
 from helpers._utils import value_or_default
 from static_values._miscellaneous import (
-    STRIPPING_SOLUTION_ACID_CONCENTRATION, TOTAL_PRODUCTION)
+    STRIPPING_SOLUTION_ACID_CONCENTRATION, TOTAL_PRODUCTION, TIME_REFERENCE)
 from static_values._substances import HCL
-from templates._types import Number
+from templates._types import Number, Scalar
 from templates._classes import Extractant, Solvent
 from templates._models import Condition
+from templates._units import unit_registry as ur
 
 # ------------------ Phase Volumes
 
-def calculate_phase_volumes(condition: Condition):
-    total_aq_volume = g_in_ton(TOTAL_PRODUCTION) / condition.product_at_raffinate
+@ur.wraps(('L', 'L'), None)
+def calculate_phase_volumes(condition: Condition) -> tuple[Scalar, Scalar]:
+    total_aq_volume = TOTAL_PRODUCTION / condition.product_at_raffinate
     total_org_volume = total_aq_volume / condition.ao_ratio
     return total_aq_volume, total_org_volume
 
-def calculate_org_phase_composition(total_org_volume: Number, extractant: Extractant) -> tuple[Number, Number]:
-    extractant_volume = total_org_volume / extractant.volumetric_concentration / extractant.purity
+@ur.wraps(('L', 'L'), (None, None))
+def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extractant) -> tuple[Scalar, Scalar]:
+    extractant_volume = total_org_volume * extractant.volumetric_concentration / extractant.purity
     solvent_volume = total_org_volume - extractant_volume
     return extractant_volume, solvent_volume
 
 # ------------------ Flows
 
-def calculate_flows(total_aq_volume: Number, total_org_volume: Number) -> tuple[Number, Number, Number]:
-    # Reference flow ensures that the fastest flow should still have a residence time great enough to meet equilibrium
-    aq_flow_rate = total_aq_volume / minutes_in_year(1)
-    org_flow_rate = total_org_volume / minutes_in_year(1)
+@ur.wraps(('L/min', 'L/min', 'L/min'), (None, None))
+def calculate_flows(total_aq_volume: Scalar, total_org_volume: Scalar) -> tuple[Scalar, Scalar, Scalar]:
+    """
+    Reference flow ensures that the fastest flow should still
+    have a residence time great enough to meet equilibrium
+    """
+    aq_flow_rate = total_aq_volume / TIME_REFERENCE
+    org_flow_rate = total_org_volume / TIME_REFERENCE
     reference_flow = max(aq_flow_rate, org_flow_rate)
     return aq_flow_rate, org_flow_rate, reference_flow
 

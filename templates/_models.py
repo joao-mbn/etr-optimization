@@ -1,45 +1,53 @@
 from typing import Callable
-from templates._types import Number
-from numpy import inf
-from templates._factories import rees_factory, extractant_factory, solvent_factory
+
+from pint import Quantity
+
 from helpers._utils import default_if_none
-from templates._classes import Ree, Extractant, Solvent
+from numpy import inf
+
+from templates._classes import Extractant, Ree, Solvent
+from templates._factories import (extractant_factory, rees_factory,
+                                  solvent_factory)
+from templates._types import Number, Scalar
+from templates._units import quantity as Q
 
 # Classes make physical sense, where models do not.
 
 class Condition():
 
-    cost = inf
+    cost: Scalar = Q(inf, 'usd')
 
-    def __init__(self, n_cells, ao_ratio, pHi, purity, recovery, separation_factor, product_at_feed, product_at_raffinate, pH_at_raffinate):
-        self.n_cells: int = n_cells
-        self.ao_ratio: Number = ao_ratio
-        self.pHi: Number = pHi
-        self.purity: float = purity
-        self.recovery: float = recovery
+    def __init__(self, n_cells, ao_ratio, pHi, purity, recovery, separation_factor,
+                 product_at_feed, product_at_raffinate, pH_at_raffinate):
+
+        self.n_cells: Quantity[int] = Q(n_cells, 'un')
+        self.ao_ratio: Scalar = Q(ao_ratio)
+        self.pHi: Scalar = Q(pHi)
+        self.purity: Quantity[float] = Q(purity)
+        self.recovery: Quantity[float] = Q(recovery)
         self.separation_factor: Number = separation_factor
-        self.product_at_feed: Number = product_at_feed
-        self.product_at_raffinate: Number = product_at_raffinate
-        self.pH_at_raffinate = pH_at_raffinate
+        self.product_at_feed: Scalar = Q(product_at_feed, 'g/L')
+        self.product_at_raffinate: Scalar = Q(product_at_raffinate, 'g/L')
+        self.pH_at_raffinate: Scalar = Q(pH_at_raffinate)
 
 
 class Approveds():
 
     average_separation_factor: Number = 0
     average_recovery: Number = 0
-    average_cost: Number = 0
+    average_cost: Scalar = Q(0.0, 'usd')
 
     separation_factor_median: Number = 0
     recovery_median: float = 0
-    cost_median: Number = 0
+    cost_median: Scalar = Q(0.0, 'usd')
 
     highest_average_separation_factor: Number = -inf
     lowest_average_separation_factor: Number = inf
     highest_recovery: float = -inf
     lowest_recovery: float = inf
     highest_purity: float = -inf
-    lowest_cost: Number = inf
-    highest_cost: Number = -inf
+    lowest_cost: Scalar = Q(inf, 'usd')
+    highest_cost: Scalar = Q(-inf, 'usd')
 
 
 class PivotTable():

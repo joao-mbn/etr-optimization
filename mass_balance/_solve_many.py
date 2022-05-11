@@ -53,10 +53,10 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
 
     pivot_table.number_of_tests = cells_range.__len__() * ao_ratio_range.__len__() * pHi_range.__len__()
     pivot_table.total_of_approveds = approveds.__len__()
-    pivot_table.approveds.average_separation_factor = mean([condition.separation_factor for condition in approveds])
-    pivot_table.approveds.average_recovery = mean([condition.recovery for condition in approveds])
-    pivot_table.approveds.separation_factor_median = median([condition.separation_factor for condition in approveds])
-    pivot_table.approveds.recovery_median = median([condition.recovery for condition in approveds])
+    pivot_table.approveds.average_separation_factor = mean(condition.separation_factor for condition in approveds)
+    pivot_table.approveds.average_recovery = mean(condition.recovery for condition in approveds)
+    pivot_table.approveds.separation_factor_median = median(condition.separation_factor for condition in approveds)
+    pivot_table.approveds.recovery_median = median(condition.recovery for condition in approveds)
 
     return pivot_table, approveds
 
@@ -87,7 +87,7 @@ def calculate_total_reos(rees_of_interest: list[Ree]) -> tuple[Number, Number]:
     at_feed = sum(oxide_from_atom(g_from_mol(ree.aq_feed_concentration, ree.atom_molar_mass),
                                   ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
                   for ree in rees_of_interest)
-    at_raffinate = sum(oxide_from_atom(g_from_mol(ree.aq_feed_concentration, ree.atom_molar_mass),
+    at_raffinate = sum(oxide_from_atom(g_from_mol(ree.cells_aq_concentrations[-1], ree.atom_molar_mass),
                                        ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
                        for ree in rees_of_interest)
 

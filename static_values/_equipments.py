@@ -1,89 +1,91 @@
+from templates._units import quantity as Q
+
 PIPES = [
     {
-        'DIAMETER': 0.5,
-        'PRICE_PER_LENGTH': 1,
+        'DIAMETER': Q('0.5 mm'),
+        'PRICE_PER_LENGTH': Q('0.1 usd/m'),
     }
 ]
 
 PUMPS = [
     {
-        'PRICE': 1,
-        'EFFICIENCY': 1,
-        'MAX_POWER': 9999999999,
+        'PRICE': Q('0.1 usd/un'),
+        'EFFICIENCY': Q('0.9'),
+        'MAX_POWER': Q('100 kW'),
     },
-        {
-        'PRICE': 2,
-        'EFFICIENCY': 0.8,
-        'MAX_POWER': 1e30,
+    {
+        'PRICE': Q('0.2 usd/un'),
+        'EFFICIENCY': Q('0.6'),
+        'MAX_POWER': Q('300 kW'),
     }
 ]
 
 MIXER_SETTLERS = [
     {
-        'PRICE': 54200, # R$/Un.
+        'PRICE': Q('10000 usd/un'),
         'MIXER': {
-            'HEIGHT': 999999999999999,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         },
         'SETTLER': {
-            'HEIGHT': 99999999999999999,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         }
     },
     {
         'PRICE': 1,
         'MIXER': {
-            'HEIGHT': 1,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         },
         'SETTLER': {
-            'HEIGHT': 1,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         }
     },
     {
         'PRICE': 1,
         'MIXER': {
-            'HEIGHT': 1,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         },
         'SETTLER': {
-            'HEIGHT': 1,
-            'WIDTH': 1,
-            'DEPTH': 1,
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
         }
     }
 ]
 
 AGITATORS = [
     {
-        'PRICE': 1,
-        'EFFICIENCY': 1,
-        'MAX_POWER': 99999999999999999,
-        'MAX_RPM': 999999999999999999,
-        'OPTIMAL_TORQUE': 1,
+        'PRICE': Q('0.1 usd/un'),
+        'EFFICIENCY': Q('0.9'),
+        'MAX_POWER': Q('100 kW'),
+        'MAX_RPM': Q('100 rpm'),
+        'OPTIMAL_TORQUE': Q('100 N*m'),
     }
 ]
 
 LEVEL_INDICATORS = [
     {
-        'PRICE': 1,
+        'PRICE': Q('0.1 usd/un'),
     }
 ]
 
 LEVEL_CONTROLLERS = [
     {
-        'PRICE': 1,
+        'PRICE': Q('0.1 usd/un'),
     }
 ]
 
 TANKS = [
     {
-        'PRICE': 1,
+        'PRICE': Q('0.1 usd/un'),
     }
 ]

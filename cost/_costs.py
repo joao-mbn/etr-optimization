@@ -17,11 +17,9 @@ from cost._material import (calculate_acid_loss, calculate_extractant_loss,
 
 def calculate_cost(condition: Condition, extractant: Extractant, solvent: Solvent) -> Number:
 
-    # Annual Volumes Output (L/year)
     total_aq_volume, total_org_volume = calculate_phase_volumes(condition)
     extractant.volume, solvent.volume = calculate_org_phase_composition(total_org_volume, extractant)
 
-    # Flow rates (L/min)
     aq_flow_rate, org_flow_rate, reference_flow = calculate_flows(total_aq_volume, total_org_volume)
 
     equipments, operating_powers, total_pipe_length = get_equipments(aq_flow_rate, org_flow_rate, reference_flow,

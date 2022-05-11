@@ -1,4 +1,5 @@
-from templates._types import Vector, Number
+from templates._types import Vector, Number, Scalar
+from templates._units import quantity as Q
 
 # Classes make physical sense, where models do not.
 
@@ -12,14 +13,14 @@ class Element():
 class Substance():
 
     def __init__(self, price, name) -> None:
-        self.price: Number = price
+        self.price: Scalar = Q(price, 'usd')
         self.name: str = name
 
 
 class Equipment():
 
     def __init__(self, price, name = None) -> None:
-        self.price: Number = price
+        self.price: Scalar = Q(price, 'usd')
         self.name: str = name
 
 
@@ -63,32 +64,32 @@ class Ree(Element):
 
 class Extractant(Substance):
 
-    volume: Number = 0
+    volume: Scalar = Q(0, 'L')
 
     def __init__(self, price, name, volumetric_concentration, molecular_weight, purity, density, volatilization_rate, pKa):
         super().__init__(price, name)
 
-        self.volumetric_concentration: float = volumetric_concentration
-        self.purity: float = purity
-        self.density: Number = density
-        self.volatilization_rate: Number = volatilization_rate
-        self.molar_weight: Number = molecular_weight
-        self.pKa = pKa
-        self.mass_concentration: Number = volumetric_concentration * density * purity
-        self.molar_concentration: Number = self.mass_concentration / molecular_weight
+        self.volumetric_concentration: Scalar = Q(volumetric_concentration)
+        self.purity: Scalar = Q(purity)
+        self.density: Scalar = Q(density, 'kg/L')
+        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
+        self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
+        self.mass_concentration: Scalar = volumetric_concentration * density * purity
+        self.molar_concentration: Scalar = self.mass_concentration / molecular_weight
+        self.pKa: Scalar = Q(pKa)
 
 
 class Solvent(Substance):
 
-    volume: Number = 0
+    volume: Scalar = Q(0, 'L')
 
     def __init__(self, price, name, volumetric_concentration, molecular_weight, purity, density, volatilization_rate):
         super().__init__(price, name)
 
-        self.volumetric_concentration: float = volumetric_concentration
-        self.purity: float = purity
-        self.density: Number = density
-        self.volatilization_rate: Number = volatilization_rate
-        self.molar_weight: Number = molecular_weight
-        self.mass_concentration: Number = volumetric_concentration * density * purity
-        self.molar_concentration: Number = self.mass_concentration / molecular_weight
+        self.volumetric_concentration: Scalar = Q(volumetric_concentration)
+        self.purity: Scalar = Q(purity)
+        self.density: Scalar = Q(density, 'kg/L')
+        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
+        self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
+        self.mass_concentration: Scalar = volumetric_concentration * density * purity
+        self.molar_concentration: Scalar = self.mass_concentration / molecular_weight
