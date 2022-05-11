@@ -12,23 +12,23 @@ from static_values._miscellaneous import (
 from static_values._substances import WATER
 from templates._types import Number
 from templates._classes import Extractant, Solvent
+from templates._models import Condition
 
 from cost._energy import (calculate_required_agitator_power,
                           calculate_required_pump_power, calculate_rpm)
 
 
 def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_rate: Number,
-                   extractant: Extractant, solvent: Solvent, condition) -> tuple[Any, dict[str, Number], Number]:
+                   extractant: Extractant, solvent: Solvent, condition: Condition) -> tuple[Any, dict[str, Number], Number]:
 
-    ao_ratio, n_cells = condition['ao_ratio'], condition['n_cells']
     org_avg_density = weighted_average([extractant.density, solvent.density],
                                        [extractant.volumetric_concentration, solvent.volumetric_concentration])
 
     cell = get_adequate_cell(reference_flow_rate)
-    pipe, total_pipe_length = get_adequate_pipe(n_cells)
+    pipe, total_pipe_length = get_adequate_pipe(condition.n_cells)
     aq_pump, aq_pump_operating_power = get_adequate_pump(aq_flow_rate, WATER['DENSITY'], pipe['DIAMETER'])
     org_pump, org_pump_operating_power = get_adequate_pump(org_flow_rate, org_avg_density, pipe['DIAMETER'])
-    agitator, agitator_operating_power = get_adequate_agitator(aq_flow_rate, org_flow_rate, org_avg_density, ao_ratio)
+    agitator, agitator_operating_power = get_adequate_agitator(aq_flow_rate, org_flow_rate, org_avg_density, condition.ao_ratio)
     aq_level_indicator, org_level_indicator = get_adequate_level_indicator(), get_adequate_level_indicator()
     aq_level_controller = get_adequate_level_controller()    # The two phases do not need to be controlled, only the ao_ratio.
     aq_tank, org_tank = get_adequate_tank(), get_adequate_tank()
@@ -76,10 +76,10 @@ def get_adequate_pump(flow_rate: Number, fluid_density: Number, pipe_diameter: N
     but to select the cheapest in the aggregate of combined capital cost and power consumption over a period of time.
     """
     required_power = calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter)
-    powerful_enough_pumps = next((pump for pump in PUMPS if pump['MAX_POWER'] >= required_power / pump['EFFICIENCY']))
+    powerful_enough_pumps = [pump for pump in PUMPS if pump['MAX_POWER'] >= required_power / pump['EFFICIENCY']]
     powerful_enough_pumps.sort(key=lambda pump: pump['PRICE'])
     cheapest_pump = powerful_enough_pumps[0]
-    operating_power = required_power / cheapest_pump
+    operating_power = required_power / cheapest_pump['EFFICIENCY']
     return cheapest_pump, operating_power
 
 def get_adequate_agitator(aq_flow_rate: Number, org_flow_rate: Number, org_avg_density: Number, ao_ratio: Number):
@@ -101,7 +101,7 @@ def get_adequate_agitator(aq_flow_rate: Number, org_flow_rate: Number, org_avg_d
     adequate_agitators.sort(key=lambda agitator: agitator['PRICE'])
     cheapest_agitator = adequate_agitators[0]
     operating_power = required_power / cheapest_agitator['EFFICIENCY']
-    return cheapest_agitator
+    return cheapest_agitator, operating_power
 
 def get_adequate_pipe(n_cells: int):
     """

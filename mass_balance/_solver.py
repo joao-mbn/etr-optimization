@@ -109,7 +109,7 @@ def create_ree_guesses(n_cells: int, ree: Ree):
 def create_proton_guesses(n_cells: int, proton: Proton):
     return np.linspace(proton.feed_concentration, proton.feed_concentration * 1.2, n_cells)
 
-def create_distribution_ratios_guesses(n_cells, ree: Ree):
+def create_distribution_ratios_guesses(n_cells: int, ree: Ree):
     return np.linspace(1, 1, n_cells)
 
 def unpack_values(vars: Vector, n_cells: int, rees: Rees, proton: Proton):

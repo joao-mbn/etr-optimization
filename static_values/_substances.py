@@ -17,6 +17,7 @@ FEED_LIQUOR = {
 ISOPARAFFIN = {
     'NAME': 'Isoparaffin',
     'PRICE': 8.9, # R$/kg
+    'PURITY': 0.99,
     'DENSITY': 1,
     'VOLATILIZATION_RATE': 1,
     'MOLECULAR_WEIGHT': 1,

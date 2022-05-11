@@ -1,10 +1,11 @@
+from typing import Any
 from templates._types import T, Z, Number, Vector
 
 
 def default_if_none(a: T, b: Z) -> T | Z:
     return a if a is not None else b
 
-def value_or_default(dictionary: dict, key: str, default: Z) -> T | Z:
+def value_or_default(dictionary: dict, key: str, default: Z) -> Any | Z:
     return dictionary[key] if key in dictionary else default
 
 def flatten(list_of_lists: list[list[T]]) -> list[T]:

@@ -61,7 +61,8 @@ class Project():
         self.extractant: Extractant = extractant_factory(extractant)
         self.solvent: Solvent = solvent_factory(
             default_if_none(solvent,
-                            dict(name = 'Isoparaffin', concentration = 1 - extractant.volumetric_concentration)))
+                            dict(name = 'Isoparaffin',
+                                 concentration = 1 - self.extractant.volumetric_concentration)))
         self.cut: str = cut
         self.distribution_ratio_model: Callable[..., Number] = distribution_ratio_model
         self.max_cells_interval: tuple[int, int] = max_cells_interval
