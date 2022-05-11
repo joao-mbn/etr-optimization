@@ -21,9 +21,10 @@ def ree_factory(REE: dict, wannabe_ree: dict) -> Ree:
         symbol = REE['SYMBOL'],
         atom_molar_mass = REE['ATOMIC_WEIGHT'],
         oxide_molar_mass = REE['OXIDE_WEIGHT'],
-        stoichiometric_proportion=REE['OXIDE_STOICHIOMETRIC_PROPORTION'],
-        org_feed_concentration=value_or_default(wannabe_ree, 'org_feed_concentration', 0),
-        model_coefficients=wannabe_ree['model_coefficients']
+        valency = REE['VALENCY'],
+        stoichiometric_proportion = REE['OXIDE_STOICHIOMETRIC_PROPORTION'],
+        org_feed_concentration = value_or_default(wannabe_ree, 'org_feed_concentration', 0),
+        model_coefficients = wannabe_ree['model_coefficients']
     )
     return Ree(**props)
 

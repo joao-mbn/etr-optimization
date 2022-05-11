@@ -11,8 +11,8 @@ def isotherm_chart(rees: list[Ree]):
     fig = plt.figure()
 
     # Plots grid
-    n_colums = 2
-    n_rows = m.ceil(len(rees) / n_colums)
+    n_columns = 2
+    n_rows = m.ceil(len(rees) / n_columns)
 
     for i, ree in enumerate(rees):
 
@@ -27,7 +27,7 @@ def isotherm_chart(rees: list[Ree]):
         stages_y_axis = flatten([2 * [org_conc] for org_conc in ree.cells_org_concentrations]) + [ree.org_feed_concentration]
 
         # Plot building -----------------------------------
-        position = int('{0}{1}{2}'.format(n_rows, n_colums, i + 1))
+        position = int(f'{n_rows}{n_columns}{i + 1}')
         axes = fig.add_subplot(position)
 
         axes.plot(operating_line_x_axis, operating_line_y_axis, '.-', markersize = 2, label = 'Reta de Operação')
@@ -39,6 +39,6 @@ def isotherm_chart(rees: list[Ree]):
         axes.set_ylim([0, None])
         axes.set_xlim([0, None])
         axes.legend(loc = 0)
-        axes.set_title('Isoterma de extração de {0}'.format(ree.name))
+        axes.set_title(f'Isoterma de extração de {ree.name}')
 
     plt.show()

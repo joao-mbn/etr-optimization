@@ -31,7 +31,7 @@ def solver(distribution_ratio_model: Callable[..., Number], rees: Rees, proton: 
     guesses = create_guesses(n_cells, rees, proton)
     results: Vector = fsolve(
         create_system_of_equations, guesses, args=(distribution_ratio_model, ao_ratio, n_cells, rees, proton)
-    ).tolist()
+    ).tolist()  # type: ignore
 
     unpack_values(results, n_cells, rees, proton)
 
@@ -41,7 +41,7 @@ def create_system_of_equations(guesses, *args) -> Vector:
     unpack_values(guesses, n_cells, rees, proton)
 
     equations: Vector = []
-    charge_constant = get_total_charges([ree.aq_feed_concentration for ree in rees], proton.feed_concentration)
+    charge_constant = m.fsum(ree.aq_feed_concentration * ree.valency for ree in rees)
 
     equations += create_cell_charge_balance_equations(charge_constant, n_cells, rees, proton)
     equations += create_distribution_ratios_equations(distribution_ratio_model, n_cells, rees, proton)
@@ -50,10 +50,6 @@ def create_system_of_equations(guesses, *args) -> Vector:
         equations += create_cell_mass_balance_equations(cell_number, n_cells, ao_ratio, rees)
 
     return equations
-
-def get_total_charges(ree_initial_concentrations: Vector, proton_initial_concentration: Number) -> float:
-    """ From initial [H+] and sum([REE 3+]) values, gets total charge concentration on the solution."""
-    return proton_initial_concentration + REE_VALENCY * m.fsum(ree_initial_concentrations)
 
 def create_cell_mass_balance_equations(cell_number: int, n_cells: int, ao_ratio: Number, rees: Rees) -> Vector:
     """Generate mass balance for each ree in a given cell."""

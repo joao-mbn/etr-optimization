@@ -34,19 +34,21 @@ class Proton(Element):
 
 class Ree(Element):
 
+    cells_aq_concentrations: Vector = []
+    cells_org_concentrations: Vector = []
+    distribution_ratios: Vector = []
+
     def __init__(self,
                  aq_feed_concentration,
                  name,
+                 model_coefficients = {},
                  symbol = None,
                  atom_molar_mass = None,
                  oxide_molar_mass = None,
                  atomic_number = None,
+                 valency = 3,
                  stoichiometric_proportion = 3,
-                 org_feed_concentration = 0,
-                 model_coefficients = [],
-                 cells_aq_concentrations = [],
-                 cells_org_concentrations = [],
-                 distribution_ratios = []):
+                 org_feed_concentration = 0):
 
         super().__init__(name=name, symbol=symbol, atomic_number=atomic_number)
 
@@ -55,10 +57,8 @@ class Ree(Element):
         self.atom_molar_mass: Number = atom_molar_mass
         self.oxide_molar_mass: Number = oxide_molar_mass
         self.stoichiometric_proportion: Number = stoichiometric_proportion
-        self.model_coefficients: Vector = model_coefficients
-        self.cells_aq_concentrations: Vector = cells_aq_concentrations
-        self.cells_org_concentrations: Vector = cells_org_concentrations
-        self.distribution_ratios: Vector = distribution_ratios
+        self.valency: Number = valency
+        self.model_coefficients: dict[str, Number] = model_coefficients
 
 
 class Extractant(Substance):
