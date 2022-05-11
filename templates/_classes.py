@@ -74,8 +74,8 @@ class Extractant(Substance):
         self.density: Scalar = Q(density, 'kg/L')
         self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
         self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
-        self.mass_concentration: Scalar = volumetric_concentration * density * purity
-        self.molar_concentration: Scalar = self.mass_concentration / molecular_weight
+        self.mass_concentration: Scalar = self.volumetric_concentration * self.density * self.purity
+        self.molar_concentration: Scalar = self.mass_concentration / self.molecular_weight
         self.pKa: Scalar = Q(pKa)
 
 
@@ -91,5 +91,5 @@ class Solvent(Substance):
         self.density: Scalar = Q(density, 'kg/L')
         self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
         self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
-        self.mass_concentration: Scalar = volumetric_concentration * density * purity
-        self.molar_concentration: Scalar = self.mass_concentration / molecular_weight
+        self.mass_concentration: Scalar = self.volumetric_concentration * self.density * self.purity
+        self.molar_concentration: Scalar = self.mass_concentration / self.molecular_weight
