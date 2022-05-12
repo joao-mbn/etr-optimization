@@ -1,56 +1,58 @@
+from templates._units import quantity as Q
+
 HCL = {
-    'PRICE': 1,
-    'DENSITY': 1.17,
-    'MOLAR_MASS': 35.453,
-    'VOLUMETRIC_CONCENTRATION': 0.37, # v/v
-    'MOLAR_CONCENTRATION': 12.21 # mol/L
+    'PRICE': Q(1, 'usd/kg'),
+    'DENSITY': Q(1.17, 'kg/L'),
+    'MOLAR_MASS': Q(5.453, 'g/mol'),
+    'VOLUMETRIC_CONCENTRATION': Q(0.37, 'v/v'),
+    'MOLAR_CONCENTRATION': Q(2.21, 'mol/L'),
 }
 
 WATER = {
-    'DENSITY': 997, # kg/m³ @25ºC, 1 atm
+    'DENSITY': Q(997, 'kg/m^3'), # @25ºC, 1atm
 }
 
 FEED_LIQUOR = {
-    'PRICE': 1,
+    'PRICE': Q(1, 'usd/kg'),
 }
 
 ISOPARAFFIN = {
     'NAME': 'Isoparaffin',
-    'PRICE': 8.9, # R$/kg
-    'PURITY': 0.99,
-    'DENSITY': 1,
-    'VOLATILIZATION_RATE': 1,
-    'MOLECULAR_WEIGHT': 1,
+    'PRICE': Q(8.9, 'usd/kg'),
+    'PURITY': Q(0.99),
+    'DENSITY': Q(1, 'kg/L'),
+    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'),
+    'MOLECULAR_WEIGHT': Q(1, 'g/mol'),
 }
 
 D2EHPA = {
     'NAME': 'D2EHPA',
-    'PRICE': 15.52, # R$/L
-    'DENSITY': 0.97, # kg/L
-    'PURITY': 0.95,
-    'VOLATILIZATION_RATE': 1,
-    'MOLECULAR_WEIGHT': 1,
-    'PKA': 3.32,
+    'PRICE': Q(15.52, 'usd/L'),
+    'DENSITY': Q(0.97, 'kg/L'),
+    'PURITY': Q(0.95),
+    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'),
+    'MOLECULAR_WEIGHT': Q(1, 'g/mol'),
+    'PKA': Q(3.32),
 }
 
 P507 = {
     'NAME': 'P507',
-    'PRICE': 80.75, # R$/L
-    'DENSITY': 0.95, # kg/L
-    'PURITY': 0.95,
-    'VOLATILIZATION_RATE': 1,
-    'MOLECULAR_WEIGHT': 1,
-    'PKA': 4.10,
+    'PRICE': Q(80.75, 'usd/L'),
+    'DENSITY': Q(0.95, 'kg/L'),
+    'PURITY': Q(0.95),
+    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'),
+    'MOLECULAR_WEIGHT': Q(1, 'g/mol'),
+    'PKA': Q(4.10),
 }
 
 CYANEX_272 = {
     'NAME': 'Cyanex 272',
-    'PRICE': 208.5, # R$/L
-    'DENSITY': 0.93, # kg/L
-    'PURITY': 0.9,
-    'VOLATILIZATION_RATE': 1,
-    'MOLECULAR_WEIGHT': 1,
-    'PKA': 6.37,
+    'PRICE': Q(208.5, 'usd/L'),
+    'DENSITY': Q(0.93, 'kg/L'),
+    'PURITY': Q(0.9),
+    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'),
+    'MOLECULAR_WEIGHT': Q(1, 'g/mol'),
+    'PKA': Q(6.37),
 }
 
 EXTRACTANTS = [D2EHPA, P507, CYANEX_272]

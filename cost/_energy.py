@@ -1,15 +1,17 @@
 import math as m
 
 from helpers._common import area_of_circle
-from static_values._miscellaneous import ACCELERATION_OF_GRAVITY
+from static_values._miscellaneous import ACCELERATION_OF_GRAVITY, TIME_REFERENCE
 from templates._types import Number
+from templates._units import unit_registry as ur
 
-
+@ur.wraps(('kWh'), (None, None, None, None))
 def energy_consumption(n_cells: int, aq_pump_operating_power: Number,
                        org_pump_operating_power: Number, agitator_operating_power: Number) -> Number:
-    hours_in_year = 365 * 24
-    return hours_in_year * (aq_pump_operating_power + org_pump_operating_power + agitator_operating_power * n_cells)
 
+    return TIME_REFERENCE * (aq_pump_operating_power + org_pump_operating_power + agitator_operating_power * n_cells)
+
+@ur.wraps(('kilowatt'), (None, None, None))
 def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Number:
     """
     This calculates the power required to pump the fluid from the tanks to the cell.
@@ -35,6 +37,7 @@ def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Nu
     power = velocity_head * flow_rate * fluid_density * ACCELERATION_OF_GRAVITY
     return power
 
+@ur.wraps(('kilowatt'), (None, None, None))
 def calculate_required_agitator_power(flow_rate: Number, fluid_density: Number, head_loss: Number) -> Number:
     """
     This calculates the power required to pump the fluid from one cell to another.
@@ -56,6 +59,7 @@ def calculate_required_agitator_power(flow_rate: Number, fluid_density: Number, 
     power = head_to_add * flow_rate * fluid_density * ACCELERATION_OF_GRAVITY
     return power
 
+@ur.wraps(('rpm'), ('N m', 'kilowatt'))
 def calculate_rpm(motor_torque: Number, operating_power: Number) -> Number:
     """
     This calculates the RPM of the agitator.
@@ -71,5 +75,4 @@ def calculate_rpm(motor_torque: Number, operating_power: Number) -> Number:
 
     https://simplemotor.com/calculations/
     """
-    seconds_in_minute = 60
-    return operating_power * 2 * m.pi / motor_torque / seconds_in_minute
+    return operating_power * 2 * m.pi / motor_torque

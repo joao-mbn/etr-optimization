@@ -18,16 +18,20 @@ class Condition():
     cost: Scalar = Q(inf, 'usd')
 
     def __init__(self, n_cells, ao_ratio, pHi, purity, recovery, separation_factor,
-                 product_at_feed, product_at_raffinate, pH_at_raffinate):
+                 mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate,
+                 moles_of_ree_product_at_feed, moles_of_ree_product_at_raffinate,
+                 pH_at_raffinate):
 
-        self.n_cells: Quantity[int] = Q(n_cells, 'un')
+        self.n_cells: Quantity[int] = Q(n_cells)
         self.ao_ratio: Scalar = Q(ao_ratio)
         self.pHi: Scalar = Q(pHi)
         self.purity: Quantity[float] = Q(purity)
         self.recovery: Quantity[float] = Q(recovery)
         self.separation_factor: Number = separation_factor
-        self.product_at_feed: Scalar = Q(product_at_feed, 'g/L')
-        self.product_at_raffinate: Scalar = Q(product_at_raffinate, 'g/L')
+        self.mass_of_reo_product_at_feed : Scalar = Q(mass_of_reo_product_at_feed, 'g/L')
+        self.mass_of_reo_product_at_raffinate: Scalar = Q(mass_of_reo_product_at_raffinate, 'g/L')
+        self.moles_of_ree_product_at_feed: Scalar = Q(moles_of_ree_product_at_feed, 'mol/L')
+        self.moles_of_ree_product_at_raffinate: Scalar = Q(moles_of_ree_product_at_raffinate, 'mol/L')
         self.pH_at_raffinate: Scalar = Q(pH_at_raffinate)
 
 

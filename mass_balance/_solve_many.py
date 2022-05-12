@@ -38,14 +38,16 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
                 purity = calculate_raffinate_purity(rees_of_interest, contaminants)
                 if purity >= required_raffinate_purity:
 
-                    recovery = calculate_raffinate_recovery(rees_of_interest)
+                    (recovery, moles_of_ree_product_at_feed,
+                     moles_of_ree_product_at_raffinate) = calculate_raffinate_recovery(rees_of_interest)
                     separation_factor = calculate_average_border_separation_factor(rees_of_interest[-1], contaminants[0])
-                    total_reo_concentration_at_feed, total_reo_concentration_at_raffinate = calculate_total_reos(rees_of_interest)
+                    mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate = calculate_total_reos(rees_of_interest)
                     pH_at_raffinate = pH_from_H(proton.cells_concentrations[-1])
 
                     update_pivot_table(pivot_table, purity, recovery, separation_factor)
                     condition_summary = Condition(n_cells, ao_ratio, pHi, purity, recovery, separation_factor,
-                                                  total_reo_concentration_at_feed, total_reo_concentration_at_raffinate,
+                                                  mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate,
+                                                  moles_of_ree_product_at_feed, moles_of_ree_product_at_raffinate,
                                                   pH_at_raffinate)
                     approveds.append(condition_summary)
 
@@ -65,10 +67,10 @@ def calculate_raffinate_purity(rees_of_interest: list[Ree], contaminants: list[R
     contaminants_raffinate_concentration = sum(ree.cells_aq_concentrations[-1] for ree in contaminants)
     return purity(rees_of_interest_raffinate_concentration, contaminants_raffinate_concentration)
 
-def calculate_raffinate_recovery(rees_of_interest: list[Ree]) -> float:
+def calculate_raffinate_recovery(rees_of_interest: list[Ree]) -> tuple[float, Number, Number]:
     at_feed = sum(ree.aq_feed_concentration for ree in rees_of_interest)
     at_raffinate = sum(ree.cells_aq_concentrations[-1] for ree in rees_of_interest)
-    return recovery(at_feed, at_raffinate)
+    return recovery(at_feed, at_raffinate), at_feed, at_raffinate
 
 def calculate_average_border_separation_factor(upper_lighter, lower_heavier) -> float:
     """
@@ -84,14 +86,15 @@ def calculate_total_reos(rees_of_interest: list[Ree]) -> tuple[Number, Number]:
     This calculates the total reos concentration at the feed and at the raffinate.
     A chain conversion is performed from mol/L Ree to g/L Reo.
     """
-    at_feed = sum(oxide_from_atom(g_from_mol(ree.aq_feed_concentration, ree.atom_molar_mass),
+    mass_of_reo_at_feed = sum(oxide_from_atom(
+                                  g_from_mol(ree.aq_feed_concentration, ree.atom_molar_mass),
                                   ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
-                  for ree in rees_of_interest)
-    at_raffinate = sum(oxide_from_atom(g_from_mol(ree.cells_aq_concentrations[-1], ree.atom_molar_mass),
+                              for ree in rees_of_interest)
+    mass_of_reo_at_raffinate = sum(oxide_from_atom(
+                                       g_from_mol(ree.cells_aq_concentrations[-1], ree.atom_molar_mass),
                                        ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
-                       for ree in rees_of_interest)
-
-    return at_feed, at_raffinate
+                                   for ree in rees_of_interest)
+    return mass_of_reo_at_feed, mass_of_reo_at_raffinate
 
 def update_pivot_table(pivot_table: PivotTable, purity: float, recovery: float, separation_factor: float):
     pivot_table.approveds.highest_average_separation_factor = max(pivot_table.approveds.highest_average_separation_factor, separation_factor)

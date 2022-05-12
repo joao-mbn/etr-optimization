@@ -9,12 +9,12 @@ PIPES = [
 
 PUMPS = [
     {
-        'PRICE': Q('0.1 usd/un'),
+        'PRICE': Q('0.1 usd'),
         'EFFICIENCY': Q('0.9'),
         'MAX_POWER': Q('100 kW'),
     },
     {
-        'PRICE': Q('0.2 usd/un'),
+        'PRICE': Q('0.2 usd'),
         'EFFICIENCY': Q('0.6'),
         'MAX_POWER': Q('300 kW'),
     }
@@ -22,7 +22,20 @@ PUMPS = [
 
 MIXER_SETTLERS = [
     {
-        'PRICE': Q('10000 usd/un'),
+        'PRICE': Q('10000 usd'),
+        'MIXER': {
+            'HEIGHT': Q('2 m'),
+            'WIDTH': Q('10 m'),
+            'DEPTH': Q('2 m'),
+        },
+        'SETTLER': {
+            'HEIGHT': Q('1 m'),
+            'WIDTH': Q('1 m'),
+            'DEPTH': Q('1 m'),
+        }
+    },
+    {
+        'PRICE': Q('8000 usd'),
         'MIXER': {
             'HEIGHT': Q('1 m'),
             'WIDTH': Q('1 m'),
@@ -35,20 +48,7 @@ MIXER_SETTLERS = [
         }
     },
     {
-        'PRICE': 1,
-        'MIXER': {
-            'HEIGHT': Q('1 m'),
-            'WIDTH': Q('1 m'),
-            'DEPTH': Q('1 m'),
-        },
-        'SETTLER': {
-            'HEIGHT': Q('1 m'),
-            'WIDTH': Q('1 m'),
-            'DEPTH': Q('1 m'),
-        }
-    },
-    {
-        'PRICE': 1,
+        'PRICE': Q('7000 usd'),
         'MIXER': {
             'HEIGHT': Q('1 m'),
             'WIDTH': Q('1 m'),
@@ -64,28 +64,28 @@ MIXER_SETTLERS = [
 
 AGITATORS = [
     {
-        'PRICE': Q('0.1 usd/un'),
+        'PRICE': Q('0.1 usd'),
         'EFFICIENCY': Q('0.9'),
         'MAX_POWER': Q('100 kW'),
         'MAX_RPM': Q('100 rpm'),
-        'OPTIMAL_TORQUE': Q('100 N*m'),
+        'OPTIMAL_TORQUE': Q('100 N m'),
     }
 ]
 
 LEVEL_INDICATORS = [
     {
-        'PRICE': Q('0.1 usd/un'),
+        'PRICE': Q('0.1 usd'),
     }
 ]
 
 LEVEL_CONTROLLERS = [
     {
-        'PRICE': Q('0.1 usd/un'),
+        'PRICE': Q('0.1 usd'),
     }
 ]
 
 TANKS = [
     {
-        'PRICE': Q('0.1 usd/un'),
+        'PRICE': Q('0.1 usd'),
     }
 ]

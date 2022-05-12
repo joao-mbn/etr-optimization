@@ -2,7 +2,7 @@ import math as m
 from typing import TypeAlias
 
 import numpy as np
-from static_values._rees import SEPARATION_ORDER, REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
+from static_values._rees import SEPARATION_ORDER
 from templates._classes import Ree
 from templates._types import Number, Vector
 
@@ -48,13 +48,6 @@ def Ka_from_pKa(pKa: Number) -> Number:
 
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
-
-def free_extractant_on_last_cell(feed_concentration: Number, raffinate_concentration: Number,
-                                 ao_ratio: Number, extractant_initial_concentration: Number) -> Number:
-    return (extractant_initial_concentration
-            - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
-            * ao_ratio
-            * (feed_concentration - raffinate_concentration))
 
 def area_of_rectangle(height: Number, width: Number) -> Number:
     return height * width

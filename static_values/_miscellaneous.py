@@ -1,14 +1,14 @@
 from templates._units import quantity as Q
 
 TIME_REFERENCE = Q('1 year')
-TOTAL_PRODUCTION = Q('100 ton')
+TOTAL_PRODUCTION = Q('1 ton')
 
 STRIPPING_SOLUTION_ACID_CONCENTRATION = Q('3 mol/L')
 HEAD_LOSS_BETWEEN_CELLS = Q('0.1 m')
 
 # Costs
-ENERGY_COST_PER_KWH = Q('0.1 usd/kWh') # $/kWh
-OPERATORS_COST = Q('0.1 usd/un')
+ENERGY_COST_PER_KWH = Q('0.1 usd/kWh')
+OPERATORS_COST = Q('0.1 usd')
 
 # Equilibrium
 REE_SX_EQUILIBRIUM_TIME = Q('15 min')

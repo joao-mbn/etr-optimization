@@ -13,14 +13,14 @@ class Element():
 class Substance():
 
     def __init__(self, price, name) -> None:
-        self.price: Scalar = Q(price, 'usd')
+        self.price: Scalar = price
         self.name: str = name
 
 
 class Equipment():
 
     def __init__(self, price, name = None) -> None:
-        self.price: Scalar = Q(price, 'usd')
+        self.price: Scalar = price
         self.name: str = name
 
 
@@ -72,7 +72,7 @@ class Extractant(Substance):
         self.volumetric_concentration: Scalar = Q(volumetric_concentration)
         self.purity: Scalar = Q(purity)
         self.density: Scalar = Q(density, 'kg/L')
-        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
+        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^-2 s^-1')
         self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
         self.mass_concentration: Scalar = self.volumetric_concentration * self.density * self.purity
         self.molar_concentration: Scalar = self.mass_concentration / self.molecular_weight
@@ -89,7 +89,7 @@ class Solvent(Substance):
         self.volumetric_concentration: Scalar = Q(volumetric_concentration)
         self.purity: Scalar = Q(purity)
         self.density: Scalar = Q(density, 'kg/L')
-        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^2 s^-1')
+        self.volatilization_rate: Scalar = Q(volatilization_rate, 'kg m^-2 s^-1')
         self.molecular_weight: Scalar = Q(molecular_weight, 'g/mol')
         self.mass_concentration: Scalar = self.volumetric_concentration * self.density * self.purity
         self.molar_concentration: Scalar = self.mass_concentration / self.molecular_weight

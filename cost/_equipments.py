@@ -55,8 +55,8 @@ def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_r
     return equipments, operating_powers, total_pipe_length
 
 def get_adequate_cell(reference_flow_rate: Number):
-    smallest_mixer_possible = reference_flow_rate * REE_SX_EQUILIBRIUM_TIME # Volume in L
-    smallest_settler_possible = reference_flow_rate * PHASE_SETTLING_TIME   # Volume in L
+    smallest_mixer_possible = reference_flow_rate * REE_SX_EQUILIBRIUM_TIME
+    smallest_settler_possible = reference_flow_rate * PHASE_SETTLING_TIME
 
     big_enough_cells: list[Any] = []
     for cell in MIXER_SETTLERS:

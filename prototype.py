@@ -25,9 +25,9 @@ p507 = dict(name='P507', concentration=0.1)
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (5, 5)
-pHi_interval = (1.4, 1.4)
-ao_ratio_interval = (0.5, 0.5)
+max_cells_interval = (2, 10)
+pHi_interval = (1, 2)
+ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
 
 project = Project(
