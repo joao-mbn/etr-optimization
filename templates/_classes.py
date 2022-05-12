@@ -1,4 +1,4 @@
-from templates._types import Vector, Number, Scalar
+from templates._types import Number, Scalar, Vector
 from templates._units import quantity as Q
 
 # Classes make physical sense, where models do not.
@@ -20,7 +20,7 @@ class Substance():
 class Proton(Element):
     def __init__(self, feed_concentration=0.5, cells_concentrations = []):
 
-        super().__init__(name='proton', symbol='H', atomic_number=1)
+        super().__init__(name='próton', symbol='H', atomic_number=1)
 
         self.feed_concentration: Number = feed_concentration
         self.cells_concentrations: Vector = cells_concentrations

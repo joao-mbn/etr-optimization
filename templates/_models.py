@@ -16,6 +16,8 @@ from templates._units import quantity as Q
 class Condition():
 
     cost: Scalar = Q(inf, 'usd')
+    extractant: str = ''
+    extractant_concentration: Number = 0
 
     def __init__(self, n_cells, ao_ratio, pHi, purity, recovery, separation_factor,
                  mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate,

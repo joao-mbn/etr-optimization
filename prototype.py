@@ -9,7 +9,7 @@ from static_values._rees import PRASEODYMIUM as PR
 from static_values._rees import SAMARIUM as SM
 from templates._classes import Proton, Ree
 from templates._factories import rees_factory
-from visualization._charts_builder import isotherm_chart
+from visualization._isotherm_chart import isotherm_chart
 from templates._models import Project
 from _main import main
 
@@ -25,9 +25,9 @@ p507 = dict(name='P507', concentration=0.1)
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (2, 10)
-pHi_interval = (1, 2)
-ao_ratio_interval = (0.5, 2)
+max_cells_interval = (2, 2)
+pHi_interval = (2, 2)
+ao_ratio_interval = (2, 2)
 required_raffinate_purity = 0.995
 
 project = Project(
