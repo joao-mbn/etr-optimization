@@ -5,13 +5,10 @@ from mass_balance._solve_many import solve_many
 from templates._classes import Proton
 from templates._models import Project
 
-from time import time
 
 def main(projects: list[Project]):
 
     for project in projects:
-
-        t1 = time()
 
         project.pivot_table, project.approved_conditions = solve_many(  # type: ignore
             project.cut,
@@ -24,10 +21,6 @@ def main(projects: list[Project]):
             project.required_raffinate_purity,
         )
 
-        t2 = time()
-        a = f'{round(t2 - t1, 6)}s'
-        print(a)
-
         for condition in project.approved_conditions:
 
             condition.cost = calculate_cost(condition, project.extractant, project.solvent)
@@ -36,7 +29,3 @@ def main(projects: list[Project]):
 
         project.pivot_table.approveds.average_cost = mean(condition.cost for condition in project.approved_conditions)
         project.pivot_table.approveds.cost_median = median(condition.cost for condition in project.approved_conditions)
-
-        t3 = time()
-        b = f'{round(t3 - t2, 6)}s'
-        print(b)
