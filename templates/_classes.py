@@ -17,13 +17,6 @@ class Substance():
         self.name: str = name
 
 
-class Equipment():
-
-    def __init__(self, price, name = None) -> None:
-        self.price: Scalar = price
-        self.name: str = name
-
-
 class Proton(Element):
     def __init__(self, feed_concentration=0.5, cells_concentrations = []):
 

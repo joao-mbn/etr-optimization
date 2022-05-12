@@ -31,7 +31,7 @@ def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extrac
 def calculate_flows(total_aq_volume: Scalar, total_org_volume: Scalar) -> tuple[Scalar, Scalar, Scalar]:
     """
     Reference flow ensures that the fastest flow should still
-    have a residence time great enough to meet equilibrium
+    have a residence time great enough to meet equilibrium.
     """
     aq_flow_rate = total_aq_volume / TIME_REFERENCE
     org_flow_rate = total_org_volume / TIME_REFERENCE
@@ -42,6 +42,9 @@ def calculate_flows(total_aq_volume: Scalar, total_org_volume: Scalar) -> tuple[
 
 @ur.wraps(('min', 'kg'), (None, None, None, None))
 def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, condition: Condition) ->  tuple[Number, Number]:
+    """
+    It assumes that both ree in the raffinate and organic will be lost until permanent state.
+    """
     actual_mixing_time = value_or_default(mixer, 'VOLUME', volume_of_parallelepiped(mixer['HEIGHT'], mixer['WIDTH'], mixer['DEPTH'])) / reference_flow
     actual_settling_time = value_or_default(settler, 'VOLUME', volume_of_parallelepiped(settler['HEIGHT'], settler['WIDTH'], settler['DEPTH'])) / reference_flow
     time_until_permanent_state = (actual_mixing_time + actual_settling_time) * condition.n_cells
@@ -50,12 +53,22 @@ def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, c
 
 @ur.wraps(('kg'), (None, None, None))
 def calculate_ree_loss(wasted_ree_until_permanent_state: Number, total_aq_volume: Number, condition: Condition) -> Number:
+    """
+    It assumes that all ree in the loaded organic will be lost.
+    """
     loss_on_loaded_organic = condition.mass_of_reo_product_at_feed * total_aq_volume * (1 - condition.recovery)
     return loss_on_loaded_organic + wasted_ree_until_permanent_state
 
 @ur.wraps(('L'), (None, None, None, None, None))
 def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: Number,
                               condition: Condition, extractant: Extractant) -> Number:
+    """
+    - No method for estimation of drag loss and crude loss are yet implemented.
+    - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
+    - It assumes that only the free ion of the extractant is capable of migrating to aqueous phase.
+    - It assumes that acid-base equilibrium is the only equilibrium that would lead to formation of the extractant free ion.
+    - It assumes that acid-base equilibrium of the extractant is instantaneous.
+    """
     drag_loss = Q('0 kg')
     crude_loss = Q('0 kg')
 
@@ -76,6 +89,11 @@ def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: 
 
 @ur.wraps(('L'), (None, None, None, None))
 def calculate_solvent_loss(settling_time: Number, settler, total_org_volume: Number, solvent: Solvent) -> Number:
+    """
+    - No method for estimation of drag loss and crude loss are yet implemented.
+    - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
+    - It assumes that, due to the nature of the solvents, the solvent does not dissociate in water in any meaningful quantity.
+    """
     drag_loss = Q('0 kg')
     crude_loss = Q('0 kg')
     dissociation_loss = Q('0 kg')
@@ -89,8 +107,9 @@ def calculate_solvent_loss(settling_time: Number, settler, total_org_volume: Num
 @ur.wraps(('L'), (None, None, None))
 def calculate_acid_loss(total_aq_volume: Number, total_org_volume: Number, pHi: Number) -> Number:
     """
-    The stripping occurs with ao_ratio = 1 between stripping solution and organic phase.
-    It is assumed that the stripping solution is enough to clear organic phase from REEs.
+    It assumes that the stripping occurs with A/O ratio 1, between stripping solution and organic phase.
+    It assumes that the stripping solution is enough to clear organic phase from REEs.
+    It assumes that the acid and the rees are herewith lost.
     """
     acid_to_pHi = (total_aq_volume * Q(H_from_pH(pHi), 'mol/L') / HCL['MOLAR_CONCENTRATION'])
     acid_to_stripping = total_org_volume * STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION']

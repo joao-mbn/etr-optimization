@@ -1,8 +1,7 @@
 import math as m
 
-from matplotlib import pyplot as plt
-
 from helpers._utils import flatten
+from matplotlib import pyplot as plt
 from templates._classes import Ree
 
 

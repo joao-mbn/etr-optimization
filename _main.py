@@ -7,10 +7,21 @@ from templates._models import Project
 
 
 def main(projects: list[Project]):
+    """
+    - Solves all systems of equations for a given area of investigation, between multiple:
+        - Type of Extractant
+        - Extractant Concentration
+        - pHi
+        - A/O Ratio
+        - Number of Cells
+    - Calculates the cost of each one.
+    - Defines the best solution.
+    - Provides data visualization.
+    """
 
     for project in projects:
 
-        project.pivot_table, project.approved_conditions = solve_many(  # type: ignore
+        project.pivot_table, project.approved_conditions = solve_many(
             project.cut,
             project.distribution_ratio_model,
             project.rees,
@@ -29,3 +40,8 @@ def main(projects: list[Project]):
 
         project.pivot_table.approveds.average_cost = mean(condition.cost for condition in project.approved_conditions)
         project.pivot_table.approveds.cost_median = median(condition.cost for condition in project.approved_conditions)
+
+        project.approved_conditions.sort(key=lambda condition: condition.cost)
+        print(project.approved_conditions[0].__dict__)
+
+

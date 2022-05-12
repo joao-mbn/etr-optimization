@@ -1,9 +1,13 @@
+from helpers._utils import value_or_default
 from static_values._rees import REES
 from static_values._substances import EXTRACTANTS, SOLVENTS
-from helpers._utils import value_or_default
 
-from templates._classes import Ree, Extractant, Solvent
+from templates._classes import Extractant, Ree, Solvent
 
+"""
+These factories are simply a handy way to instance full objects passing only a few properties, drawing the rest from the static values.
+Useful for stuff with many physical-chemical properties, belonging to a more or less defined group.
+"""
 
 def rees_factory(wannabe_rees: list[dict]) -> list[Ree]:
     rees: list[Ree] = []
@@ -29,28 +33,28 @@ def ree_factory(REE: dict, wannabe_ree: dict) -> Ree:
     return Ree(**props)
 
 def extractant_factory(wannabe_extractant: dict) -> Extractant:
-    EXTRACTANT = next(filter(lambda EXTRACTANT: EXTRACTANT['NAME'] == wannabe_extractant['name'], EXTRACTANTS))
+    extractant = next(filter(lambda extractant: extractant['NAME'] == wannabe_extractant['name'], EXTRACTANTS))
     props = dict(
-        name = EXTRACTANT['NAME'],
-        price = EXTRACTANT['PRICE'],
+        name = extractant['NAME'],
+        price = extractant['PRICE'],
         volumetric_concentration = wannabe_extractant['concentration'],
-        molecular_weight = EXTRACTANT['MOLECULAR_WEIGHT'],
-        purity = EXTRACTANT['PURITY'],
-        density = EXTRACTANT['DENSITY'],
-        volatilization_rate = EXTRACTANT['VOLATILIZATION_RATE'],
-        pKa = EXTRACTANT['PKA'],
+        molecular_weight = extractant['MOLECULAR_WEIGHT'],
+        purity = extractant['PURITY'],
+        density = extractant['DENSITY'],
+        volatilization_rate = extractant['VOLATILIZATION_RATE'],
+        pKa = extractant['PKA'],
     )
     return Extractant(**props)
 
 def solvent_factory(wannabe_solvent: dict) -> Solvent:
-    SOLVENT = next(filter(lambda SOLVENT: SOLVENT['NAME'] == wannabe_solvent['name'], SOLVENTS))
+    solvent = next(filter(lambda solvent: solvent['NAME'] == wannabe_solvent['name'], SOLVENTS))
     props = dict(
-        name = SOLVENT['NAME'],
-        price = SOLVENT['PRICE'],
+        name = solvent['NAME'],
+        price = solvent['PRICE'],
         volumetric_concentration = wannabe_solvent['concentration'],
-        molecular_weight = SOLVENT['MOLECULAR_WEIGHT'],
-        purity = SOLVENT['PURITY'],
-        density = SOLVENT['DENSITY'],
-        volatilization_rate = SOLVENT['VOLATILIZATION_RATE'],
+        molecular_weight = solvent['MOLECULAR_WEIGHT'],
+        purity = solvent['PURITY'],
+        density = solvent['DENSITY'],
+        volatilization_rate = solvent['VOLATILIZATION_RATE'],
     )
     return Solvent(**props)

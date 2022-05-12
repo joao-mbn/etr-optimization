@@ -51,7 +51,7 @@ main([project])
 # summary, approved = solve_many(cut, logD_x_pH, rees, Proton(), max_cells_interval,
 #                                pHi_interval, ao_ratio_interval, required_raffinate_purity)
 
-# solver(logD_x_pH, rees, Proton(0.01), ao_ratio=2, n_cells=7)
+# solver(logD_x_pH, rees, Proton(0.01), ao_ratio=2, n_cells=2)
 # praseodymium, neodymium, samarium = rees
 
 # praseodymium.cells_org_concentrations = org_concentrations(praseodymium.cells_aq_concentrations, praseodymium.distribution_ratios)

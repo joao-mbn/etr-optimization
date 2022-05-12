@@ -46,7 +46,6 @@ def calculate_capital_cost(equipments, total_pipe_length: Number, n_cells: int, 
 
 def calculate_operating_cost(cell, reference_flow: Number, total_aq_volume: Number, total_org_volume: Number,
                              condition: Condition, extractant: Extractant, solvent: Solvent, operating_powers: dict[str, Number]) -> Number:
-    """All operating costs are in terms of the TIME_REFERENCE"""
 
     settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
         cell['MIXER'], cell['SETTLER'], reference_flow, condition)

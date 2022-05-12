@@ -10,13 +10,7 @@ from helpers._utils import is_residue
 
 Rees: TypeAlias = list[Ree]
 
-# ----------------- Time Conversions
-def minutes_in_year(years: Number) -> Number:
-    return years * 365 * 24 * 60
-
 # ----------------- Mass Conversions
-def g_in_ton(ton: Number) -> Number:
-    return ton * 1e9
 
 def g_from_mol(mol: Number, molecular_weight: Number) -> Number:
     return mol * molecular_weight

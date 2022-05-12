@@ -16,6 +16,14 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
                max_cells_interval: tuple[int, int], pHi_interval: tuple[Number, Number], ao_ratio_interval: tuple[Number, Number],
                required_raffinate_purity: float = 0.995) -> tuple[PivotTable, list[Condition]]:
 
+    """
+    - Solves the systems of equations for all possible combinations of A/O ratio, Nº of cells and initial pH, \
+        given a certain range of investigation and a arbitrary grid that separates one condition of the other.
+
+    - Collects the conditions that meet a minimal criterium of purity.
+    - Records data for statiscal analysis in a pivot table.
+    """
+
     approveds: list[Condition] = []
     pivot_table = PivotTable()
     lighter_fraction, heavier_fraction = resolve_cut(cut)
@@ -74,7 +82,7 @@ def calculate_raffinate_recovery(rees_of_interest: list[Ree]) -> tuple[float, Nu
 
 def calculate_average_border_separation_factor(upper_lighter, lower_heavier) -> float:
     """
-    This calculates the average separation factor between the elements of the cut alone. \n
+    This calculates the average separation factor between the elements of the cut alone.
     Ex: PrNd/SmEu -> average separation factor Nd/Sm.
     """
     avg_distribution_ratio_of_lighter = mean(upper_lighter.distribution_ratios)
@@ -104,6 +112,10 @@ def update_pivot_table(pivot_table: PivotTable, purity: float, recovery: float, 
     pivot_table.approveds.highest_purity = max(pivot_table.approveds.highest_purity, purity)
 
 def clear_result(rees: list[Ree], proton: Proton):
+    """
+    Since the system yields the results in place, this methods cleans the results, \
+        after they were stored elsewhere, to give room for the next system to be solved.
+    """
     for ree in rees:
         ree.cells_aq_concentrations = []
         ree.cells_org_concentrations = []
