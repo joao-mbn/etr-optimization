@@ -10,8 +10,12 @@ from static_values._rees import SAMARIUM as SM
 from templates._classes import Proton, Ree
 from templates._factories import rees_factory
 from visualization._isotherm_chart import isotherm_chart
+from visualization._approveds_plot import cost_relationship_curve
 from templates._models import Project
 from _main import main
+
+
+# cost_relationship_curve([])
 
 pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
 nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
@@ -25,9 +29,9 @@ p507 = dict(name='P507', concentration=0.1)
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (2, 2)
-pHi_interval = (2, 2)
-ao_ratio_interval = (2, 2)
+max_cells_interval = (2, 10)
+pHi_interval = (1, 2)
+ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
 
 project = Project(

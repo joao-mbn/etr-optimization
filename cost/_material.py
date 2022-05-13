@@ -13,11 +13,18 @@ from templates._units import unit_registry as ur
 
 # ------------------ Phase Volumes
 
-@ur.wraps(('L', 'L'), None)
-def calculate_phase_volumes(condition: Condition) -> tuple[Scalar, Scalar]:
+@ur.wraps(('L'), (None))
+def calculate_total_aqueous_volume(condition: Condition) -> Scalar:
     total_aq_volume = TOTAL_PRODUCTION / condition.mass_of_reo_product_at_raffinate
-    total_org_volume = total_aq_volume / condition.ao_ratio
-    return total_aq_volume, total_org_volume
+    return total_aq_volume
+
+@ur.wraps(('L'), (None, None, None))
+def calculate_total_organic_volume(cell, ao_ratio: Scalar, n_cells: int) -> Scalar:
+    mixer, settler = cell['MIXER'], cell['SETTLER']
+    mixer_volume = value_or_default(mixer, 'VOLUME', volume_of_parallelepiped(mixer['HEIGHT'], mixer['WIDTH'], mixer['DEPTH']))
+    settler_volume = value_or_default(settler, 'VOLUME', volume_of_parallelepiped(settler['HEIGHT'], settler['WIDTH'], settler['DEPTH']))
+    total_org_volume = (mixer_volume + settler_volume) * n_cells / ao_ratio
+    return total_org_volume
 
 @ur.wraps(('L', 'L'), (None, None))
 def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extractant) -> tuple[Scalar, Scalar]:
@@ -28,13 +35,13 @@ def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extrac
 # ------------------ Flows
 
 @ur.wraps(('L/min', 'L/min', 'L/min'), (None, None))
-def calculate_flows(total_aq_volume: Scalar, total_org_volume: Scalar) -> tuple[Scalar, Scalar, Scalar]:
+def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, Scalar, Scalar]:
     """
     Reference flow ensures that the fastest flow should still
     have a residence time great enough to meet equilibrium.
     """
     aq_flow_rate = total_aq_volume / TIME_REFERENCE
-    org_flow_rate = total_org_volume / TIME_REFERENCE
+    org_flow_rate = aq_flow_rate / ao_ratio
     reference_flow = max(aq_flow_rate, org_flow_rate)
     return aq_flow_rate, org_flow_rate, reference_flow
 

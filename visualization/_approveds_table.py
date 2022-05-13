@@ -1,37 +1,22 @@
-from typing import Any
-import pandas as pd
-from pint import Quantity
-
+from pandas import ExcelWriter
 from templates._models import Condition
+from helpers._common import transform_conditions_to_dataframe
 
 def approveds_table(approveds: list[Condition]) -> None:
     """
-    Passes the dimensions of the approveds from individual
-    results to the columns and send it to excel.
+    Sends the results to an excel file, with data of the approveds
+    and metadata about the dataset (a pivot-table, basically).
     """
-    data = [approved.__dict__ for approved in approveds]
-    unitted_columns_names = add_units_to_columns(data[0])
-    remove_units_from_data(data)
-    df = pd.DataFrame(data)
-    df.rename(columns=unitted_columns_names, inplace=True)
-    df.to_excel('C:/Users/joao.batista/Desktop/aprovados.xlsx', 'Condições Aprovadas')
 
+    # Create dataframe out of the approveds
+    df = transform_conditions_to_dataframe(approveds)
 
-def add_units_to_columns(data: dict[str, Any]) -> dict[str, str]:
+    # Creates the table with the data and the pivot table with the metadata
+    highlights = df.describe(include='all')
 
-    columns_to_update = dict()
-    for key, value in data.items():
-        if isinstance(value, Quantity):
-            unit = f'({value.units})'.replace(' ', '') if not value.units.dimensionless else ''
-        else:
-            unit = ''
-
-        columns_to_update[key] = f'{key} {unit}'.replace('_', ' ')
-
-    return columns_to_update
-
-def remove_units_from_data(data: list[dict[str, Any]]) -> None:
-    for row in data:
-        for key, value in row.items():
-            if isinstance(value, Quantity):
-                row[key] = value.magnitude
+    # Saves it to an excel file
+    writer = ExcelWriter('C:/Users/joao.batista/Desktop/aprovados.xlsx', engine='openpyxl')
+    df.to_excel(writer, 'Condições Aprovadas')
+    highlights.to_excel(writer, 'Highlights')
+    writer.save()
+    writer.close()

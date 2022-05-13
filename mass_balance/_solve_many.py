@@ -5,7 +5,7 @@ from helpers._common import (H_from_pH, pH_from_H, are_all_residues, are_results
                              classify_rees, g_from_mol, oxide_from_atom,
                              purity, recovery, resolve_cut, separation_factor)
 from templates._classes import Proton, Ree
-from templates._models import Condition, PivotTable
+from templates._models import Condition
 from templates._types import Number
 
 from mass_balance._solver import solver
@@ -27,9 +27,9 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
     lighter_fraction, heavier_fraction = resolve_cut(cut)
     rees_of_interest, contaminants = classify_rees(rees, lighter_fraction, heavier_fraction)
 
-    cells_range = np.arange(max_cells_interval[0], max_cells_interval[1] + 1)
+    cells_range = np.arange(max_cells_interval[0], max_cells_interval[1] + 1, 1)
     ao_ratio_range = np.arange(ao_ratio_interval[0], ao_ratio_interval[1] + 0.1, 0.1)
-    pHi_range = np.arange(pHi_interval[0],pHi_interval[1] + 0.05, 0.05)
+    pHi_range = np.arange(pHi_interval[0], pHi_interval[1] + 0.05, 0.05)
 
     for n_cells in cells_range:
         for ao_ratio in ao_ratio_range:
