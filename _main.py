@@ -38,14 +38,8 @@ def main(projects: list[Project]):
         for condition in project.approved_conditions:
 
             condition.cost = calculate_cost(condition, project.extractant, project.solvent)
-            project.pivot_table.approveds.highest_cost = max(project.pivot_table.approveds.highest_cost, condition.cost)
-            project.pivot_table.approveds.lowest_cost = min(project.pivot_table.approveds.lowest_cost, condition.cost)
-
             condition.extractant = project.extractant.name
             condition.extractant_concentration = project.extractant.volumetric_concentration
-
-        project.pivot_table.approveds.average_cost = mean(condition.cost for condition in project.approved_conditions)
-        project.pivot_table.approveds.cost_median = median(condition.cost for condition in project.approved_conditions)
 
         # Define best solution
         project.approved_conditions.sort(key=lambda condition: condition.cost)

@@ -36,36 +36,8 @@ class Condition():
         self.moles_of_ree_product_at_raffinate: Scalar = Q(moles_of_ree_product_at_raffinate, 'mol/L')
         self.pH_at_raffinate: Scalar = Q(pH_at_raffinate)
 
-
-class Approveds():
-
-    average_separation_factor: Number = 0
-    average_recovery: Number = 0
-    average_cost: Scalar = Q(0.0, 'usd')
-
-    separation_factor_median: Number = 0
-    recovery_median: float = 0
-    cost_median: Scalar = Q(0.0, 'usd')
-
-    highest_average_separation_factor: Number = -inf
-    lowest_average_separation_factor: Number = inf
-    highest_recovery: float = -inf
-    lowest_recovery: float = inf
-    highest_purity: float = -inf
-    lowest_cost: Scalar = Q(inf, 'usd')
-    highest_cost: Scalar = Q(-inf, 'usd')
-
-
-class PivotTable():
-
-    number_of_tests: int = 0
-    total_of_approveds: int = 0
-    approveds = Approveds()
-
-
 class Project():
 
-    pivot_table = PivotTable()
     approved_conditions = list[Condition]
 
     def __init__(self, rees, extractant, cut, distribution_ratio_model, max_cells_interval, pHi_interval,

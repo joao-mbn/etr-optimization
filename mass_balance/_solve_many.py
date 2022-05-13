@@ -1,4 +1,3 @@
-from statistics import mean, median
 from typing import Callable
 
 import numpy as np
@@ -14,7 +13,7 @@ from mass_balance._solver import solver
 
 def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: list[Ree], proton: Proton,
                max_cells_interval: tuple[int, int], pHi_interval: tuple[Number, Number], ao_ratio_interval: tuple[Number, Number],
-               required_raffinate_purity: float = 0.995) -> tuple[PivotTable, list[Condition]]:
+               required_raffinate_purity: float = 0.995) -> list[Condition]:
 
     """
     - Solves the systems of equations for all possible combinations of A/O ratio, Nº of cells and initial pH, \
@@ -25,7 +24,6 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
     """
 
     approveds: list[Condition] = []
-    pivot_table = PivotTable()
     lighter_fraction, heavier_fraction = resolve_cut(cut)
     rees_of_interest, contaminants = classify_rees(rees, lighter_fraction, heavier_fraction)
 
@@ -52,7 +50,6 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
                     mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate = calculate_total_reos(rees_of_interest)
                     pH_at_raffinate = pH_from_H(proton.cells_concentrations[-1])
 
-                    update_pivot_table(pivot_table, purity, recovery, separation_factor)
                     condition_summary = Condition(n_cells, ao_ratio, pHi, purity, recovery, separation_factor,
                                                   mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate,
                                                   moles_of_ree_product_at_feed, moles_of_ree_product_at_raffinate,
@@ -61,14 +58,7 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
 
                     clear_result(rees, proton)
 
-    pivot_table.number_of_tests = cells_range.__len__() * ao_ratio_range.__len__() * pHi_range.__len__()
-    pivot_table.total_of_approveds = approveds.__len__()
-    pivot_table.approveds.average_separation_factor = mean(condition.separation_factor for condition in approveds)
-    pivot_table.approveds.average_recovery = mean(condition.recovery for condition in approveds)
-    pivot_table.approveds.separation_factor_median = median(condition.separation_factor for condition in approveds)
-    pivot_table.approveds.recovery_median = median(condition.recovery for condition in approveds)
-
-    return pivot_table, approveds
+    return approveds
 
 def calculate_raffinate_purity(rees_of_interest: list[Ree], contaminants: list[Ree]) -> float:
     rees_of_interest_raffinate_concentration = sum(ree.cells_aq_concentrations[-1] for ree in rees_of_interest)
@@ -85,8 +75,8 @@ def calculate_average_border_separation_factor(upper_lighter, lower_heavier) -> 
     This calculates the average separation factor between the elements of the cut alone.
     Ex: PrNd/SmEu -> average separation factor Nd/Sm.
     """
-    avg_distribution_ratio_of_lighter = mean(upper_lighter.distribution_ratios)
-    avg_distribution_ratio_of_heavier = mean(lower_heavier.distribution_ratios)
+    avg_distribution_ratio_of_lighter = np.mean(upper_lighter.distribution_ratios)
+    avg_distribution_ratio_of_heavier = np.mean(lower_heavier.distribution_ratios)
     return separation_factor(avg_distribution_ratio_of_lighter, avg_distribution_ratio_of_heavier)
 
 def calculate_total_reos(rees_of_interest: list[Ree]) -> tuple[Number, Number]:
@@ -103,13 +93,6 @@ def calculate_total_reos(rees_of_interest: list[Ree]) -> tuple[Number, Number]:
                                        ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
                                    for ree in rees_of_interest)
     return mass_of_reo_at_feed, mass_of_reo_at_raffinate
-
-def update_pivot_table(pivot_table: PivotTable, purity: float, recovery: float, separation_factor: float):
-    pivot_table.approveds.highest_average_separation_factor = max(pivot_table.approveds.highest_average_separation_factor, separation_factor)
-    pivot_table.approveds.lowest_average_separation_factor = min(pivot_table.approveds.lowest_average_separation_factor, separation_factor)
-    pivot_table.approveds.highest_recovery = max(pivot_table.approveds.highest_recovery, recovery)
-    pivot_table.approveds.lowest_recovery = min(pivot_table.approveds.lowest_recovery, recovery)
-    pivot_table.approveds.highest_purity = max(pivot_table.approveds.highest_purity, purity)
 
 def clear_result(rees: list[Ree], proton: Proton):
     """
