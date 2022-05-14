@@ -21,6 +21,10 @@ from cost._energy import (calculate_required_agitator_power,
 def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_rate: Number,
                    extractant: Extractant, solvent: Solvent, condition: Condition) -> tuple[Any, dict[str, Number], Number]:
 
+    """
+    - It assumes that the total volume of the phase is equal to the sum of the volume of its individual components, \
+        an ideal fluid.
+    """
     org_avg_density = weighted_average([extractant.density, solvent.density],
                                        [extractant.volumetric_concentration, solvent.volumetric_concentration])
 

@@ -21,13 +21,13 @@ def cost_relationship_curve(conditions: list[Condition] | None):
     ao_ratio_column = next(column for column in columns if 'ratio' in column)
     n_cells_column = next(column for column in columns if 'cell' in column)
 
-    cost = df[cost_column].values
+    dependent_variable = df[cost_column].values
     independent_variables = df[[n_cells_column, ao_ratio_column, phi_column]].values
 
     # Create a cubic model on polynomial regression
     independent_variables_ = PolynomialFeatures(degree = 3, include_bias = False).fit_transform(independent_variables)
     regression = LinearRegression()
-    regression.fit(independent_variables_, cost)
+    regression.fit(independent_variables_, dependent_variable)
     intercept, coefficients = regression.intercept_, regression.coef_
 
     # Generates layers of smooth curves using the model, on a valid area of investigation.
@@ -44,16 +44,21 @@ def cost_relationship_curve(conditions: list[Condition] | None):
         plot._facecolors2d = plot._facecolor3d
         plot._edgecolors2d = plot._edgecolor3d
 
+    # Plot the real points as a scatter plot
     ax.scatter(df[n_cells_column].values, df[ao_ratio_column].values, df[cost_column].values, color = 'r', s = 2)
 
     ax.set_xlabel('Nº Células')
     ax.set_ylabel('Razão A/O')
     ax.set_zlabel('Custo (USD)')
-    plt.legend(loc='lower center', bbox_to_anchor=(0.5, 1),
-               ncol=3, fancybox=True, shadow=True)
+    """
+    set a reference point where to put the legend box at halfway through the chart width and on top of its height,
+    starting from the chart's lower left corner, a legend box using this reference point as the lower center of it is created.
+    """
+    plt.legend(loc='lower center', bbox_to_anchor=(0.5, 1), ncol=3, fancybox=True, shadow=True)
     plt.show()
 
-def curves_model(intercept, coefficients, moving_independent_variables, fixed_independent_variable):
+def curves_model(intercept, coefficients, moving_independent_variables, fixed_independent_variable) -> float:
+
     x1, x2 = moving_independent_variables
     x3 = fixed_independent_variable
 
