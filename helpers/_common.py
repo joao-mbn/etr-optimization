@@ -109,7 +109,7 @@ def add_units_to_columns(data: dict[str, Any]) -> dict[str, str]:
             unit = f'({value.units})'.replace(' ', '') if not value.units.dimensionless else ''
         else:
             unit = ''
-        columns_to_update[key] = f'{key} {unit}'.replace('_', ' ')
+        columns_to_update[key] = f'{key} {unit}'.replace('_', ' ').strip()
     return columns_to_update
 
 def remove_units_from_data(data: list[dict[str, Any]]) -> None:

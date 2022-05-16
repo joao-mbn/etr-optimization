@@ -41,7 +41,8 @@ class Project():
     approved_conditions = list[Condition]
 
     def __init__(self, rees, extractant, cut, distribution_ratio_model, max_cells_interval, pHi_interval,
-                 ao_ratio_interval = (0.5, 2), required_raffinate_purity = 0.995, solvent = None):
+                 ao_ratio_interval = (0.5, 2), required_raffinate_purity = 0.995, minimal_recovery = 0.15,
+                 solvent = None):
 
         self.rees: list[Ree] = rees_factory(rees)
         self.extractant: Extractant = extractant_factory(extractant)
@@ -53,3 +54,4 @@ class Project():
         self.pHi_interval: tuple[Number, Number] = pHi_interval
         self.ao_ratio_interval: tuple[Number, Number] = ao_ratio_interval
         self.required_raffinate_purity: float = required_raffinate_purity
+        self.minimal_recovery: float = minimal_recovery

@@ -1,7 +1,7 @@
 from cost._costs import calculate_cost
 from mass_balance._solve_many import solve_many
 from templates._classes import Proton
-from templates._models import Project
+from templates._models import Project, Condition
 from visualization._approveds_plot import cost_relationship_curve
 from visualization._approveds_table import approveds_table
 
@@ -19,6 +19,8 @@ def main(projects: list[Project]):
     - Provides data visualization.
     """
 
+    all_projects_approved_conditions: list[Condition] = []
+
     for project in projects:
 
         # Solve systems
@@ -31,6 +33,7 @@ def main(projects: list[Project]):
             project.pHi_interval,
             project.ao_ratio_interval,
             project.required_raffinate_purity,
+            project.minimal_recovery,
         )
         # Calculate cost
         for condition in project.approved_conditions:
@@ -39,13 +42,16 @@ def main(projects: list[Project]):
             condition.extractant = project.extractant.name
             condition.extractant_concentration = project.extractant.volumetric_concentration
 
-        # Define best solution
-        project.approved_conditions.sort(key=lambda condition: condition.cost)
+        all_projects_approved_conditions += project.approved_conditions
 
-        # Visualize data
-        cost_relationship_curve(project.approved_conditions)
-        approveds_table(project.approved_conditions)
+    # Define best solution
+    all_projects_approved_conditions.sort(key=lambda condition: condition.cost)
 
-        #print(project.approved_conditions[0].__dict__)
+    # Visualize data
+
+    # cost_relationship_curve(all_projects_approved_conditions)
+    approveds_table(all_projects_approved_conditions)
+
+    #print(project.approved_conditions[0].__dict__)
 
 

@@ -45,8 +45,8 @@ P507 = {
     'PKA': Q(4.10),
 }
 
-CYANEX_272 = {
-    'NAME': 'Cyanex 272',
+CYANEX_572 = {
+    'NAME': 'Cyanex 572',
     'PRICE': Q(208.5, 'usd/L'),
     'DENSITY': Q(0.93, 'kg/L'),
     'PURITY': Q(0.9),
@@ -55,5 +55,5 @@ CYANEX_272 = {
     'PKA': Q(6.37),
 }
 
-EXTRACTANTS = [D2EHPA, P507, CYANEX_272]
+EXTRACTANTS = [D2EHPA, P507, CYANEX_572]
 SOLVENTS = [ISOPARAFFIN]

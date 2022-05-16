@@ -13,7 +13,7 @@ from mass_balance._solver import solver
 
 def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: list[Ree], proton: Proton,
                max_cells_interval: tuple[int, int], pHi_interval: tuple[Number, Number], ao_ratio_interval: tuple[Number, Number],
-               required_raffinate_purity: float = 0.995) -> list[Condition]:
+               required_raffinate_purity: float = 0.995, minimal_recovery: float = 0.15) -> list[Condition]:
 
     """
     - Solves the systems of equations for all possible combinations of A/O ratio, Nº of cells and initial pH, \
@@ -29,7 +29,7 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
 
     cells_range = np.arange(max_cells_interval[0], max_cells_interval[1] + 1, 1)
     ao_ratio_range = np.arange(ao_ratio_interval[0], ao_ratio_interval[1] + 0.1, 0.1)
-    pHi_range = np.arange(pHi_interval[0], pHi_interval[1] + 0.05, 0.05)
+    pHi_range = np.arange(pHi_interval[0], pHi_interval[1] + 0.1, 0.1)
 
     for n_cells in cells_range:
         for ao_ratio in ao_ratio_range:
@@ -42,10 +42,10 @@ def solve_many(cut: str, distribution_ratio_model: Callable[..., Number], rees: 
                     continue
 
                 purity = calculate_raffinate_purity(rees_of_interest, contaminants)
-                if purity >= required_raffinate_purity:
+                recovery, moles_of_ree_product_at_feed, moles_of_ree_product_at_raffinate = calculate_raffinate_recovery(rees_of_interest)
 
-                    (recovery, moles_of_ree_product_at_feed,
-                     moles_of_ree_product_at_raffinate) = calculate_raffinate_recovery(rees_of_interest)
+                if purity >= required_raffinate_purity and recovery >= minimal_recovery:
+
                     separation_factor = calculate_average_border_separation_factor(rees_of_interest[-1], contaminants[0])
                     mass_of_reo_product_at_feed, mass_of_reo_product_at_raffinate = calculate_total_reos(rees_of_interest)
                     pH_at_raffinate = pH_from_H(proton.cells_concentrations[-1])
