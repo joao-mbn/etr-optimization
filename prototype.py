@@ -13,42 +13,14 @@ from visualization._isotherm_chart import isotherm_chart
 from visualization._approveds_plot import cost_relationship_curve
 from templates._models import Project
 from _main import main
-from projects import projects
+from projects.nd_sm_cut import projects
 
 main(projects)
 # cost_relationship_curve()
 
 # Limpar o código
 
-# pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
-# nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
-# sm_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.923, SM['OXIDE_WEIGHT']), SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['ATOMIC_WEIGHT'], SM['OXIDE_WEIGHT'])
-
-# pr = dict(symbol = 'Pr', aq_feed_concentration = pr_feed_aq_mols_atom, model_coefficients = dict(a = 0.4026, b = -1.5661) )
-# nd = dict(symbol = 'Nd', aq_feed_concentration = nd_feed_aq_mols_atom, model_coefficients = dict(a = 0.8569, b = -1.9035) )
-# sm = dict(symbol = 'Sm', aq_feed_concentration = sm_feed_aq_mols_atom, model_coefficients = dict(a = 1.1924, b = -1.2654) )
-
 # p507 = dict(name='P507', concentration=0.1)
-
-# cut = 'Nd/Sm'
-# distribution_ratio_model = logD_x_pH
-# max_cells_interval = (2, 10)
-# pHi_interval = (1, 2)
-# ao_ratio_interval = (0.5, 2)
-# required_raffinate_purity = 0.995
-
-# project = Project(
-#     **dict(
-#         rees = [pr, nd, sm],
-#         extractant = p507,
-#         cut = cut,
-#         distribution_ratio_model = distribution_ratio_model,
-#         max_cells_interval = max_cells_interval,
-#         pHi_interval = pHi_interval,
-#         ao_ratio_interval = ao_ratio_interval,
-#         required_raffinate_purity = required_raffinate_purity,
-#     )
-# )
 
 # rees = rees_factory([pr, nd, sm])
 # rees.sort(key=lambda ree: ree.atom_molar_mass)
