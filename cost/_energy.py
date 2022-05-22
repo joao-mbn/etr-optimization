@@ -62,6 +62,8 @@ def calculate_required_agitator_power(flow_rate: Number, fluid_density: Number, 
 @ur.wraps(('rpm'), ('N m', 'kilowatt'))
 def calculate_rpm(motor_torque: Number, operating_power: Number) -> Number:
     """
+    @Deprecated - removed from calculations.
+
     This calculates the RPM of the agitator.
     While the pump allows you to set flow rate, which is given by the required output,
     rotation is necessary to specify the agitator and not given anywhere.

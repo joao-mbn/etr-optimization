@@ -15,7 +15,7 @@ def approveds_table(approveds: list[Condition]) -> None:
     highlights = df.describe(include='all')
 
     # Saves it to an excel file
-    writer = ExcelWriter('C:/Users/joao.batista/Desktop/aprovados.xlsx', engine='openpyxl')
+    writer = ExcelWriter('C:/Users/joao.batista/Desktop/My Repos/etr-optimization/aprovados.xlsx', engine='openpyxl')
     df.to_excel(writer, 'Condições Aprovadas')
     highlights.to_excel(writer, 'Highlights')
     writer.save()
