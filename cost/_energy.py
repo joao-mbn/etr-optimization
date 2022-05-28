@@ -1,15 +1,15 @@
-import math as m
-
 from helpers._common import area_of_circle
-from static_values._miscellaneous import ACCELERATION_OF_GRAVITY, TIME_REFERENCE
+from static_values._miscellaneous import (ACCELERATION_OF_GRAVITY,
+                                          TIME_REFERENCE)
 from templates._types import Number
 from templates._units import unit_registry as ur
 
-@ur.wraps(('kWh'), (None, None, None, None))
-def energy_consumption(n_cells: int, aq_pump_operating_power: Number,
-                       org_pump_operating_power: Number, agitator_operating_power: Number) -> Number:
 
-    return TIME_REFERENCE * (aq_pump_operating_power + org_pump_operating_power + agitator_operating_power * n_cells)
+@ur.wraps(('kWh'), (None, None, None, None))
+def calculate_energy_consumption(n_cells: int, aq_pump_operating_power: Number,
+                       org_pump_operating_power: Number, cell_operating_power: Number) -> Number:
+
+    return TIME_REFERENCE * (aq_pump_operating_power + org_pump_operating_power + cell_operating_power * n_cells)
 
 @ur.wraps(('kilowatt'), (None, None, None))
 def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Number:
@@ -58,23 +58,3 @@ def calculate_required_agitator_power(flow_rate: Number, fluid_density: Number, 
     head_to_add = head_loss
     power = head_to_add * flow_rate * fluid_density * ACCELERATION_OF_GRAVITY
     return power
-
-@ur.wraps(('rpm'), ('N m', 'kilowatt'))
-def calculate_rpm(motor_torque: Number, operating_power: Number) -> Number:
-    """
-    @Deprecated - removed from calculations.
-
-    This calculates the RPM of the agitator.
-    While the pump allows you to set flow rate, which is given by the required output,
-    rotation is necessary to specify the agitator and not given anywhere.
-
-    Using a torque x efficiency chart, operate on a RPM where torque would provide highest efficiency,
-    which diminishes operating power.
-
-    See reference for such a chart.
-
-    Reference:
-
-    https://simplemotor.com/calculations/
-    """
-    return operating_power * 2 * m.pi / motor_torque

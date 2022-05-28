@@ -41,7 +41,6 @@ def extractant_factory(wannabe_extractant: dict) -> Extractant:
         molecular_weight = extractant['MOLECULAR_WEIGHT'],
         purity = extractant['PURITY'],
         density = extractant['DENSITY'],
-        volatilization_rate = extractant['VOLATILIZATION_RATE'],
         pKa = extractant['PKA'],
     )
     return Extractant(**props)
@@ -55,6 +54,6 @@ def solvent_factory(wannabe_solvent: dict) -> Solvent:
         molecular_weight = solvent['MOLECULAR_WEIGHT'],
         purity = solvent['PURITY'],
         density = solvent['DENSITY'],
-        volatilization_rate = solvent['VOLATILIZATION_RATE'],
+        solubility_in_water = solvent['SOLUBILITY_IN_WATER'],
     )
     return Solvent(**props)

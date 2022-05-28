@@ -2,6 +2,7 @@ from helpers._common import atom_from_oxide, mol_from_g
 from mass_balance._distribution_ratio_models import logD_x_pH
 from static_values._rees import DYSPROSIUM as DY
 from static_values._rees import HOLMIUM as HO
+from static_values._substances import XENOTIME
 from templates._models import Project
 
 cut = 'Dy/Ho'
@@ -11,6 +12,7 @@ pHi_interval = (0, 1)
 ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
 minimal_recovery = 0.15
+mineral = XENOTIME
 
 dy_feed_aq_mols_atom = atom_from_oxide(mol_from_g(3.19, DY['OXIDE_WEIGHT']), DY['OXIDE_STOICHIOMETRIC_PROPORTION'], DY['ATOMIC_WEIGHT'], DY['OXIDE_WEIGHT'])
 ho_feed_aq_mols_atom = atom_from_oxide(mol_from_g(6.71, HO['OXIDE_WEIGHT']), HO['OXIDE_STOICHIOMETRIC_PROPORTION'], HO['ATOMIC_WEIGHT'], HO['OXIDE_WEIGHT'])
@@ -29,6 +31,7 @@ project_p507_026 = Project(
         ao_ratio_interval = ao_ratio_interval,
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
+        mineral = mineral,
     )
 )
 

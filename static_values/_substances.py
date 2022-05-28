@@ -18,7 +18,6 @@ ISOPARAFFIN = {
     'PRICE': Q(1.54, 'usd/L'),
     'PURITY': Q(0.98),
     'DENSITY': Q(0.78, 'kg/L'),
-    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'), # TODO
     'MOLECULAR_WEIGHT': Q(180, 'g/mol'),
     'SOLUBILITY_IN_WATER': Q(0.007, 'g/L'),
 }
@@ -28,7 +27,6 @@ D2EHPA = {
     'PRICE': Q(15.52, 'usd/L'),
     'DENSITY': Q(0.97, 'kg/L'),
     'PURITY': Q(0.95),
-    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'), # TODO
     'MOLECULAR_WEIGHT': Q(322.43, 'g/mol'),
     'PKA': Q(3.32),
 }
@@ -38,7 +36,6 @@ P507 = {
     'PRICE': Q(80.75, 'usd/L'),
     'DENSITY': Q(0.95, 'kg/L'),
     'PURITY': Q(0.95),
-    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'), # TODO
     'MOLECULAR_WEIGHT': Q(306.4, 'g/mol'),
     'PKA': Q(4.10),
 }
@@ -55,6 +52,18 @@ CYANEX_572 = {
     'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'), # TODO
     'MOLECULAR_WEIGHT': Q(310, 'g/mol'),
     'PKA': Q(5),
+}
+
+MONAZITE = {
+    'NAME': 'Monazite',
+    'PRICE': Q(1900, 'usd/ton'),
+    'REO_CONTENT': Q(0.55),
+}
+
+XENOTIME = {
+    'NAME': 'Xenotime',
+    'PRICE': Q(1900, 'usd/ton'), # Not really known
+    'REO_CONTENT': Q(0.616),
 }
 
 EXTRACTANTS = [D2EHPA, P507, CYANEX_572]

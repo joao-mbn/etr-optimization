@@ -1,9 +1,9 @@
 from typing import Callable
 
-from pint import Quantity
-
 from helpers._utils import default_if_none
 from numpy import inf
+from pint import Quantity
+from static_values._substances import MONAZITE
 
 from templates._classes import Extractant, Ree, Solvent
 from templates._factories import (extractant_factory, rees_factory,
@@ -42,7 +42,7 @@ class Project():
 
     def __init__(self, rees, extractant, cut, distribution_ratio_model, max_cells_interval, pHi_interval,
                  ao_ratio_interval = (0.5, 2), required_raffinate_purity = 0.995, minimal_recovery = 0.15,
-                 solvent = None):
+                 solvent = None, mineral = MONAZITE):
 
         self.rees: list[Ree] = rees_factory(rees)
         self.extractant: Extractant = extractant_factory(extractant)
@@ -55,3 +55,4 @@ class Project():
         self.ao_ratio_interval: tuple[Number, Number] = ao_ratio_interval
         self.required_raffinate_purity: float = required_raffinate_purity
         self.minimal_recovery: float = minimal_recovery
+        self.mineral: dict[str, str | Scalar] = mineral

@@ -34,8 +34,8 @@ def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extrac
 
 # ------------------ Flows
 
-@ur.wraps(('L/min', 'L/min', 'L/min'), (None, None))
-def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, Scalar, Scalar]:
+@ur.wraps(('L/min', 'L/min', 'L/min', 'L/min'), (None, None))
+def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, Scalar, Scalar, Scalar]:
     """
     Reference flow ensures that the fastest flow should still
     have a residence time great enough to meet equilibrium.
@@ -43,7 +43,8 @@ def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, 
     aq_flow_rate = total_aq_volume / TIME_REFERENCE
     org_flow_rate = aq_flow_rate / ao_ratio
     reference_flow = max(aq_flow_rate, org_flow_rate)
-    return aq_flow_rate, org_flow_rate, reference_flow
+    total_flow_rate = aq_flow_rate + org_flow_rate
+    return aq_flow_rate, org_flow_rate, reference_flow, total_flow_rate
 
 # ------------------ Material Losses
 
@@ -71,13 +72,13 @@ def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: 
                               condition: Condition, extractant: Extractant) -> Number:
     """
     - No method for estimation of drag loss and crude loss are yet implemented.
-    - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
     - It assumes that only the free ion of the extractant is capable of migrating to aqueous phase.
     - It assumes that acid-base equilibrium is the only equilibrium that would lead to formation of the extractant free ion.
     - It assumes that acid-base equilibrium of the extractant is instantaneous.
     """
     drag_loss = Q('0 kg')
     crude_loss = Q('0 kg')
+    volatilization_loss = Q('0 kg')
 
     free_extractant_on_last_cell = (extractant.molar_concentration
                                     - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
@@ -87,27 +88,23 @@ def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: 
     ionized_extractants = Ka_from_pKa(extractant.pKa) * free_extractant_on_last_cell / H_from_pH(condition.pH_at_raffinate)
     dissociation_loss = ionized_extractants * total_org_volume * extractant.molecular_weight
 
-    volatilization_loss = (area_of_rectangle(settler['HEIGHT'], settler['WIDTH'])
+    # - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
+    """ volatilization_loss = (area_of_rectangle(settler['HEIGHT'], settler['WIDTH'])
                            * extractant.volatilization_rate
                            * extractant.volumetric_concentration
-                           * settling_time)
+                           * settling_time) """
 
     return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) / extractant.density
 
-@ur.wraps(('L'), (None, None, None, None))
-def calculate_solvent_loss(settling_time: Number, settler, total_org_volume: Number, solvent: Solvent) -> Number:
+@ur.wraps(('L'), (None, None))
+def calculate_solvent_loss(total_aq_volume: Number, solvent: Solvent) -> Number:
     """
-    - No method for estimation of drag loss and crude loss are yet implemented.
-    - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
-    - It assumes that, due to the nature of the solvents, the solvent does not dissociate in water in any meaningful quantity.
+    - No method for estimation of drag loss, crude loss and volatilization loss are yet implemented.
     """
     drag_loss = Q('0 kg')
     crude_loss = Q('0 kg')
     dissociation_loss = Q('0 kg')
-    volatilization_loss = (area_of_rectangle(settler['HEIGHT'], settler['WIDTH'])
-                           * solvent.volatilization_rate
-                           * solvent.volumetric_concentration
-                           * settling_time)
+    volatilization_loss = solvent.solubility_in_water * total_aq_volume
 
     return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) / solvent.density
 

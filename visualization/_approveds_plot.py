@@ -13,7 +13,7 @@ def cost_relationship_curve(conditions: list[Condition] = None):
     if conditions:
         df = transform_conditions_to_dataframe(conditions)
     else:
-        df = pd.read_excel('C:/Users/joao.batista/Desktop/aprovados.xlsx', 'Condições Aprovadas')
+        df = pd.read_excel('C:/Users/joao.batista/Desktop/My Repos/etr-optimization/aprovados.xlsx', 'Condições Aprovadas')
 
     add_extractants_dummy_columns(df)
 
