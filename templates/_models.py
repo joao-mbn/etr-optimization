@@ -11,6 +11,8 @@ from templates._factories import (extractant_factory, rees_factory,
 from templates._types import Number, Scalar
 from templates._units import quantity as Q
 
+from mass_balance._distribution_ratio_models import logD_x_pH
+
 # Classes make physical sense, where models do not.
 
 class Condition():
@@ -40,7 +42,7 @@ class Project():
 
     approved_conditions = list[Condition]
 
-    def __init__(self, rees, extractant, cut, distribution_ratio_model, max_cells_interval, pHi_interval,
+    def __init__(self, rees, extractant, cut, max_cells_interval, pHi_interval, distribution_ratio_model = logD_x_pH,
                  ao_ratio_interval = (0.5, 2), required_raffinate_purity = 0.995, minimal_recovery = 0.15,
                  solvent = None, mineral = MONAZITE):
 

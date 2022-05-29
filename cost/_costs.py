@@ -1,6 +1,7 @@
 from functools import reduce
 
 from static_values._miscellaneous import (ENERGY_COST, MARGIN_OF_SAFETY,
+                                          NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
                                           NUMBER_OF_OPERATORS, OPERATOR_COST,
                                           TIME_REFERENCE)
 from static_values._substances import HCL
@@ -44,7 +45,7 @@ def calculate_capital_cost(equipments, total_pipe_length: Number, n_cells: int, 
                             [calculate_and_conform_pounderal_price(x.volume, x.price, x.density) for x in (extractant, solvent)])
 
     equipments_cost = reduce(lambda x, y: x + y,
-                             [equipment['PRICE'] * n_cells if key in ('cell', 'agitator')
+                             [equipment['PRICE'] * (n_cells + NUMBER_OF_CELLS_IN_STRIPPING_SECTION) if key in ('cell')
                               else equipment['PRICE_PER_LENGTH'] * total_pipe_length if key in ('pipe')
                               else equipment['PRICE']
                               for key, equipment in equipments.items()])
@@ -59,7 +60,7 @@ def calculate_operating_cost(cell, reference_flow: Number, total_aq_volume: Numb
     settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
         cell['MIXER'], cell['SETTLER'], reference_flow, condition)
 
-    volume_of_lost_acid = calculate_acid_loss(total_aq_volume, total_org_volume, condition.pHi)
+    volume_of_lost_acid = calculate_acid_loss(total_aq_volume, condition.ao_ratio, condition.pHi)
     volume_of_lost_extractant = calculate_extractant_loss(settling_time, cell['SETTLER'], total_org_volume, condition, extractant)
     volume_of_lost_solvent = calculate_solvent_loss(total_aq_volume, solvent)
 

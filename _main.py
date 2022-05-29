@@ -50,7 +50,7 @@ def main(projects: list[Project]):
     # Visualize data
 
     # cost_relationship_curve(all_projects_approved_conditions)
-    approveds_table(all_projects_approved_conditions)
+    # approveds_table(all_projects_approved_conditions)
 
     # print(project.approved_conditions[0].__dict__)
 

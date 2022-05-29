@@ -1,7 +1,7 @@
 from typing import Any
 
 import numpy as np
-from helpers._common import volume_of_parallelepiped
+from helpers._common import volume_of_mixer_settler
 from helpers._utils import value_or_default, weighted_average
 from static_values._equipments import (FLOW_CONTROLLERS, FLOW_SENSORS,
                                        MIXER_SETTLERS,
@@ -10,8 +10,9 @@ from static_values._equipments import (FLOW_CONTROLLERS, FLOW_SENSORS,
 from static_values._miscellaneous import (
     AGITATOR_EFFICIENCY, DISTANCE_BETWEEN_AQ_TANK_AND_FEED_CELL,
     DISTANCE_BETWEEN_CELLS, DISTANCE_BETWEEN_ORG_TANK_AND_RAFFINATE_CELL,
-    HEAD_LOSS_BETWEEN_CELLS, PHASE_SETTLING_TIME, PUMP_EFFICIENCY,
-    REE_SX_EQUILIBRIUM_TIME)
+    DISTANCE_BETWEEN_STRIPPING_SOLUTION_TANK_AND_STRIPPING_FEED_CELL,
+    HEAD_LOSS_BETWEEN_CELLS, NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
+    PHASE_SETTLING_TIME, PUMP_EFFICIENCY, REE_SX_EQUILIBRIUM_TIME)
 from static_values._substances import WATER
 from templates._classes import Extractant, Solvent
 from templates._models import Condition
@@ -36,28 +37,36 @@ def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_r
     pipe, total_pipe_length, pipe_diameter = get_adequate_pipe(condition.n_cells)
     aq_pump, aq_pump_operating_power = get_adequate_pump(aq_flow_rate, WATER['DENSITY'], pipe_diameter)
     org_pump, org_pump_operating_power = get_adequate_pump(org_flow_rate, org_avg_density, pipe_diameter)
+
+    # It assumes that the stripping occurs with A/O ratio 1, between stripping solution and organic phase.
+    stripping_solution_pump, stripping_solution_pump_operating_power = get_adequate_pump(org_flow_rate, WATER['DENSITY'], pipe_diameter)
+
     pH_sensor_transmitter = get_adequate_pH_sensor_transmitter()
-    aq_level_indicator, org_level_indicator = get_adequate_level_indicator(), get_adequate_level_indicator()
-    aq_level_controller = get_adequate_level_controller()
-    aq_tank, org_tank = get_adequate_tank(), get_adequate_tank()
+    aq_flow_indicator, org_flow_indicator = get_adequate_flow_indicator(), get_adequate_flow_indicator()
+    aq_flow_controller, concentrated_acid_flow_controller = get_adequate_flow_controller(), get_adequate_flow_controller()
+    aq_tank, org_tank, stripping_tank = get_adequate_tank(), get_adequate_tank(), get_adequate_tank()
 
     equipments = dict(
         cell=cell,
         aq_pump=aq_pump,
         org_pump=org_pump,
+        stripping_solution_pump=stripping_solution_pump,
         pipe=pipe,
         pH_sensor_transmitter=pH_sensor_transmitter,
-        aq_level_indicator=aq_level_indicator,
-        org_level_indicator=org_level_indicator,
-        aq_level_controller=aq_level_controller,
+        aq_flow_indicator=aq_flow_indicator,
+        org_flow_indicator=org_flow_indicator,
+        aq_flow_controller=aq_flow_controller,
+        concentrated_acid_flow_controller=concentrated_acid_flow_controller,
         aq_tank=aq_tank,
         org_tank=org_tank,
+        stripping_tank=stripping_tank,
     )
 
     operating_powers = dict(
         aq_pump_operating_power=aq_pump_operating_power,
         org_pump_operating_power=org_pump_operating_power,
-        cell_operating_power=cell_operating_power
+        cell_operating_power=cell_operating_power,
+        stripping_solution_pump_operating_power=stripping_solution_pump_operating_power,
     )
 
     return equipments, operating_powers, total_pipe_length
@@ -73,16 +82,7 @@ def get_adequate_mixer_settler(total_flow_rate: Number, reference_flow_rate: Num
     for cell in MIXER_SETTLERS:
 
         mixer, settler = cell['MIXER'], cell['SETTLER']
-        mixer_volume = value_or_default(mixer, 'VOLUME',
-                                        volume_of_parallelepiped(
-                                            value_or_default(mixer, 'HEIGHT', 0),
-                                            value_or_default(mixer, 'WIDTH', 0),
-                                            value_or_default(mixer, 'DEPTH', 0)))
-        settler_volume = value_or_default(settler, 'VOLUME',
-                                          volume_of_parallelepiped(
-                                              value_or_default(settler, 'HEIGHT', 0),
-                                              value_or_default(settler, 'WIDTH', 0),
-                                              value_or_default(settler, 'DEPTH', 0)))
+        mixer_volume, settler_volume = volume_of_mixer_settler(mixer, settler)
 
         recommended_flow = value_or_default(cell, 'RECOMMENDED_FLOW', Q(-np.inf, 'L/min'))
         agitator_powerful_enough = (value_or_default(cell, 'MAX_POWER', Q(-np.inf, 'W')) >= operating_power or
@@ -142,7 +142,8 @@ def get_adequate_pipe(n_cells: int):
     """
     pipe_length_aq = n_cells * DISTANCE_BETWEEN_CELLS + DISTANCE_BETWEEN_AQ_TANK_AND_FEED_CELL
     pipe_length_org = n_cells * DISTANCE_BETWEEN_CELLS + DISTANCE_BETWEEN_ORG_TANK_AND_RAFFINATE_CELL
-    total_pipe_length = pipe_length_aq + pipe_length_org
+    pipe_length_stripping = NUMBER_OF_CELLS_IN_STRIPPING_SECTION * DISTANCE_BETWEEN_CELLS + DISTANCE_BETWEEN_STRIPPING_SOLUTION_TANK_AND_STRIPPING_FEED_CELL
+    total_pipe_length = pipe_length_aq + pipe_length_org + pipe_length_stripping
     PIPES.sort(key=lambda pipe: pipe['DIAMETER_RANGE'][1], reverse=True)
     best_pipe = PIPES[0]
     return best_pipe, total_pipe_length, best_pipe['DIAMETER_RANGE'][1]
@@ -154,14 +155,14 @@ def get_adequate_pH_sensor_transmitter():
     PH_SENSOR_AND_TRANSMITTER.sort(key=lambda sensor: sensor['PRICE'])
     return PH_SENSOR_AND_TRANSMITTER[0]
 
-def get_adequate_level_indicator():
+def get_adequate_flow_indicator():
     """
     There isn't yet a criteria for level indicator selection.
     """
     FLOW_SENSORS.sort(key=lambda sensor: sensor['PRICE'])
     return FLOW_SENSORS[0]
 
-def get_adequate_level_controller():
+def get_adequate_flow_controller():
     """
     There isn't yet a criteria for level controller selection.
     """

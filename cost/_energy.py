@@ -1,15 +1,20 @@
 from helpers._common import area_of_circle
 from static_values._miscellaneous import (ACCELERATION_OF_GRAVITY,
+                                          NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
                                           TIME_REFERENCE)
 from templates._types import Number
 from templates._units import unit_registry as ur
 
 
-@ur.wraps(('kWh'), (None, None, None, None))
+@ur.wraps(('kWh'), (None, None, None, None, None))
 def calculate_energy_consumption(n_cells: int, aq_pump_operating_power: Number,
-                       org_pump_operating_power: Number, cell_operating_power: Number) -> Number:
+                                 org_pump_operating_power: Number, cell_operating_power: Number,
+                                 stripping_solution_pump_operating_power: Number) -> Number:
 
-    return TIME_REFERENCE * (aq_pump_operating_power + org_pump_operating_power + cell_operating_power * n_cells)
+    return TIME_REFERENCE * (aq_pump_operating_power
+                             + org_pump_operating_power
+                             + stripping_solution_pump_operating_power
+                             + cell_operating_power * (n_cells + NUMBER_OF_CELLS_IN_STRIPPING_SECTION))
 
 @ur.wraps(('kilowatt'), (None, None, None))
 def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Number:

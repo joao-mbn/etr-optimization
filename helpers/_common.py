@@ -9,7 +9,7 @@ from templates._classes import Ree
 from templates._models import Condition
 from templates._types import Number, Vector
 
-from helpers._utils import is_residue
+from helpers._utils import is_residue, value_or_default
 
 Rees: TypeAlias = list[Ree]
 
@@ -54,6 +54,18 @@ def area_of_circle(diameter: Number, radius: Number | None = None) -> Number:
 
 def volume_of_parallelepiped(height: Number, width: Number, depth: Number) -> Number:
     return height * width * depth
+
+def volume_of_mixer_settler(mixer, settler):
+    mixer_volume = value_or_default(mixer, 'VOLUME',
+                                    volume_of_parallelepiped(value_or_default(mixer, 'HEIGHT', 0),
+                                                             value_or_default(mixer, 'WIDTH', 0),
+                                                             value_or_default(mixer, 'DEPTH', 0)))
+    settler_volume = value_or_default(settler, 'VOLUME',
+                                      volume_of_parallelepiped(value_or_default(settler, 'HEIGHT', 0),
+                                                               value_or_default(settler, 'WIDTH', 0),
+                                                               value_or_default(settler, 'DEPTH', 0)))
+
+    return mixer_volume, settler_volume
 
 # ----------------- Indicators Calculation
 

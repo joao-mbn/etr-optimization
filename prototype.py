@@ -15,8 +15,8 @@ from templates._models import Project
 from _main import main
 from projects.nd_sm_cut import projects
 
-# main(projects)
-cost_relationship_curve()
+main(projects)
+# cost_relationship_curve()
 
 # Limpar o código
 
