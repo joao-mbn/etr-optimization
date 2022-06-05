@@ -14,6 +14,7 @@ ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
 minimal_recovery = 0.15
 mineral = MONAZITE
+reos_of_interest_mineral_content = sum([mineral['REOS_DISTRIBUTION'][reo] for reo in ['Pr', 'Nd']])
 
 pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
 nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
@@ -35,6 +36,7 @@ project_d2ehpa_006 = Project(
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
         mineral = mineral,
+        reos_of_interest_mineral_content = reos_of_interest_mineral_content,
     )
 )
 
@@ -54,6 +56,7 @@ project_d2ehpa_010 = Project(
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
         mineral = mineral,
+        reos_of_interest_mineral_content = reos_of_interest_mineral_content,
     )
 )
 
@@ -73,6 +76,7 @@ project_p507_006 = Project(
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
         mineral = mineral,
+        reos_of_interest_mineral_content = reos_of_interest_mineral_content,
     )
 )
 
@@ -92,6 +96,7 @@ project_p507_010 = Project(
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
         mineral = mineral,
+        reos_of_interest_mineral_content = reos_of_interest_mineral_content,
     )
 )
 
@@ -111,6 +116,7 @@ project_cyanex572_010 = Project(
         required_raffinate_purity = required_raffinate_purity,
         minimal_recovery = minimal_recovery,
         mineral = mineral,
+        reos_of_interest_mineral_content = reos_of_interest_mineral_content,
     )
 )
 

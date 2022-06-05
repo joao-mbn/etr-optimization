@@ -38,7 +38,7 @@ def main(projects: list[Project]):
         # Calculate cost
         for condition in project.approved_conditions:
 
-            condition.cost = calculate_cost(condition, project.extractant, project.solvent, project.mineral)
+            condition.cost = calculate_cost(condition, project)
             condition.extractant = project.extractant.name
             condition.extractant_concentration = project.extractant.volumetric_concentration
 
@@ -50,7 +50,7 @@ def main(projects: list[Project]):
     # Visualize data
 
     # cost_relationship_curve(all_projects_approved_conditions)
-    # approveds_table(all_projects_approved_conditions)
+    approveds_table(all_projects_approved_conditions)
 
     # print(project.approved_conditions[0].__dict__)
 

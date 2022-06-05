@@ -1,6 +1,6 @@
-from helpers._common import (H_from_pH, Ka_from_pKa,
-                             volume_of_mixer_settler)
+from helpers._common import H_from_pH, Ka_from_pKa, volume_of_mixer_settler
 from static_values._miscellaneous import (
+    AO_RATIO_IN_STRIPPING_SECTION, NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
     STRIPPING_SOLUTION_ACID_CONCENTRATION, TIME_REFERENCE, TOTAL_PRODUCTION)
 from static_values._rees import REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
 from static_values._substances import HCL
@@ -21,7 +21,7 @@ def calculate_total_aqueous_volume(condition: Condition) -> Scalar:
 def calculate_total_organic_volume(cell, ao_ratio: Scalar, n_cells: int) -> Scalar:
     mixer, settler = cell['MIXER'], cell['SETTLER']
     mixer_volume, settler_volume = volume_of_mixer_settler(mixer, settler)
-    total_org_volume = (mixer_volume + settler_volume) * n_cells / ao_ratio
+    total_org_volume = (mixer_volume + settler_volume) * (n_cells / ao_ratio + NUMBER_OF_CELLS_IN_STRIPPING_SECTION / AO_RATIO_IN_STRIPPING_SECTION)
     return total_org_volume
 
 @ur.wraps(('L', 'L'), (None, None))
@@ -46,8 +46,8 @@ def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, 
 
 # ------------------ Material Losses
 
-@ur.wraps(('min', 'kg'), (None, None, None, None))
-def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, condition: Condition) ->  tuple[Number, Number]:
+@ur.wraps(('min', 'kg'), (None, None, None, None, None))
+def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, aq_flow_rate, condition: Condition) ->  tuple[Number, Number]:
     """
     It assumes that both ree in the raffinate and organic will be lost until permanent state.
     """
@@ -55,16 +55,16 @@ def calculate_wasted_ree_until_permanent_state(mixer, settler, reference_flow, c
     actual_mixing_time = mixer_volume / reference_flow
     actual_settling_time = settler_volume / reference_flow
     time_until_permanent_state = (actual_mixing_time + actual_settling_time) * condition.n_cells
-    wasted_ree = condition.mass_of_reo_product_at_feed * time_until_permanent_state * reference_flow
+    wasted_ree = condition.mass_of_reo_product_at_feed * aq_flow_rate * time_until_permanent_state
     return actual_settling_time, wasted_ree
 
 @ur.wraps(('kg'), (None, None, None))
 def calculate_ree_loss(wasted_ree_until_permanent_state: Number, total_aq_volume: Number, condition: Condition) -> Number:
     """
-    It assumes that all ree in the loaded organic will be lost.
+    It assumes that all ree in the loaded organic won't be recovered/recycled.
     """
-    loss_on_loaded_organic = condition.mass_of_reo_product_at_feed * total_aq_volume * (1 - condition.recovery)
-    return loss_on_loaded_organic + wasted_ree_until_permanent_state
+    loss_on_operation = condition.mass_of_reo_product_at_feed * total_aq_volume
+    return loss_on_operation + wasted_ree_until_permanent_state
 
 @ur.wraps(('L'), (None, None, None, None, None))
 def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: Number,
@@ -110,14 +110,15 @@ def calculate_solvent_loss(total_aq_volume: Number, solvent: Solvent) -> Number:
 @ur.wraps(('L'), (None, None, None))
 def calculate_acid_loss(total_aq_volume: Number, ao_ratio: Number, pHi: Number) -> Number:
     """
-    It assumes that the stripping occurs with A/O ratio 1, between stripping solution and organic phase.
     It assumes that the stripping solution is enough to clear organic phase from REEs.
     It assumes that the acid and the rees are herewith lost.
 
-    Hence, the stripping volume equals the organic phase volume times the number of times it circulates. Therefore,
-        the stripping solution volume equals organic flow rate times the time reference or
-        the total aqueous volume divided by A/O ratio.
+    Hence, the stripping volume equals the organic phase volume times the number of times it circulates
+    times the A/O ratio between stripping solution and organic phase.
+
+    The total volume of organic that passes through the stripping section equals organic flow rate times the time reference
+    or the total aqueous volume divided by A/O ratio.
     """
     acid_to_pHi = (total_aq_volume * Q(H_from_pH(pHi), 'mol/L') / HCL['MOLAR_CONCENTRATION'])
-    acid_to_stripping = (total_aq_volume / ao_ratio) * STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION']
+    acid_to_stripping = (total_aq_volume / ao_ratio) * AO_RATIO_IN_STRIPPING_SECTION * STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION']
     return acid_to_pHi + acid_to_stripping

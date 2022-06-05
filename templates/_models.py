@@ -44,7 +44,7 @@ class Project():
 
     def __init__(self, rees, extractant, cut, max_cells_interval, pHi_interval, distribution_ratio_model = logD_x_pH,
                  ao_ratio_interval = (0.5, 2), required_raffinate_purity = 0.995, minimal_recovery = 0.15,
-                 solvent = None, mineral = MONAZITE):
+                 solvent = None, mineral = MONAZITE, reos_of_interest_mineral_content = 1):
 
         self.rees: list[Ree] = rees_factory(rees)
         self.extractant: Extractant = extractant_factory(extractant)
@@ -58,3 +58,4 @@ class Project():
         self.required_raffinate_purity: float = required_raffinate_purity
         self.minimal_recovery: float = minimal_recovery
         self.mineral: dict[str, str | Scalar] = mineral
+        self.reos_of_interest_mineral_content: float = reos_of_interest_mineral_content

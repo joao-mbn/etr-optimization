@@ -54,16 +54,52 @@ CYANEX_572 = {
     'PKA': Q(5),
 }
 
-MONAZITE = {
+MONAZITE = { # From Araxá's mine
     'NAME': 'Monazite',
     'PRICE': Q(1900, 'usd/ton'),
     'REO_CONTENT': Q(0.55),
+    'REOS_DISTRIBUTION': {
+        'Sc': Q(0.0036),
+        'Y':  Q(0.0124),
+        'La': Q(0.2350),
+        'Ce': Q(0.4920),
+        'Pr': Q(0.0416),
+        'Nd': Q(0.1637),
+        'Sm': Q(0.0249),
+        'Eu': Q(0.0045),
+        'Gd': Q(0.0128),
+        'Tb': Q(0.0020),
+        'Dy': Q(0.0035),
+        'Ho': Q(0.0000),
+        'Er': Q(0.0015),
+        'Tm': Q(0.0013),
+        'Yb': Q(0.0006),
+        'Lu': Q(0.0005),
+    }
 }
 
-XENOTIME = {
+XENOTIME = { # From Pitinga's mine
     'NAME': 'Xenotime',
     'PRICE': Q(1900, 'usd/ton'), # Not really known
     'REO_CONTENT': Q(0.616),
+    'REOS_DISTRIBUTION': {
+        'Sc': Q(0.0007),
+        'Y':  Q(0.4538),
+        'La': Q(0.0072),
+        'Ce': Q(0.0268),
+        'Pr': Q(0.0065),
+        'Nd': Q(0.0166),
+        'Sm': Q(0.0124),
+        'Eu': Q(0.0000),
+        'Gd': Q(0.0217),
+        'Tb': Q(0.0186),
+        'Dy': Q(0.1071),
+        'Ho': Q(0.0287),
+        'Er': Q(0.1149),
+        'Tm': Q(0.0216),
+        'Yb': Q(0.1423),
+        'Lu': Q(0.0192),
+    }
 }
 
 EXTRACTANTS = [D2EHPA, P507, CYANEX_572]
