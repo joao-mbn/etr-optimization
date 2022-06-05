@@ -1,8 +1,9 @@
 from templates._units import quantity as Q
 
-TIME_REFERENCE = Q(10, 'year')
+TIME_REFERENCE = Q(1, 'year')
 YEARLY_PRODUCTION = Q(10, 'ton/year')
 TOTAL_PRODUCTION = TIME_REFERENCE * YEARLY_PRODUCTION
+INTEREST_RATE_ON_CAPITAL = Q(0.1, 'year^-1')
 
 # Considering approximations and values not considered.
 # e.g. FOB to CIF, price of water, stage efficiency, extra energy from headlosses, equipment for stripping and so on.

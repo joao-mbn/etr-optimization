@@ -78,7 +78,7 @@ def get_adequate_mixer_settler(total_flow_rate: Number, reference_flow_rate: Num
     required_power = mixer_settler_required_power(aq_flow_rate, org_flow_rate, org_avg_density, ao_ratio)
     operating_power = required_power / AGITATOR_EFFICIENCY
 
-    adequate_cells: list[Any] = []
+    adequate_cells: list[dict[str, Any]] = []
     for cell in MIXER_SETTLERS:
 
         mixer, settler = cell['MIXER'], cell['SETTLER']

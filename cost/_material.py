@@ -1,6 +1,5 @@
 from helpers._common import (H_from_pH, Ka_from_pKa,
                              volume_of_mixer_settler)
-from helpers._utils import value_or_default
 from static_values._miscellaneous import (
     STRIPPING_SOLUTION_ACID_CONCENTRATION, TIME_REFERENCE, TOTAL_PRODUCTION)
 from static_values._rees import REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION

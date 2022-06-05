@@ -7,9 +7,9 @@ from templates._models import Project
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (2, 2)
-pHi_interval = (2, 2)
-ao_ratio_interval = (2, 2)
+max_cells_interval = (2, 10)
+pHi_interval = (1.5, 2.5)
+ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
 minimal_recovery = 0.15
 mineral = MONAZITE

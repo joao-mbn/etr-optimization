@@ -1,6 +1,8 @@
 from functools import reduce
 
-from static_values._miscellaneous import (ENERGY_COST, MARGIN_OF_SAFETY,
+from static_values._miscellaneous import (ENERGY_COST,
+                                          INTEREST_RATE_ON_CAPITAL,
+                                          MARGIN_OF_SAFETY,
                                           NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
                                           NUMBER_OF_OPERATORS, OPERATOR_COST,
                                           TIME_REFERENCE)
@@ -50,7 +52,7 @@ def calculate_capital_cost(equipments, total_pipe_length: Number, n_cells: int, 
                               else equipment['PRICE']
                               for key, equipment in equipments.items()])
 
-    return inventory_cost + equipments_cost
+    return (inventory_cost + equipments_cost) * TIME_REFERENCE * INTEREST_RATE_ON_CAPITAL
 
 @ur.wraps(('usd'), (None, None, None, None, None, None, None, None, None))
 def calculate_operating_cost(cell, reference_flow: Number, total_aq_volume: Number, total_org_volume: Number,
