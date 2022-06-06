@@ -23,7 +23,7 @@ from cost._material import (calculate_acid_loss, calculate_extractant_loss,
                             calculate_wasted_ree_until_permanent_state)
 
 
-@ur.wraps(('usd'), (None, None, None, None))
+@ur.wraps(('usd'), (None, None))
 def calculate_cost(condition: Condition, project: Project) -> Number:
 
     extractant, solvent, mineral, reos_of_interest_mineral_content = project.extractant, project.solvent, project.mineral, project.reos_of_interest_mineral_content
@@ -57,7 +57,7 @@ def calculate_capital_cost(equipments, total_pipe_length: Number, n_cells: int, 
 
     return (inventory_cost + equipments_cost) * TIME_REFERENCE * INTEREST_RATE_ON_CAPITAL
 
-@ur.wraps(('usd'), (None, None, None, None, None, None, None, None, None))
+@ur.wraps(('usd'), (None, None, None, None, None, None, None, None, None, None, None))
 def calculate_operating_cost(cell, reference_flow: Number, aq_flow_rate: Number, total_aq_volume: Number, total_org_volume: Number,
                              condition: Condition, extractant: Extractant, solvent: Solvent,
                              operating_powers: dict[str, Number], mineral: dict[str, str | Scalar],

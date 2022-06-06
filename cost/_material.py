@@ -85,7 +85,7 @@ def calculate_extractant_loss(settling_time: Number, settler, total_aq_volume: N
     extraction_solubilization_loss = ionized_extractants_at_raffinate * total_aq_volume * extractant.molecular_weight
 
     free_extractant_at_stripping_raffinate = extractant.molar_concentration - ionized_extractants_at_raffinate
-    ionized_extractants_at_stripping_raffinate = Ka_from_pKa(extractant.pKa) / (Ka_from_pKa(extractant.pKa) + STRIPPING_SOLUTION_ACID_CONCENTRATION) * free_extractant_at_stripping_raffinate
+    ionized_extractants_at_stripping_raffinate = Q(Ka_from_pKa(extractant.pKa.magnitude), 'mol/L') / (Q(Ka_from_pKa(extractant.pKa.magnitude), 'mol/L') + STRIPPING_SOLUTION_ACID_CONCENTRATION) * free_extractant_at_stripping_raffinate
     stripping_solubilization_loss = ionized_extractants_at_stripping_raffinate * volume_of_stripping_section * extractant.molecular_weight
 
     solubilization_loss = extraction_solubilization_loss + stripping_solubilization_loss
