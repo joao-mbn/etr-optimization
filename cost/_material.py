@@ -66,26 +66,29 @@ def calculate_ree_loss(wasted_ree_until_permanent_state: Number, total_aq_volume
     loss_on_operation = condition.mass_of_reo_product_at_feed * total_aq_volume
     return loss_on_operation + wasted_ree_until_permanent_state
 
-@ur.wraps(('L'), (None, None, None, None, None))
-def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: Number,
-                              condition: Condition, extractant: Extractant) -> Number:
+@ur.wraps(('L'), (None, None, None, None, None, None))
+def calculate_extractant_loss(settling_time: Number, settler, total_aq_volume: Number,
+                              condition: Condition, extractant: Extractant, volume_of_stripping_section: Number) -> Number:
     """
     - No method for estimation of drag loss and crude loss are yet implemented.
     - It assumes that only the free ion of the extractant is capable of migrating to aqueous phase.
     - It assumes that acid-base equilibrium is the only equilibrium that would lead to formation of the extractant free ion.
     - It assumes that acid-base equilibrium of the extractant is instantaneous.
     """
-    drag_loss = Q('0 kg')
-    crude_loss = Q('0 kg')
+    entrainment_loss = Q('0 kg')
+    crud_loss = Q('0 kg')
     volatilization_loss = Q('0 kg')
 
-    free_extractant_on_last_cell = (extractant.molar_concentration
-                                    - REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
-                                    * condition.ao_ratio
-                                    * (condition.moles_of_ree_product_at_feed - condition.moles_of_ree_product_at_raffinate))
+    complexed_extractant_at_raffinate = REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION * condition.ao_ratio * (condition.moles_of_ree_product_at_feed - condition.moles_of_ree_product_at_raffinate)
+    free_extractant_at_raffinate = extractant.molar_concentration - complexed_extractant_at_raffinate
+    ionized_extractants_at_raffinate = Ka_from_pKa(extractant.pKa) / (Ka_from_pKa(extractant.pKa) + H_from_pH(condition.pH_at_raffinate)) * free_extractant_at_raffinate
+    extraction_solubilization_loss = ionized_extractants_at_raffinate * total_aq_volume * extractant.molecular_weight
 
-    ionized_extractants = Ka_from_pKa(extractant.pKa) * free_extractant_on_last_cell / H_from_pH(condition.pH_at_raffinate)
-    dissociation_loss = ionized_extractants * total_org_volume * extractant.molecular_weight
+    free_extractant_at_stripping_raffinate = extractant.molar_concentration - ionized_extractants_at_raffinate
+    ionized_extractants_at_stripping_raffinate = Ka_from_pKa(extractant.pKa) / (Ka_from_pKa(extractant.pKa) + STRIPPING_SOLUTION_ACID_CONCENTRATION) * free_extractant_at_stripping_raffinate
+    stripping_solubilization_loss = ionized_extractants_at_stripping_raffinate * volume_of_stripping_section * extractant.molecular_weight
+
+    solubilization_loss = extraction_solubilization_loss + stripping_solubilization_loss
 
     # - It assumes that volatilization occurs only at the settler, not at the tanks nor the mixer nor anywhere else.
     """ volatilization_loss = (area_of_rectangle(settler['HEIGHT'], settler['WIDTH'])
@@ -93,22 +96,22 @@ def calculate_extractant_loss(settling_time: Number, settler, total_org_volume: 
                            * extractant.volumetric_concentration
                            * settling_time) """
 
-    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) / extractant.density
+    return (entrainment_loss + crud_loss + solubilization_loss + volatilization_loss) / extractant.density
 
-@ur.wraps(('L'), (None, None))
-def calculate_solvent_loss(total_aq_volume: Number, solvent: Solvent) -> Number:
+@ur.wraps(('L'), (None, None, None))
+def calculate_solvent_loss(total_aq_volume: Number, solvent: Solvent, volume_of_stripping_section: Number) -> Number:
     """
     - No method for estimation of drag loss, crude loss and volatilization loss are yet implemented.
     """
-    drag_loss = Q('0 kg')
-    crude_loss = Q('0 kg')
-    dissociation_loss = Q('0 kg')
-    volatilization_loss = solvent.solubility_in_water * total_aq_volume
+    entrainment_loss = Q('0 kg')
+    crud_loss = Q('0 kg')
+    volatilization_loss = Q('0 kg')
+    solubilization_loss = solvent.solubility_in_water * (total_aq_volume + volume_of_stripping_section)
 
-    return (drag_loss + crude_loss + dissociation_loss + volatilization_loss) / solvent.density
+    return (entrainment_loss + crud_loss + solubilization_loss + volatilization_loss) / solvent.density
 
-@ur.wraps(('L'), (None, None, None))
-def calculate_acid_loss(total_aq_volume: Number, ao_ratio: Number, pHi: Number) -> Number:
+@ur.wraps(('L', 'L'), (None, None, None))
+def calculate_acid_loss(total_aq_volume: Number, ao_ratio: Number, pHi: Number) -> tuple[Number, Number]:
     """
     It assumes that the stripping solution is enough to clear organic phase from REEs.
     It assumes that the acid and the rees are herewith lost.
@@ -120,5 +123,8 @@ def calculate_acid_loss(total_aq_volume: Number, ao_ratio: Number, pHi: Number) 
     or the total aqueous volume divided by A/O ratio.
     """
     acid_to_pHi = (total_aq_volume * Q(H_from_pH(pHi), 'mol/L') / HCL['MOLAR_CONCENTRATION'])
-    acid_to_stripping = (total_aq_volume / ao_ratio) * AO_RATIO_IN_STRIPPING_SECTION * STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION']
-    return acid_to_pHi + acid_to_stripping
+
+    volume_of_stripping_section = total_aq_volume * (AO_RATIO_IN_STRIPPING_SECTION / ao_ratio)
+    acid_to_stripping = volume_of_stripping_section * (STRIPPING_SOLUTION_ACID_CONCENTRATION / HCL['MOLAR_CONCENTRATION'])
+
+    return acid_to_pHi + acid_to_stripping, volume_of_stripping_section

@@ -4,7 +4,8 @@ from static_values._miscellaneous import (ENERGY_COST,
                                           INTEREST_RATE_ON_CAPITAL,
                                           MARGIN_OF_SAFETY,
                                           NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
-                                          NUMBER_OF_OPERATORS, OPERATOR_COST,
+                                          NUMBER_OF_OPERATORS_PER_POSITION,
+                                          NUMBER_OF_POSITIONS, OPERATOR_COST,
                                           TIME_REFERENCE)
 from static_values._substances import HCL
 from templates._classes import Extractant, Solvent
@@ -65,9 +66,9 @@ def calculate_operating_cost(cell, reference_flow: Number, aq_flow_rate: Number,
     settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
         cell['MIXER'], cell['SETTLER'], reference_flow, aq_flow_rate, condition)
 
-    volume_of_lost_acid = calculate_acid_loss(total_aq_volume, condition.ao_ratio, condition.pHi)
-    volume_of_lost_extractant = calculate_extractant_loss(settling_time, cell['SETTLER'], total_org_volume, condition, extractant)
-    volume_of_lost_solvent = calculate_solvent_loss(total_aq_volume, solvent)
+    volume_of_lost_acid, volume_of_stripping_section = calculate_acid_loss(total_aq_volume, condition.ao_ratio, condition.pHi)
+    volume_of_lost_extractant = calculate_extractant_loss(settling_time, cell['SETTLER'], total_aq_volume, condition, extractant, volume_of_stripping_section)
+    volume_of_lost_solvent = calculate_solvent_loss(total_aq_volume, solvent, volume_of_stripping_section)
 
     ree_loss = calculate_ree_loss(wasted_ree_until_permanent_state, total_aq_volume, condition) * mineral['PRICE'] / mineral['REO_CONTENT'] / reos_of_interest_mineral_content
     acid_loss = calculate_and_conform_pounderal_price(volume_of_lost_acid, HCL['PRICE'], HCL['DENSITY'])
@@ -76,7 +77,7 @@ def calculate_operating_cost(cell, reference_flow: Number, aq_flow_rate: Number,
 
     energy_loss = calculate_energy_consumption(condition.n_cells, **operating_powers) * ENERGY_COST
 
-    operators_cost = OPERATOR_COST * NUMBER_OF_OPERATORS * TIME_REFERENCE
+    operators_cost = OPERATOR_COST * NUMBER_OF_OPERATORS_PER_POSITION * NUMBER_OF_POSITIONS * TIME_REFERENCE
 
     return ree_loss + extractant_loss + solvent_loss + acid_loss + energy_loss + operators_cost
 

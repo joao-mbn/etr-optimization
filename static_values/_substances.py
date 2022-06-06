@@ -49,7 +49,6 @@ CYANEX_572 = {
     'PRICE': Q(208.5, 'usd/L'),
     'DENSITY': Q(0.933, 'kg/L'),
     'PURITY': Q(1),
-    'VOLATILIZATION_RATE': Q(1, 'kg m^-2 s^-1'), # TODO
     'MOLECULAR_WEIGHT': Q(310, 'g/mol'),
     'PKA': Q(5),
 }

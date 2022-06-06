@@ -35,5 +35,8 @@ PUMP_EFFICIENCY = Q(0.7)
 NUMBER_OF_CELLS_IN_STRIPPING_SECTION = Q(3)
 AO_RATIO_IN_STRIPPING_SECTION = Q(1)
 STRIPPING_SOLUTION_ACID_CONCENTRATION = Q('3 mol/L')
+
 HEAD_LOSS_BETWEEN_CELLS = Q('0.1 m') # Guessed
-NUMBER_OF_OPERATORS = Q(6) # Conservative estimation of the number of operators necessary to cover 1 position at a 24/7 production.
+
+NUMBER_OF_OPERATORS_PER_POSITION = Q(6) # Conservative estimation of the number of operators necessary to cover 1 position at a 24/7 production.
+NUMBER_OF_POSITIONS = Q(1)
