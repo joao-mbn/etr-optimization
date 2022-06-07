@@ -37,14 +37,14 @@ def calculate_cost(condition: Condition, project: Project) -> Number:
     total_org_volume = calculate_total_organic_volume(equipments['cell'], condition.ao_ratio, condition.n_cells)
     extractant.volume, solvent.volume = calculate_org_phase_composition(total_org_volume, extractant)
 
-    capital_cost = calculate_capital_cost(equipments, total_pipe_length, condition.n_cells, extractant, solvent)
+    interest_on_capital = calculate_interest_on_capital(equipments, total_pipe_length, condition.n_cells, extractant, solvent)
     operating_cost = calculate_operating_cost(equipments['cell'], reference_flow, aq_flow_rate, total_aq_volume, total_org_volume, condition,
                                               extractant, solvent, operating_powers, mineral, reos_of_interest_mineral_content)
 
-    return (capital_cost + operating_cost) * MARGIN_OF_SAFETY
+    return (interest_on_capital + operating_cost) * MARGIN_OF_SAFETY
 
 @ur.wraps(('usd'), (None, None, None, None, None))
-def calculate_capital_cost(equipments, total_pipe_length: Number, n_cells: int, extractant: Extractant, solvent: Solvent) -> Number:
+def calculate_interest_on_capital(equipments, total_pipe_length: Number, n_cells: int, extractant: Extractant, solvent: Solvent) -> Number:
 
     inventory_cost = reduce(lambda x, y: x + y,
                             [calculate_and_conform_pounderal_price(x.volume, x.price, x.density) for x in (extractant, solvent)])
