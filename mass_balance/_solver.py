@@ -36,7 +36,7 @@ def create_system_of_equations(guesses, *args) -> Vector:
     unpack_values(guesses, n_cells, rees, proton)
 
     equations: Vector = []
-    charge_constant = m.fsum(ree.aq_feed_concentration * ree.valency for ree in rees)
+    charge_constant = proton.feed_concentration + m.fsum(ree.aq_feed_concentration * ree.valency for ree in rees)
 
     equations += create_cell_charge_balance_equations(charge_constant, n_cells, rees, proton)
     equations += create_distribution_ratios_equations(distribution_ratio_model, n_cells, rees, proton)
