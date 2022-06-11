@@ -50,12 +50,12 @@ def create_cell_mass_balance_equations(cell_number: int, n_cells: int, ao_ratio:
 
     equations: Vector = []
     for ree in rees:
-        if cell_number == 0:               # ree_aq_feed as known simplification
+        if cell_number == 0:               # Aqueous Feed is Known
             equation = \
                 ree.cells_aq_concentrations[cell_number] * (ree.distribution_ratios[cell_number] + ao_ratio) \
                 - ree.cells_aq_concentrations[cell_number + 1] * ree.distribution_ratios[cell_number + 1] \
                 - ree.aq_feed_concentration * ao_ratio
-        elif cell_number == n_cells - 1:   # ree_org_feed as known simplification
+        elif cell_number == n_cells - 1:   # Organic Feed is Known
             equation = \
                 ree.cells_aq_concentrations[cell_number] * (ree.distribution_ratios[cell_number] + ao_ratio) \
                 - ree.org_feed_concentration \

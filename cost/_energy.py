@@ -11,10 +11,12 @@ def calculate_energy_consumption(n_cells: int, aq_pump_operating_power: Number,
                                  org_pump_operating_power: Number, cell_operating_power: Number,
                                  stripping_solution_pump_operating_power: Number) -> Number:
 
-    return TIME_REFERENCE * (aq_pump_operating_power
-                             + org_pump_operating_power
-                             + stripping_solution_pump_operating_power
-                             + cell_operating_power * (n_cells + NUMBER_OF_CELLS_IN_STRIPPING_SECTION))
+    energy_consumption = TIME_REFERENCE * (aq_pump_operating_power
+                            + org_pump_operating_power
+                            + stripping_solution_pump_operating_power
+                            + cell_operating_power * (n_cells + NUMBER_OF_CELLS_IN_STRIPPING_SECTION))
+
+    return energy_consumption
 
 @ur.wraps(('kilowatt'), (None, None, None))
 def calculate_required_pump_power(flow_rate, fluid_density, pipe_diameter) -> Number:

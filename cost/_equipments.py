@@ -37,8 +37,6 @@ def get_equipments(aq_flow_rate: Number, org_flow_rate: Number, reference_flow_r
     pipe, total_pipe_length, pipe_diameter = get_adequate_pipe(condition.n_cells)
     aq_pump, aq_pump_operating_power = get_adequate_pump(aq_flow_rate, WATER['DENSITY'], pipe_diameter)
     org_pump, org_pump_operating_power = get_adequate_pump(org_flow_rate, org_avg_density, pipe_diameter)
-
-    # It assumes that the stripping occurs with A/O ratio 1, between stripping solution and organic phase.
     stripping_solution_pump, stripping_solution_pump_operating_power = get_adequate_pump(org_flow_rate, WATER['DENSITY'], pipe_diameter)
 
     pH_sensor_transmitter = get_adequate_pH_sensor_transmitter()
