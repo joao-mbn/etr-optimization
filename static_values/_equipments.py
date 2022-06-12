@@ -264,12 +264,12 @@ PIPES = [
     # PVC and PVDF are adequate to deal with very acidic solutions.
     {
         'MATERIAL': 'PVDF',
-        'DIAMETER_RANGE': (Q(16, 'mm'), Q(300, 'mm')),
+        'DIAMETER_RANGE': (Q(16, 'mm'), Q(30, 'mm')),
         'PRICE_PER_LENGTH': Q(4, 'usd/m'),
     },
     {
         'MATERIAL': 'PVC',
-        'DIAMETER_RANGE': (Q(20, 'mm'), Q(150, 'mm')),
+        'DIAMETER_RANGE': (Q(20, 'mm'), Q(30, 'mm')),
         'PRICE_PER_LENGTH': Q(0.3, 'usd/m'),
     }
 ]

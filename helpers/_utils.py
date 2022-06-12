@@ -1,3 +1,4 @@
+from math import nan
 from typing import Any
 from templates._types import T, Z, Number, Vector
 
@@ -16,3 +17,6 @@ def is_residue(value: Number, referential: Number, tolerance: Number = 1e-4) -> 
 
 def weighted_average(values: Vector, weights: Vector) -> Number:
     return sum(value * weight for value, weight in zip(values, weights)) / sum(weights)
+
+def standardize(value: Number, mean: Number, standard_deviation: Number) -> Number:
+    return (value - mean) / standard_deviation if standard_deviation != 0 and standard_deviation != nan and type(value) != str else 0

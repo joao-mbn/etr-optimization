@@ -101,31 +101,3 @@ def classify_rees(rees: Rees, lighter_fraction: list[str], heavier_fraction: lis
     lighter_cut = [ree for ree in rees if ree.symbol in lighter_fraction]
     heavier_cut = [ree for ree in rees if ree.symbol in heavier_fraction]
     return lighter_cut, heavier_cut
-
-def transform_conditions_to_dataframe(conditions: list[Condition]) -> DataFrame:
-    """
-    Turns a list of conditions into a dictionary of its properties and than into a dataframe.
-    Removes the units from individual cells and set it to the column.
-    """
-    data = [condition.__dict__ for condition in conditions]
-    unitted_columns_names = add_units_to_columns(data[0])
-    remove_units_from_data(data)
-    df = DataFrame(data)
-    df.rename(columns=unitted_columns_names, inplace=True)
-    return df
-
-def add_units_to_columns(data: dict[str, Any]) -> dict[str, str]:
-    columns_to_update = dict()
-    for key, value in data.items():
-        if isinstance(value, Quantity):
-            unit = f'({value.units})'.replace(' ', '') if not value.units.dimensionless else ''
-        else:
-            unit = ''
-        columns_to_update[key] = f'{key} {unit}'.replace('_', ' ').strip()
-    return columns_to_update
-
-def remove_units_from_data(data: list[dict[str, Any]]) -> None:
-    for row in data:
-        for key, value in row.items():
-            if isinstance(value, Quantity):
-                row[key] = value.magnitude

@@ -2,8 +2,7 @@ from cost._costs import calculate_cost
 from mass_balance._solve_many import solve_many
 from templates._classes import Proton
 from templates._models import Project, Condition
-from visualization._approveds_plot import cost_relationship_curve
-from visualization._approveds_table import approveds_table
+from visualization._table_manipulation import save_conditions_in_excel
 
 
 def main(projects: list[Project]):
@@ -15,8 +14,7 @@ def main(projects: list[Project]):
         - A/O Ratio
         - Number of Cells
     - Calculates the cost of each one.
-    - Defines the best solution.
-    - Provides data visualization.
+    - Saves the data.
     """
 
     all_projects_approved_conditions: list[Condition] = []
@@ -44,14 +42,7 @@ def main(projects: list[Project]):
 
         all_projects_approved_conditions += project.approved_conditions
 
-    # Define best solution
-    all_projects_approved_conditions.sort(key=lambda condition: condition.cost)
-
-    # Visualize data
-
-    # cost_relationship_curve(all_projects_approved_conditions)
-    approveds_table(all_projects_approved_conditions)
-
-    # print(project.approved_conditions[0].__dict__)
+    # Save data to an excel spreadsheet
+    save_conditions_in_excel(all_projects_approved_conditions)
 
 
