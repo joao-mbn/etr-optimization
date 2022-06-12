@@ -36,7 +36,7 @@ def main(projects: list[Project]):
         # Calculate cost
         for condition in project.approved_conditions:
 
-            condition.cost = calculate_cost(condition, project)
+            condition.costs = calculate_cost(condition, project)
             condition.extractant = project.extractant.name
             condition.extractant_concentration = project.extractant.volumetric_concentration
 

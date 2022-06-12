@@ -23,13 +23,14 @@ from cost._material import (calculate_acid_loss, calculate_extractant_loss,
                             calculate_wasted_ree_until_permanent_state)
 
 
-@ur.wraps(('usd'), (None, None))
 def calculate_cost(condition: Condition, project: Project) -> Number:
+
+    costs: dict[str, Scalar] = {}
 
     extractant, solvent, mineral, reos_of_interest_mineral_content = project.extractant, project.solvent, project.mineral, project.reos_of_interest_mineral_content
 
     total_aq_volume = calculate_total_aqueous_volume(condition)
-    aq_flow_rate, org_flow_rate, reference_flow, total_flow_rate = calculate_flows(total_aq_volume, condition.ao_ratio)
+    aq_flow_rate, org_flow_rate, reference_flow, total_flow_rate = calculate_flows(condition)
 
     equipments, operating_powers, total_pipe_length = get_equipments(aq_flow_rate, org_flow_rate, reference_flow,
                                                                      total_flow_rate, extractant, solvent, condition)
@@ -37,14 +38,20 @@ def calculate_cost(condition: Condition, project: Project) -> Number:
     total_org_volume = calculate_total_organic_volume(equipments['cell'], condition.ao_ratio, condition.n_cells)
     extractant.volume, solvent.volume = calculate_org_phase_composition(total_org_volume, extractant)
 
-    interest_on_capital = calculate_interest_on_capital(equipments, total_pipe_length, condition.n_cells, extractant, solvent)
-    operating_cost = calculate_operating_cost(equipments['cell'], reference_flow, aq_flow_rate, total_aq_volume, total_org_volume, condition,
-                                              extractant, solvent, operating_powers, mineral, reos_of_interest_mineral_content)
+    calculate_interest_on_capital(equipments, total_pipe_length, condition.n_cells, extractant, solvent, costs)
+    calculate_operating_cost(equipments['cell'], reference_flow, aq_flow_rate, total_aq_volume, total_org_volume, condition,
+                             extractant, solvent, operating_powers, mineral, reos_of_interest_mineral_content, costs)
 
-    return (interest_on_capital + operating_cost) * MARGIN_OF_SAFETY
+    costs['raw total cost'] = costs['interest on capital'] + costs['operating cost']
+    costs['total cost'] = costs['raw total cost'] * MARGIN_OF_SAFETY
 
-@ur.wraps(('usd'), (None, None, None, None, None))
-def calculate_interest_on_capital(equipments, total_pipe_length: Number, n_cells: int, extractant: Extractant, solvent: Solvent) -> Number:
+    costs.update((key, value.to('usd')) for key, value in costs.items())
+
+    return costs
+
+
+def calculate_interest_on_capital(equipments, total_pipe_length: Number, n_cells: int, extractant: Extractant,
+                                  solvent: Solvent, costs: dict[str, Scalar]) -> None:
 
     inventory_cost = reduce(lambda x, y: x + y,
                             [calculate_and_conform_pounderal_price(x.volume, x.price, x.density) for x in (extractant, solvent)])
@@ -55,13 +62,16 @@ def calculate_interest_on_capital(equipments, total_pipe_length: Number, n_cells
                               else equipment['PRICE']
                               for key, equipment in equipments.items()])
 
-    return (inventory_cost + equipments_cost) * TIME_REFERENCE * INTEREST_RATE_ON_CAPITAL
+    costs['interest on inventory'] = inventory_cost * TIME_REFERENCE * INTEREST_RATE_ON_CAPITAL
+    costs['interest on equipments'] = equipments_cost * TIME_REFERENCE * INTEREST_RATE_ON_CAPITAL
 
-@ur.wraps(('usd'), (None, None, None, None, None, None, None, None, None, None, None))
+    costs['interest on capital'] = costs['interest on inventory'] + costs['interest on equipments']
+
+
 def calculate_operating_cost(cell, reference_flow: Number, aq_flow_rate: Number, total_aq_volume: Number, total_org_volume: Number,
                              condition: Condition, extractant: Extractant, solvent: Solvent,
                              operating_powers: dict[str, Number], mineral: dict[str, str | Scalar],
-                             reos_of_interest_mineral_content: float) -> Number:
+                             reos_of_interest_mineral_content: float, costs: dict[str, Scalar]) -> None:
 
     settling_time, wasted_ree_until_permanent_state = calculate_wasted_ree_until_permanent_state(
         cell['MIXER'], cell['SETTLER'], reference_flow, aq_flow_rate, condition)
@@ -79,7 +89,15 @@ def calculate_operating_cost(cell, reference_flow: Number, aq_flow_rate: Number,
 
     operators_cost = OPERATOR_COST * NUMBER_OF_OPERATORS_PER_POSITION * NUMBER_OF_POSITIONS * TIME_REFERENCE
 
-    return ree_loss + extractant_loss + solvent_loss + acid_loss + energy_loss + operators_cost
+    costs['ree loss'] = ree_loss
+    costs['acid loss'] = acid_loss
+    costs['extractant loss'] = extractant_loss
+    costs['solvent loss'] = solvent_loss
+    costs['energy loss'] = energy_loss
+    costs['operators cost'] = operators_cost
+
+    costs['operating cost'] = (ree_loss + acid_loss + extractant_loss + solvent_loss + energy_loss + operators_cost)
+
 
 @ur.wraps(('usd'), (None, None, None))
 def calculate_and_conform_pounderal_price(volume, price, density):

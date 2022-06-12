@@ -27,17 +27,17 @@ def isotherm_chart(rees: list[Ree]):
 
         # Plot building -----------------------------------
         position = int(f'{n_rows}{n_columns}{i + 1}')
-        axes = fig.add_subplot(position)
+        ax = fig.add_subplot(position)
 
-        axes.plot(operating_line_x_axis, operating_line_y_axis, '.-', markersize = 2, label = 'Reta de Operação')
-        axes.plot(equilibrium_line_x_axis, equilibrium_line_y_axis, '.-', markersize = 2, label = 'Curva de Equilíbrio')
-        axes.plot(stages_x_axis, stages_y_axis, '.-', markersize = 2, label = 'Estágios')
+        ax.plot(operating_line_x_axis, operating_line_y_axis, '.-', markersize = 2, label = 'Reta de Operação')
+        ax.plot(equilibrium_line_x_axis, equilibrium_line_y_axis, '.-', markersize = 2, label = 'Curva de Equilíbrio')
+        ax.plot(stages_x_axis, stages_y_axis, '.-', markersize = 2, label = 'Estágios')
 
-        axes.set_xlabel('Aquoso')
-        axes.set_ylabel('Orgânico')
-        axes.set_ylim([0, None])
-        axes.set_xlim([0, None])
-        axes.legend(loc = 0)
-        axes.set_title(f'Isoterma de extração de {ree.name}')
+        ax.set_xlabel('Aquoso')
+        ax.set_ylabel('Orgânico')
+        ax.set_ylim([0, None])
+        ax.set_xlim([0, None])
+        ax.legend(loc = 0)
+        ax.set_title(f'Isoterma de extração de {ree.name}')
 
     plt.show()

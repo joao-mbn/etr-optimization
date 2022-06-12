@@ -1,7 +1,7 @@
 from helpers._common import H_from_pH, Ka_from_pKa, volume_of_mixer_settler
 from static_values._miscellaneous import (
     AO_RATIO_IN_STRIPPING_SECTION, NUMBER_OF_CELLS_IN_STRIPPING_SECTION,
-    STRIPPING_SOLUTION_ACID_CONCENTRATION, TIME_REFERENCE, TOTAL_PRODUCTION)
+    STRIPPING_SOLUTION_ACID_CONCENTRATION, PRODUCTION_RATE, TOTAL_PRODUCTION)
 from static_values._rees import REE_EXTRACTANT_STOICHIOMETRIC_PROPORTION
 from static_values._substances import HCL
 from templates._classes import Extractant, Solvent
@@ -32,14 +32,14 @@ def calculate_org_phase_composition(total_org_volume: Scalar, extractant: Extrac
 
 # ------------------ Flows
 
-@ur.wraps(('L/min', 'L/min', 'L/min', 'L/min'), (None, None))
-def calculate_flows(total_aq_volume: Scalar, ao_ratio: Scalar) -> tuple[Scalar, Scalar, Scalar, Scalar]:
+@ur.wraps(('L/min', 'L/min', 'L/min', 'L/min'), (None))
+def calculate_flows(condition: Condition) -> tuple[Scalar, Scalar, Scalar, Scalar]:
     """
     Reference flow ensures that the fastest flow should still
     have a residence time great enough to meet equilibrium.
     """
-    aq_flow_rate = total_aq_volume / TIME_REFERENCE
-    org_flow_rate = aq_flow_rate / ao_ratio
+    aq_flow_rate = PRODUCTION_RATE / condition.mass_of_reo_product_at_raffinate
+    org_flow_rate = aq_flow_rate / condition.ao_ratio
     reference_flow = max(aq_flow_rate, org_flow_rate)
     total_flow_rate = aq_flow_rate + org_flow_rate
     return aq_flow_rate, org_flow_rate, reference_flow, total_flow_rate

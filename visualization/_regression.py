@@ -3,6 +3,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from visualization._excel import save_to_existing_excel
+from helpers._common import create_sub_dataframe
 
 
 def get_regression(df: pd.DataFrame, degree: int = 3,
@@ -36,18 +37,23 @@ def save_regression_to_excel(df: pd.DataFrame, degree: int = 3,
     coefficients_table = link_coefficients_values_to_feature_names(regression, coefficients_names)
     transformed_data = pd.DataFrame(data = transformed_independent_variables, columns = coefficients_names)
 
-    save_to_existing_excel([transformed_data, coefficients_table], ['Valores Transformados Regressão', 'Coeficientes da Regressão'])
+    save_to_existing_excel([
+        {'df': transformed_data, 'name': 'Valores Transformados Regressão'},
+        {'df': coefficients_table, 'name': 'Coeficientes da Regressão'}
+    ])
 
 
 def regression_aggregate(df: pd.DataFrame, dependent_variable_substring: str, independent_variables_substrings: list[str],
                          degree: int) -> tuple[LinearRegression, PolynomialFeatures, np.ndarray]:
-    dependent_variable_column, independent_variables_columns = get_columns_of_interest(df, dependent_variable_substring,
-                                                                                       independent_variables_substrings)
-    fitted_independent_variables = PolynomialFeatures(degree = degree).fit(df[independent_variables_columns])
-    transformed_independent_variables = fitted_independent_variables.transform(df[independent_variables_columns])
+
+    independent_variables_df = create_sub_dataframe(df, white_list_substrings = independent_variables_substrings)
+    dependent_variable_df = create_sub_dataframe(df, white_list_substrings = [dependent_variable_substring])
+
+    fitted_independent_variables = PolynomialFeatures(degree = degree).fit(independent_variables_df)
+    transformed_independent_variables = fitted_independent_variables.transform(independent_variables_df)
 
     regression = LinearRegression()
-    regression.fit(transformed_independent_variables, df[dependent_variable_column])
+    regression.fit(transformed_independent_variables, dependent_variable_df)
 
     return regression, fitted_independent_variables, transformed_independent_variables
 

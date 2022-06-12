@@ -17,7 +17,7 @@ from mass_balance._distribution_ratio_models import logD_x_pH
 
 class Condition():
 
-    cost: Scalar = Q(inf, 'usd')
+    costs: dict[str, Scalar] = {}
     extractant: str = ''
     extractant_concentration: Number = 0
 
