@@ -1,6 +1,8 @@
+import locale
 from math import nan
 from typing import Any
-from templates._types import T, Z, Number, Vector
+
+from templates._types import Number, T, Vector, Z
 
 
 def default_if_none(a: T, b: Z) -> T | Z:
@@ -29,3 +31,8 @@ def standardize(value: Number, mean: Number, standard_deviation: Number) -> Numb
 
 def has_any_substring(substrings: list[str], string: str) -> bool:
     return True if any(substring in string for substring in substrings) else False
+
+
+def format_to_currency(value: Number) -> str:
+    locale.setlocale( locale.LC_ALL, 'en_US' )
+    return locale.currency(value, grouping = True)

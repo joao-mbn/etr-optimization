@@ -123,7 +123,7 @@ def create_sub_dataframe(df: pd.DataFrame, white_list_substrings: list[str] = []
 
 
 def is_column_of_interest(column: str, white_list_substrings: list[str], black_list_substrings: list[str]) -> bool:
-    has_white_listed_substring = has_any_substring(column, white_list_substrings)
-    has_black_listed_substring = has_any_substring(column, black_list_substrings)
+    has_white_listed_substring = has_any_substring(white_list_substrings, column)
+    has_black_listed_substring = has_any_substring(black_list_substrings, column)
 
     return (has_white_listed_substring or len(white_list_substrings) == 0) and not has_black_listed_substring
