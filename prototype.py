@@ -1,9 +1,6 @@
 
-from visualization._approveds_plot import cost_relationship_curve
-from _main import main
-from projects.nd_sm_cut import projects
+from _generate_data import calculate
+from _generate_charts import generate_charts
 
-main(projects)
-# cost_relationship_curve()
-
-
+calculate(projects)
+generate_charts(True)
