@@ -33,6 +33,7 @@ def calculate(projects: list[Project]):
             project.required_raffinate_purity,
             project.minimal_recovery,
         )
+
         # Calculate cost
         for condition in project.approved_conditions:
 

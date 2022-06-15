@@ -15,7 +15,7 @@ def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
     category_colors = get_colors(relative_detailed_cost)
     different_costs = relative_detailed_cost.columns.values
 
-    fig = plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(14, 8))
 
     ax = fig.add_axes([0.25, 0.1, 0.6, 0.8])
     ax.xaxis.set_visible(False)

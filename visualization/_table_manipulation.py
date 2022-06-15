@@ -22,7 +22,7 @@ def save_conditions_in_excel(approveds: list[Condition]) -> None:
     df = transform_conditions_to_dataframe(approveds)
 
     cost_df = create_sub_dataframe(df, white_list_substrings = ['total cost', 'extractant', 'cell', 'pHi', 'ao ratio'],
-                                   black_list_substrings = ['raw total cost'])
+                                   black_list_substrings = ['raw total cost', 'extractant loss'])
     detailed_cost_df = create_sub_dataframe(df, white_list_substrings = ['extractant', 'cell', 'pHi', 'ao ratio', 'loss', 'interest', 'cost'])
     process_df = create_sub_dataframe(df, black_list_substrings = ['cost', 'loss', 'interest'])
 
@@ -38,7 +38,7 @@ def save_conditions_in_excel(approveds: list[Condition]) -> None:
     save_to_new_excel([
         {'df': cost_df, 'name': 'Custos'},
         {'df': standardized_cost_df, 'name': 'Custos Padronizados'},
-        {'df': cost_pivot_table, 'name': 'Tabela Pivô de Custos'},
+        {'df': cost_pivot_table, 'name': 'Tabela Pivô de Custos', 'index': True},
         {'df': detailed_cost_df, 'name': 'Custos Detalhados'},
         {'df': process_df, 'name': 'Resultados do Processo'},
         {'df': df, 'name': 'Resultados Completos'}
