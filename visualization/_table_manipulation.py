@@ -1,10 +1,11 @@
 from typing import Any
 
 import pandas as pd
-from helpers._utils import standardize
 from helpers._common import create_sub_dataframe
+from helpers._utils import standardize
 from pint import Quantity
 from templates._models import Condition
+
 from visualization._excel import save_to_new_excel
 
 
@@ -20,9 +21,9 @@ def save_conditions_in_excel(approveds: list[Condition]) -> None:
 
     df = transform_conditions_to_dataframe(approveds)
 
-    cost_df = create_sub_dataframe(df, white_list_substrings = ['total cost', 'extractant', 'cell', 'pHi', 'ao ratio'], black_list_substrings = ['raw total cost'])
-    detailed_cost_df = create_sub_dataframe(df, white_list_substrings = ['extractant', 'cell', 'pHi', 'ao ratio', 'loss', 'interest',
-                                                                         'operators cost', 'operating cost', 'raw total cost'])
+    cost_df = create_sub_dataframe(df, white_list_substrings = ['total cost', 'extractant', 'cell', 'pHi', 'ao ratio'],
+                                   black_list_substrings = ['raw total cost'])
+    detailed_cost_df = create_sub_dataframe(df, white_list_substrings = ['extractant', 'cell', 'pHi', 'ao ratio', 'loss', 'interest', 'cost'])
     process_df = create_sub_dataframe(df, black_list_substrings = ['cost', 'loss', 'interest'])
 
     df.sort_values(by=['total cost (usd)'], inplace=True)
@@ -43,11 +44,8 @@ def save_conditions_in_excel(approveds: list[Condition]) -> None:
         {'df': df, 'name': 'Resultados Completos'}
     ])
 
+
 def transform_conditions_to_dataframe(conditions: list[Condition]) -> pd.DataFrame:
-    """
-    Turns a list of conditions into a dictionary of its properties and than into a dataframe.
-    Removes the units from individual cells and set it to the column.
-    """
     data = [condition.__dict__ for condition in conditions]
     df = pd.json_normalize(data)
     df.columns = df.columns.str.removeprefix('costs.')
@@ -68,7 +66,6 @@ def standardize_dataframe(df: pd.DataFrame, pivot_table: pd.DataFrame) -> pd.Dat
 
 
 def add_units_to_columns(df: pd.DataFrame) -> None:
-
     for column_name, value in zip(df.columns, df.loc[0]):
         unit = '' if not isinstance(value, Quantity) or value.units.dimensionless else f'({value.units})'.replace(' ', '')
         unitted_column_name = f'{column_name} {unit}'.replace('_', ' ').strip()

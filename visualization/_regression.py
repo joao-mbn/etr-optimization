@@ -68,8 +68,7 @@ def get_columns_of_interest(df: pd.DataFrame, dependent_variable_substring: str,
 
 
 def link_coefficients_values_to_feature_names(regression: LinearRegression, coefficients_names: np.ndarray) -> pd.DataFrame:
-    coefficients = pd.DataFrame(data = zip(coefficients_names, regression.coef_), columns = ['name', 'value'])
-    coefficients.drop(0, inplace = True) # Drop linear coefficient
+    coefficients = pd.DataFrame(data = zip(coefficients_names, regression.coef_.ravel()), columns = ['name', 'value'])
     coefficients.sort_values(by = 'value', ascending = False, key = abs, inplace = True)
 
     return coefficients

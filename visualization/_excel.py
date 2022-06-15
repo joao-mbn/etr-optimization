@@ -1,12 +1,12 @@
 import pandas as pd
 from openpyxl import load_workbook
-from constants import PATH, EXCEL_FILE
+from global_constants import ROOT_PATH, EXCEL_FILE
 from helpers._utils import value_or_default
 
 def save_to_existing_excel(sheets: list[dict[str, pd.DataFrame| str | bool]]) -> None:
 
-    book = load_workbook(f'{PATH}{EXCEL_FILE}')
-    writer = pd.ExcelWriter(f'{PATH}{EXCEL_FILE}', engine='openpyxl')
+    book = load_workbook(f'{ROOT_PATH}{EXCEL_FILE}')
+    writer = pd.ExcelWriter(f'{ROOT_PATH}{EXCEL_FILE}', engine='openpyxl')
     writer.book = book
     writer.sheets = dict((ws.title, ws) for ws in writer.book.worksheets)
 
@@ -16,7 +16,7 @@ def save_to_existing_excel(sheets: list[dict[str, pd.DataFrame| str | bool]]) ->
 
 def save_to_new_excel(sheets: list[dict[str, pd.DataFrame| str | bool]]) -> None:
 
-    writer = pd.ExcelWriter(f'{PATH}{EXCEL_FILE}', engine='openpyxl')
+    writer = pd.ExcelWriter(f'{ROOT_PATH}{EXCEL_FILE}', engine='openpyxl')
 
     add_sheets(sheets, writer)
     persist(writer)

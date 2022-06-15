@@ -5,7 +5,7 @@ from templates._models import Project, Condition
 from visualization._table_manipulation import save_conditions_in_excel
 
 
-def main(projects: list[Project]):
+def calculate(projects: list[Project]):
     """
     - Solves all systems of equations for a given area of investigation, between multiple:
         - Type of Extractant

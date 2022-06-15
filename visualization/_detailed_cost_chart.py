@@ -5,11 +5,12 @@ import numpy as np
 import pandas as pd
 from helpers._common import create_sub_dataframe
 from helpers._utils import format_to_currency
+from global_constants import CHARTS_RESULTS_FOLDER_PATH
 
 
-def detailed_cost_chart(df: pd.DataFrame) -> None:
+def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
 
-    label, relative_detailed_cost, accumulated_relative_detailed_cost, raw_total_cost = get_detailed_cost_info_for_chart(df)
+    label, relative_detailed_cost, accumulated_relative_detailed_cost, total_cost = get_detailed_cost_info_for_chart(df)
 
     category_colors = get_colors(relative_detailed_cost)
     different_costs = relative_detailed_cost.columns.values
@@ -34,10 +35,10 @@ def detailed_cost_chart(df: pd.DataFrame) -> None:
         ax.bar_label(bar, label_type = 'center', color = text_color, labels = bar_labels)
 
     ax2 = ax.twinx()
-    ax2.barh(raw_total_cost.map(format_to_currency), np.zeros(len(raw_total_cost)), height = 0.5)
+    ax2.barh(total_cost.apply(format_to_currency), np.zeros(len(total_cost)), height = 0.5)
 
     ax.legend(ncol = m.ceil(len(different_costs) / 2), bbox_to_anchor = (0, 1), loc = 'lower left', fontsize = 'small')
-    plt.show()
+    plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Custos Detalhados.png', bbox_inches='tight')
 
 
 def get_detailed_cost_info_for_chart(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -46,15 +47,16 @@ def get_detailed_cost_info_for_chart(df: pd.DataFrame) -> tuple[pd.DataFrame, pd
     one_tenth_interval = m.floor(df_size * 0.1)
     evenly_spaced_results = df[::one_tenth_interval]
 
+    total_cost = evenly_spaced_results['total cost (usd)']
     raw_total_cost = evenly_spaced_results['raw total cost (usd)']
     detailed_cost = create_sub_dataframe(evenly_spaced_results, white_list_substrings = ['cost', 'loss', 'interest'],
-                                black_list_substrings=['interest on capital', 'operating cost', 'raw total cost (usd)'])
+                                         black_list_substrings=['interest on capital', 'operating cost', 'total cost'])
 
     evenly_spaced_results['label'] = evenly_spaced_results.apply(create_label, axis=1)
     relative_detailed_cost = (detailed_cost.div(raw_total_cost, axis=0) * 100).round(2)
     accumulated_relative_detailed_cost = relative_detailed_cost.cumsum(axis=1)
 
-    return evenly_spaced_results['label'], relative_detailed_cost, accumulated_relative_detailed_cost, raw_total_cost
+    return evenly_spaced_results['label'], relative_detailed_cost, accumulated_relative_detailed_cost, total_cost
 
 
 def create_label(row: pd.Series) -> str:
