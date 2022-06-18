@@ -1,9 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from visualization._regression import get_regression, predict
 from global_constants import CHARTS_RESULTS_FOLDER_PATH
+from matplotlib.ticker import StrMethodFormatter
+from sklearn.linear_model import LinearRegression
+
+from visualization._regression import get_regression, predict
+
 
 def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: bool = False):
 
@@ -11,16 +14,18 @@ def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: boo
     ax = fig.add_subplot(111, projection='3d')
 
     for i, df_slice in enumerate(df_slices):
+        df_slice['total cost (1000 usd)'] = df_slice['total cost (usd)'] / 1000
+        df_slice.drop('total cost (usd)', axis = 1, inplace = True)
         regression = get_regression(df_slice)
-        extractant_name, extractant_concentration = df_slice[['extractant', 'extractant concentration']].mode().values[0]
         create_surface(ax, regression, df_slice, i)
 
     plt.suptitle('Efeito da concentração da corrente no custo', fontsize = 12)
     ax.set_title('Concentrado 2x (azul) e concentração original (vermelho) para D2EHPA 2%', fontsize = 9)
     ax.set_xlabel('Nº Células')
     ax.set_ylabel('Razão A/O')
-    ax.set_zlabel('Custo (USD)')
+    ax.set_zlabel('Custo Total (mil USD)', labelpad = 14)
     ax.view_init(elev=35, azim=45)
+    ax.zaxis.set_major_formatter(StrMethodFormatter('${x:,.0f}'))
     plt.tight_layout()
 
     plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Efeito da concentração no custo.png', bbox_inches='tight')

@@ -1,5 +1,5 @@
 ROOT_PATH = 'C:/Users/joao.batista/Desktop/My Repos/etr-optimization/'
-CHARTS_RESULTS_FOLDER_PATH = ROOT_PATH + 'charts-results/'
+CHARTS_RESULTS_FOLDER_PATH = ROOT_PATH + 'charts_results/'
 EXCEL_FILE = 'resultados da simulação.xlsx'
 TEST_EXCEL_FILE = 'test.xlsx'
 

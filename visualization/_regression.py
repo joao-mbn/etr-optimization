@@ -68,7 +68,7 @@ def regression_aggregate(df: pd.DataFrame, dependent_variable_substring: str, in
     independent_variables_df = create_sub_dataframe(df, white_list_substrings = independent_variables_substrings)
     dependent_variable_df = create_sub_dataframe(df, white_list_substrings = [dependent_variable_substring])
 
-    fitted_independent_variables = PolynomialFeatures(degree = degree, include_bias=False).fit(independent_variables_df)
+    fitted_independent_variables = PolynomialFeatures(degree = degree, include_bias = False).fit(independent_variables_df)
     transformed_independent_variables = fitted_independent_variables.transform(independent_variables_df)
 
     regression = LinearRegression().fit(transformed_independent_variables, dependent_variable_df)
