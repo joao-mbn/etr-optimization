@@ -5,7 +5,7 @@ from global_constants import (COMPLETE_RESULTS_TAB, COST_TAB,
                               STANDARDIZED_COST_TAB)
 from visualization._cost_relationship_surface import cost_relationship_surface
 from visualization._detailed_cost_chart import detailed_cost_chart
-from visualization._pareto_chart import pareto_chart
+from visualization._pareto_chart import pareto_chart, get_regression_comprehensive_coefficients_table
 from visualization._recovery_cost_relationship_chart import \
     recovery_cost_relationship_chart
 
@@ -25,7 +25,9 @@ def generate_charts(save_fig: bool = False):
                 cost_relationship_surface(df_slice, save_fig)
 
                 standardized_cost_df_slice = standardized_cost_df[standardized_cost_df.index.isin(df_slice.index)]
-                pareto_chart(standardized_cost_df_slice, save_fig, extractant_name, extractant_concentration)
+                pareto_chart(get_regression_comprehensive_coefficients_table(standardized_cost_df_slice),
+                             save_fig, extractant_name, extractant_concentration)
 
+    pareto_chart(get_regression_comprehensive_coefficients_table(standardized_cost_df), save_fig)
     detailed_cost_chart(detailed_cost_df, save_fig)
     recovery_cost_relationship_chart(complete_results_df, save_fig)

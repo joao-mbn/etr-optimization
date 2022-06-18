@@ -19,3 +19,5 @@ FONT = {
     'weight': 'normal',
     'size': 14,
 }
+
+MAX_P_VALUE = 0.05

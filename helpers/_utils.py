@@ -26,7 +26,7 @@ def weighted_average(values: Vector, weights: Vector) -> Number:
 
 
 def standardize(value: Number, mean: Number, standard_deviation: Number) -> Number:
-    return (value - mean) / standard_deviation if standard_deviation != 0 and standard_deviation != nan and type(value) != str else 0
+    return (value - mean) / standard_deviation if standard_deviation != 0 and standard_deviation != nan and type(value) != str else value
 
 
 def has_any_substring(substrings: list[str], string: str) -> bool:
