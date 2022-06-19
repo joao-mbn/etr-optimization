@@ -13,56 +13,42 @@ Rees: TypeAlias = list[Ree]
 
 # ----------------- Mass Conversions
 
-def g_from_mol(mol: Number, molecular_weight: Number) -> Number:
-    return mol * molecular_weight
+def mass_from_mol(mol: Number, especies_weight: Number) -> Number: return mol * especies_weight
+def mol_from_mass(mass: Number, especies_weight: Number) -> Number: return mass / especies_weight
 
+def mol_atom_from_mol_oxide(mol_oxide: Number, stoichiometric_proportion: Number) -> Number: return mol_oxide * stoichiometric_proportion
+def mol_oxide_from_mol_atom(mol_atom: Number, stoichiometric_proportion: Number) -> Number: return mol_atom / stoichiometric_proportion
 
-def mol_from_g(g: Number, molecular_weight: Number) -> Number:
-    return g / molecular_weight
+def mol_atom_from_mass_oxide(mass_oxide: Number, stoichiometric_proportion: Number, oxide_weight: Number) -> Number:
+    mol_oxide = mol_from_mass(mass_oxide, oxide_weight)
+    mol_atom = mol_atom_from_mol_oxide(mol_oxide, stoichiometric_proportion)
+    return mol_atom
 
-
-def oxide_from_atom(atom_concentration: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
-    """stoichiometric_proportion is the number of that atom in the oxide. e.g. Nd -> Nd2O3 = 2. Pr -> Pr6O11 = 6."""
-    return atom_concentration * stoichiometric_proportion * oxide_weight / atomic_weight
-
-
-def atom_from_oxide(oxide_concentration: Number, stoichiometric_proportion: Number, atomic_weight: Number, oxide_weight: Number) -> Number:
-    """stoichiometric_proportion is the number of that atom in the oxide. e.g. Nd -> Nd2O3 = 2. Pr -> Pr6O11 = 6."""
-    return oxide_concentration * atomic_weight / oxide_weight / stoichiometric_proportion
+def mass_oxide_from_mol_atom(mol_atom: Number, stoichiometric_proportion: Number, oxide_weight: Number) -> Number:
+    mol_oxide = mol_oxide_from_mol_atom(mol_atom, stoichiometric_proportion)
+    mass_oxide = mass_from_mol(mol_oxide, oxide_weight)
+    return mass_oxide
 
 # ----------------- Parameters Calculation
 
-def pH_from_H(proton_concentration: Number) -> Number:
-    return - m.log10(proton_concentration)
+def pH_from_H(proton_concentration: Number) -> Number: return - m.log10(proton_concentration)
+def H_from_pH(pH: Number) -> Number: return 10 ** -pH
 
-
-def H_from_pH(pH: Number) -> Number:
-    return 10 ** -pH
-
-
-def pKa_from_Ka(Ka: Number) -> Number:
-    return - m.log10(Ka)
-
-
-def Ka_from_pKa(pKa: Number) -> Number:
-    return 10 ** -pKa
+def pKa_from_Ka(Ka: Number) -> Number: return - m.log10(Ka)
+def Ka_from_pKa(pKa: Number) -> Number: return 10 ** -pKa
 
 
 def org_concentrations(aq_concentrations: Vector, distribution_ratios: Vector) -> Vector:
     return np.multiply(aq_concentrations, distribution_ratios).tolist()
 
 
-def area_of_rectangle(height: Number, width: Number) -> Number:
-    return height * width
-
+def area_of_rectangle(height: Number, width: Number) -> Number: return height * width
 
 def area_of_circle(diameter: Number, radius: Number | None = None) -> Number:
     return m.pi * radius ** 2 if radius is not None else m.pi * diameter ** 2 / 4
 
-
 def volume_of_parallelepiped(height: Number, width: Number, depth: Number) -> Number:
     return height * width * depth
-
 
 def volume_of_mixer_settler(mixer, settler):
     mixer_volume = value_or_default(mixer, 'VOLUME',
@@ -81,10 +67,7 @@ def volume_of_mixer_settler(mixer, settler):
 def purity(products: Number, contaminants: Number) -> float:
     return 0 if products == 0 else products / (products + contaminants)
 
-
-def recovery(initially: Number, lastly: Number) -> float:
-    return lastly / initially
-
+def recovery(initially: Number, lastly: Number) -> float: return lastly / initially
 
 def separation_factor(distribution_ratio_of_lighter: Number, distribution_ratio_of_heavier: Number) -> float:
     return distribution_ratio_of_heavier / distribution_ratio_of_lighter

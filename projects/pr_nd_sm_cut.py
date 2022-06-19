@@ -1,4 +1,4 @@
-from helpers._common import atom_from_oxide, mol_from_g
+from helpers._common import mol_atom_from_mass_oxide
 from mass_balance._distribution_ratio_models import logD_x_pH
 from static_values._rees import NEODYMIUM as ND
 from static_values._rees import PRASEODYMIUM as PR
@@ -16,9 +16,9 @@ minimal_recovery = 0.15
 mineral = MONAZITE
 reos_of_interest_mineral_content = sum([mineral['REOS_DISTRIBUTION'][reo] for reo in ['Pr', 'Nd']])
 
-pr_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.48, PR['OXIDE_WEIGHT']), PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['ATOMIC_WEIGHT'], PR['OXIDE_WEIGHT'])
-nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
-sm_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.923, SM['OXIDE_WEIGHT']), SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['ATOMIC_WEIGHT'], SM['OXIDE_WEIGHT'])
+pr_feed_aq_mols_atom = mol_atom_from_mass_oxide(0.48, PR['OXIDE_STOICHIOMETRIC_PROPORTION'], PR['OXIDE_WEIGHT'])
+nd_feed_aq_mols_atom = mol_atom_from_mass_oxide(12.808, ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['OXIDE_WEIGHT'])
+sm_feed_aq_mols_atom = mol_atom_from_mass_oxide(0.923, SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['OXIDE_WEIGHT'])
 
 project_d2ehpa_006 = Project(
     **dict(

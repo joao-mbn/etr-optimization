@@ -1,4 +1,4 @@
-from helpers._common import atom_from_oxide, mol_from_g
+from helpers._common import mol_atom_from_mass_oxide
 from mass_balance._distribution_ratio_models import logD_x_pH
 from static_values._rees import NEODYMIUM as ND
 from static_values._rees import SAMARIUM as SM
@@ -7,7 +7,7 @@ from templates._models import Project
 
 cut = 'Nd/Sm'
 distribution_ratio_model = logD_x_pH
-max_cells_interval = (2, 10)
+max_cells_interval = (2, 15)
 pHi_interval = (1, 2)
 ao_ratio_interval = (0.5, 2)
 required_raffinate_purity = 0.995
@@ -15,8 +15,8 @@ minimal_recovery = 0.15
 mineral = MONAZITE
 reos_of_interest_mineral_content = sum([mineral['REOS_DISTRIBUTION'][reo] for reo in ['Pr', 'Nd']])
 
-nd_feed_aq_mols_atom = atom_from_oxide(mol_from_g(12.808 * 2, ND['OXIDE_WEIGHT']), ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['ATOMIC_WEIGHT'], ND['OXIDE_WEIGHT'])
-sm_feed_aq_mols_atom = atom_from_oxide(mol_from_g(0.923 * 2, SM['OXIDE_WEIGHT']), SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['ATOMIC_WEIGHT'], SM['OXIDE_WEIGHT'])
+nd_feed_aq_mols_atom = mol_atom_from_mass_oxide(12.808 * 2, ND['OXIDE_STOICHIOMETRIC_PROPORTION'], ND['OXIDE_WEIGHT'])
+sm_feed_aq_mols_atom = mol_atom_from_mass_oxide(0.923 * 2, SM['OXIDE_STOICHIOMETRIC_PROPORTION'], SM['OXIDE_WEIGHT'])
 
 project_d2ehpa_002 = Project(
     **dict(

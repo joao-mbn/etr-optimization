@@ -24,7 +24,7 @@ def solver(distribution_ratio_model: Callable[..., Number], rees: Rees, proton: 
     Note 6: Implementation of models that considers the concentration of the extractant \
         should require the implementation of extractant mass balance equations.
     """
-    guesses = create_guesses(n_cells, rees, proton)
+    guesses = create_guesses(n_cells, rees, proton, distribution_ratio_model)
     results: Vector = fsolve(create_system_of_equations, guesses,
                              args=(distribution_ratio_model, ao_ratio, n_cells, rees, proton)).tolist()
 
@@ -81,38 +81,39 @@ def create_distribution_ratios_equations(distribution_ratio_model, n_cells: int,
     equations: Vector = []
     for cell_number in range(0, n_cells):
         for ree in rees:
-            equation = ree.distribution_ratios[cell_number] - distribution_ratio_model(cell_number, ree, proton)
+            equation = ree.distribution_ratios[cell_number] - distribution_ratio_model(ree, proton.cells_concentrations[cell_number])
             equations.append(equation)
 
     return equations
 
-def create_guesses(n_cells: int, rees: Rees, proton: Proton) -> Vector:
+def create_guesses(n_cells: int, rees: Rees, proton: Proton, distribution_ratio_model) -> Vector:
     guesses: np.ndarray = np.array([])
     for ree in rees:
         guesses = np.concatenate([ guesses, create_ree_guesses(n_cells, ree) ])
-        guesses = np.concatenate([ guesses, create_distribution_ratios_guesses(n_cells) ])
+        guesses = np.concatenate([ guesses, create_distribution_ratios_guesses(n_cells, ree, proton, distribution_ratio_model) ])
 
     guesses = np.concatenate([ guesses, create_proton_guesses(n_cells, proton) ])
 
     return guesses.tolist()
 
-def create_ree_guesses(n_cells: int, ree: Ree):
+def create_ree_guesses(n_cells: int, ree: Ree) -> Vector:
     """
     So far, it hasn't been necessary a cleverer creation method of initial guesses.
     """
     return np.linspace(ree.aq_feed_concentration, ree.aq_feed_concentration * 0.001, n_cells)
 
-def create_proton_guesses(n_cells: int, proton: Proton):
+def create_proton_guesses(n_cells: int, proton: Proton) -> Vector:
     """
     So far, it hasn't been necessary a cleverer creation method of initial guesses.
     """
     return np.linspace(proton.feed_concentration, proton.feed_concentration * 1.2, n_cells)
 
-def create_distribution_ratios_guesses(n_cells: int):
+def create_distribution_ratios_guesses(n_cells: int, ree: Ree, proton: Proton, distribution_ratio_model) -> Vector:
     """
     So far, it hasn't been necessary a cleverer creation method of initial guesses.
     """
-    return np.linspace(1, 1, n_cells)
+    return np.ones(n_cells) * distribution_ratio_model(ree, proton.feed_concentration)
+    # return np.ones(n_cells)
 
 def unpack_values(vars: Vector, n_cells: int, rees: Rees, proton: Proton):
     """

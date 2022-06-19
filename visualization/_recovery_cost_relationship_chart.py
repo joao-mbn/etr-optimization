@@ -14,7 +14,7 @@ def recovery_cost_relationship_chart(df: pd.DataFrame, save_fig: bool = False):
 
     degree = 1
     regression, score = get_regression(new_df, degree, 'total cost (usd)', ['recovery^-1'], True)
-    recovery_samples = np.linspace(15, 98, 100)
+    recovery_samples = np.linspace(40, 98, 100)
     predicted_costs = predict(regression, (recovery_samples ** -1).reshape(-1, 1), recovery_samples.shape, degree)
 
     plt.figure(figsize=(10, 6))

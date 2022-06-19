@@ -17,7 +17,7 @@ def generate_charts(save_fig: bool = False):
     detailed_cost_df = pd.read_excel(f'{ROOT_PATH}{EXCEL_FILE}', DETAILED_COST_TAB)
     complete_results_df = pd.read_excel(f'{ROOT_PATH}{EXCEL_FILE}', COMPLETE_RESULTS_TAB)
 
-    for extractant_name in cost_df['extractant'].unique().tolist():
+    """ for extractant_name in cost_df['extractant'].unique().tolist():
         for extractant_concentration in cost_df['extractant concentration'].unique().tolist():
             df_slice = cost_df.query(f'extractant == "{extractant_name}" and `extractant concentration` == {extractant_concentration}')
 
@@ -26,8 +26,8 @@ def generate_charts(save_fig: bool = False):
 
                 standardized_cost_df_slice = standardized_cost_df[standardized_cost_df.index.isin(df_slice.index)]
                 pareto_chart(get_regression_comprehensive_coefficients_table(standardized_cost_df_slice),
-                             save_fig, extractant_name, extractant_concentration)
+                             save_fig, extractant_name, extractant_concentration) """
 
     pareto_chart(get_regression_comprehensive_coefficients_table(standardized_cost_df), save_fig)
-    detailed_cost_chart(detailed_cost_df, save_fig)
-    recovery_cost_relationship_chart(complete_results_df, save_fig)
+    # detailed_cost_chart(detailed_cost_df, save_fig)
+    # recovery_cost_relationship_chart(complete_results_df, save_fig)

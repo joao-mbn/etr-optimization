@@ -2,7 +2,7 @@ from typing import Callable
 
 import numpy as np
 from helpers._common import (H_from_pH, pH_from_H, are_all_residues, are_results_absurd,
-                             classify_rees, g_from_mol, oxide_from_atom,
+                             classify_rees, mass_oxide_from_mol_atom,
                              purity, recovery, resolve_cut, separation_factor)
 from templates._classes import Proton, Ree
 from templates._models import Condition
@@ -84,13 +84,9 @@ def calculate_total_reos(rees_of_interest: list[Ree]) -> tuple[Number, Number]:
     This calculates the total reos concentration at the feed and at the raffinate.
     A chain conversion is performed from mol/L Ree to g/L Reo.
     """
-    mass_of_reo_at_feed = sum(oxide_from_atom(
-                                  g_from_mol(ree.aq_feed_concentration, ree.atom_molar_mass),
-                                  ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
+    mass_of_reo_at_feed = sum(mass_oxide_from_mol_atom(ree.aq_feed_concentration, ree.stoichiometric_proportion, ree.oxide_molar_mass)
                               for ree in rees_of_interest)
-    mass_of_reo_at_raffinate = sum(oxide_from_atom(
-                                       g_from_mol(ree.cells_aq_concentrations[-1], ree.atom_molar_mass),
-                                       ree.stoichiometric_proportion, ree.atom_molar_mass, ree.oxide_molar_mass)
+    mass_of_reo_at_raffinate = sum(mass_oxide_from_mol_atom(ree.cells_aq_concentrations[-1], ree.stoichiometric_proportion, ree.oxide_molar_mass)
                                    for ree in rees_of_interest)
     return mass_of_reo_at_feed, mass_of_reo_at_raffinate
 
