@@ -6,33 +6,35 @@ from sklearn.preprocessing import PolynomialFeatures
 from visualization._excel import save_to_existing_excel
 from helpers._common import create_sub_dataframe
 import statsmodels.api as sm
+from global_constants import MODEL_DEGREE, INTERACTION_ONLY
 
 
-def get_regression(df: pd.DataFrame, degree: int = 3, dependent_variable_substring: str = 'cost',
+def get_regression(df: pd.DataFrame, degree: int = MODEL_DEGREE, dependent_variable_substring: str = 'cost',
                    independent_variables_substrings: list[str] = ['pHi', 'ao ratio', 'cell'],
-                   get_score = False) -> tuple[LinearRegression, float] | LinearRegression:
+                   get_score = False, interaction_only: bool = INTERACTION_ONLY) -> tuple[LinearRegression, float] | LinearRegression:
 
-    regression, _, _, score = regression_aggregate(df, dependent_variable_substring, independent_variables_substrings, degree)
+    regression, _, _, score = regression_aggregate(df, dependent_variable_substring, independent_variables_substrings, degree, interaction_only)
     return (regression, score) if get_score else regression
 
 
-def predict(regression: LinearRegression, features: pd.DataFrame, grid_shape, degree: int = 3) -> LinearRegression:
-    return regression.predict(PolynomialFeatures(degree = degree, include_bias = False).fit_transform(features)).reshape(grid_shape)
+def predict(regression: LinearRegression, features: pd.DataFrame, grid_shape, degree: int = MODEL_DEGREE, interaction_only: bool = INTERACTION_ONLY) -> LinearRegression:
+    return regression.predict(PolynomialFeatures(degree = degree, include_bias = False, interaction_only = interaction_only).fit_transform(features)).reshape(grid_shape)
 
 
-def get_regression_coefficients_table(df: pd.DataFrame, degree: int = 3,
+def get_regression_coefficients_table(df: pd.DataFrame, degree: int = MODEL_DEGREE,
                                       dependent_variable_substring: str = 'cost',
-                                      independent_variables_substrings: list[str] = ['pHi', 'ao ratio', 'cell']) -> pd.DataFrame:
+                                      independent_variables_substrings: list[str] = ['pHi', 'ao ratio', 'cell'],
+                                      interaction_only: bool = INTERACTION_ONLY) -> pd.DataFrame:
 
-    regression, fitted_independent_variables, _, _ = regression_aggregate(df, dependent_variable_substring, independent_variables_substrings, degree)
+    regression, fitted_independent_variables, _, _ = regression_aggregate(df, dependent_variable_substring, independent_variables_substrings, degree, interaction_only)
     coefficients_table = link_coefficients_values_to_feature_names(regression, fitted_independent_variables.get_feature_names_out())
     return coefficients_table
 
 
 def get_complete_regression_coefficients_table(dependent_variable: pd.DataFrame, independent_variables: pd.DataFrame,
-                                               degree: int = 3, print_summary: bool = True) -> tuple[Any, np.ndarray]:
+                                               degree: int = MODEL_DEGREE, interaction_only: bool = INTERACTION_ONLY, print_summary: bool = True) -> tuple[Any, np.ndarray]:
 
-    fitted_independent_variables = PolynomialFeatures(degree = degree).fit(independent_variables)
+    fitted_independent_variables = PolynomialFeatures(degree = degree, interaction_only = interaction_only).fit(independent_variables)
     coefficients_names = fitted_independent_variables.get_feature_names_out()
     transformed_independent_variables = fitted_independent_variables.transform(independent_variables)
     transformed_independent_variables = pd.DataFrame(data = transformed_independent_variables, columns = coefficients_names)
@@ -46,12 +48,13 @@ def get_complete_regression_coefficients_table(dependent_variable: pd.DataFrame,
     return regression, coefficients_names
 
 
-def save_regression_to_excel(df: pd.DataFrame, degree: int = 3,
+def save_regression_to_excel(df: pd.DataFrame, degree: int = MODEL_DEGREE,
                              dependent_variable_substring: str = 'cost',
-                             independent_variables_substrings: list[str] = ['pHi', 'ao ratio', 'cell']) -> None:
+                             independent_variables_substrings: list[str] = ['pHi', 'ao ratio', 'cell'],
+                             interaction_only: bool = INTERACTION_ONLY) -> None:
 
     regression, fitted_independent_variables, transformed_independent_variables, _ = regression_aggregate(df, dependent_variable_substring,
-                                                                                                       independent_variables_substrings, degree)
+                                                                                                          independent_variables_substrings, degree, interaction_only)
     coefficients_names = fitted_independent_variables.get_feature_names_out()
     coefficients_table = link_coefficients_values_to_feature_names(regression, coefficients_names)
     transformed_data = pd.DataFrame(data = transformed_independent_variables, columns = coefficients_names)
@@ -63,12 +66,12 @@ def save_regression_to_excel(df: pd.DataFrame, degree: int = 3,
 
 
 def regression_aggregate(df: pd.DataFrame, dependent_variable_substring: str, independent_variables_substrings: list[str],
-                         degree: int) -> tuple[LinearRegression, PolynomialFeatures, np.ndarray, float]:
+                         degree: int, interaction_only: bool) -> tuple[LinearRegression, PolynomialFeatures, np.ndarray, float]:
 
     independent_variables_df = create_sub_dataframe(df, white_list_substrings = independent_variables_substrings)
     dependent_variable_df = create_sub_dataframe(df, white_list_substrings = [dependent_variable_substring])
 
-    fitted_independent_variables = PolynomialFeatures(degree = degree, include_bias = False).fit(independent_variables_df)
+    fitted_independent_variables = PolynomialFeatures(degree = degree, include_bias = False, interaction_only = interaction_only).fit(independent_variables_df)
     transformed_independent_variables = fitted_independent_variables.transform(independent_variables_df)
 
     regression = LinearRegression().fit(transformed_independent_variables, dependent_variable_df)

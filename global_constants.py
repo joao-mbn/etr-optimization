@@ -13,6 +13,7 @@ COMPLETE_RESULTS_TAB = 'Resultados Completos'
 TRANSFORMED_REGRESSION_VALUES_TAB = 'Valores Transformados Regressão'
 REGRESSION_COEFFICIENTS_TAB = 'Coeficientes da Regressão'
 
+
 FONT = {
     'family': 'serif',
     'color':  'darkred',
@@ -20,4 +21,7 @@ FONT = {
     'size': 14,
 }
 
+
 MAX_P_VALUE = 0.05
+MODEL_DEGREE = 2
+INTERACTION_ONLY = True

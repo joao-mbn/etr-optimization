@@ -47,7 +47,7 @@ def get_regression_comprehensive_coefficients_table(standardized_df: pd.DataFram
 
     remove_invariants_from_independent_variables(independent_variables)
 
-    regression, coefficients_names = get_complete_regression_coefficients_table(dependent_variable, independent_variables, degree = 2)
+    regression, coefficients_names = get_complete_regression_coefficients_table(dependent_variable, independent_variables)
 
     coefficients_df = create_coefficients_df_from_regression(regression, coefficients_names)
 
