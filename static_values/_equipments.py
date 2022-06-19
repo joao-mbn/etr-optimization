@@ -1,8 +1,16 @@
 from templates._units import quantity as Q
 
 MIXER_SETTLERS = [
-    # Though the max flox specified is usually for aqueous solutions,
-    # in a certain pressure and temperature, this specification was extended to organic phase as well.
+    # It was assumed that flow and power specifications were those at 1 atm, 25ºC
+    # and extended to organic phase as well, since liquid is assumed ideal.
+    # Mixer and settler dimensions were estimated from the ratios of the two in the pictures and the total cell dimensions.
+
+    # For CWX series
+    # https://www.alibaba.com/product-detail/Laboratory-mixer-settlers-and-extraction-equipment_60767193201.html
+
+    # For MSU series
+    # https://www.meab-mx.se/pdf/msu_sq_ind.pdf
+    # https://www.meab-mx.se/pdf/msu_0_5.pdf
     {
         'NAME': 'CWX-0.3J',
         'PRICE': Q('20000 usd'),
@@ -11,12 +19,12 @@ MIXER_SETTLERS = [
         'MIXER': {
             'HEIGHT': Q('400 mm'),
             'WIDTH': Q('400 mm'),
-            'DEPTH': Q('300 mm'),
+            'DEPTH': Q('160 mm'),
         },
         'SETTLER': {
             'HEIGHT': Q('400 mm'),
             'WIDTH': Q('400 mm'),
-            'DEPTH': Q('500 mm'),
+            'DEPTH': Q('640 mm'),
         }
     },
     {
@@ -27,12 +35,12 @@ MIXER_SETTLERS = [
         'MIXER': {
             'HEIGHT': Q('620 mm'),
             'WIDTH': Q('630 mm'),
-            'DEPTH': Q('400 mm'),
+            'DEPTH': Q('230 mm'),
         },
         'SETTLER': {
             'HEIGHT': Q('620 mm'),
             'WIDTH': Q('630 mm'),
-            'DEPTH': Q('750 mm'),
+            'DEPTH': Q('920 mm'),
         }
     },
     {
@@ -43,12 +51,12 @@ MIXER_SETTLERS = [
         'MIXER': {
             'HEIGHT': Q('750 mm'),
             'WIDTH': Q('750 mm'),
-            'DEPTH': Q('500 mm'),
+            'DEPTH': Q('280 mm'),
         },
         'SETTLER': {
             'HEIGHT': Q('750 mm'),
             'WIDTH': Q('750 mm'),
-            'DEPTH': Q('900 mm'),
+            'DEPTH': Q('1120 mm'),
         },
     },
     {
@@ -59,12 +67,12 @@ MIXER_SETTLERS = [
         'MIXER': {
             'HEIGHT': Q('950 mm'),
             'WIDTH': Q('950 mm'),
-            'DEPTH': Q('600 mm'),
+            'DEPTH': Q('340 mm'),
         },
         'SETTLER': {
             'HEIGHT': Q('950 mm'),
             'WIDTH': Q('950 mm'),
-            'DEPTH': Q('1088 mm'),
+            'DEPTH': Q('1360 mm'),
         }
     },
     {
@@ -75,12 +83,12 @@ MIXER_SETTLERS = [
         'MIXER': {
             'HEIGHT': Q('1000 mm'),
             'WIDTH': Q('1000 mm'),
-            'DEPTH': Q('650 mm'),
+            'DEPTH': Q('400 mm'),
         },
         'SETTLER': {
             'HEIGHT': Q('1000 mm'),
             'WIDTH': Q('1000 mm'),
-            'DEPTH': Q('1250 mm'),
+            'DEPTH': Q('1600 mm'),
         }
     },
     {
@@ -92,7 +100,6 @@ MIXER_SETTLERS = [
         },
         'SETTLER': {
             'VOLUME': Q(15, 'L'),
-            'SURFACE_AREA': Q(8, 'dm^2') # Estimated based on equipments image
         }
     },
     {
@@ -104,7 +111,6 @@ MIXER_SETTLERS = [
         },
         'SETTLER': {
             'VOLUME': Q(100, 'L'),
-            'SURFACE_AREA': Q(27, 'dm^2') # Estimated based on equipments image
         }
     },
     {
@@ -116,7 +122,6 @@ MIXER_SETTLERS = [
         },
         'SETTLER': {
             'VOLUME': Q(500, 'L'),
-            'SURFACE_AREA': Q(79, 'dm^2') # Estimated based on equipments image
         }
     },
     {
@@ -128,7 +133,6 @@ MIXER_SETTLERS = [
         },
         'SETTLER': {
             'VOLUME': Q(2000, 'L'),
-            'SURFACE_AREA': Q(200, 'dm^2') # Estimated based on equipments image
         }
     },
     {
@@ -140,7 +144,6 @@ MIXER_SETTLERS = [
         },
         'SETTLER': {
             'VOLUME': Q(4500, 'L'),
-            'SURFACE_AREA': Q(343, 'dm^2') # Estimated based on equipments image
         }
     },
 ]

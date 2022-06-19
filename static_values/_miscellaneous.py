@@ -22,7 +22,7 @@ OPERATOR_COST = Q('20000 usd/year')
 # Equilibrium
 # Estimated based on Qi's reports
 # QI, D.,  Hydrometallurgy of Rare Earths, [S.l.], Elsevier, 2018. p. 187–389. DOI: 10.1016/B978-0-12-813920-2.00002-7.
-REE_SX_EQUILIBRIUM_TIME = Q('15 min')
+REE_SX_EQUILIBRIUM_TIME = Q('10 min')
 PHASE_SETTLING_TIME = Q('10 min') # Overestimation of what has been seen on bench scale experiments
 # ========================================================================
 

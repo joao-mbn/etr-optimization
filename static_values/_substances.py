@@ -1,7 +1,11 @@
 from templates._units import quantity as Q
 
 HCL = {
-    'PRICE': Q(200, 'usd/ton'), # loosely estimated average from https://www.made-in-china.com/products-search/hot-china-products/Hydrochloric_Acid_Price.html
+    # price and volumetric concentration as loosely estimated average from
+    # https://www.made-in-china.com/products-search/hot-china-products/Hydrochloric_Acid_Price.html
+
+    # Other properties taken from a flask of Vetec's analytical grade HCl.
+    'PRICE': Q(200, 'usd/ton'),
     'DENSITY': Q(1.17, 'kg/L'),
     'MOLAR_MASS': Q(35.453, 'g/mol'),
     'VOLUMETRIC_CONCENTRATION': Q(0.34, 'v/v'),
