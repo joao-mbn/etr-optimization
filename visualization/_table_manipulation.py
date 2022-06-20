@@ -1,3 +1,4 @@
+from multiprocessing import dummy
 from typing import Any
 from numpy import ndarray
 
@@ -32,8 +33,12 @@ def save_conditions_in_excel(approveds: list[Condition]) -> None:
     detailed_cost_df.sort_values(by=['raw total cost (usd)'], inplace=True)
     process_df.sort_values(by=['n cells', 'ao ratio', 'pHi'], inplace=True)
 
-    cost_pivot_table = cost_df.describe(include='all')
+    cost_df['ext + concentration'] = cost_df['extractant'].apply(lambda x: f'{x}_') + cost_df['extractant concentration'].apply(lambda x: f'{x * 100:.0f}%').astype(str)
+    dummy_df = pd.get_dummies(cost_df['ext + concentration'], drop_first = True)
+    cost_df = cost_df.join(dummy_df)
+    cost_df.drop('ext + concentration', axis=1, inplace=True)
 
+    cost_pivot_table = cost_df.describe(include='all')
     standardized_cost_df = standardize_dataframe(cost_df, cost_pivot_table).rename(columns={'total cost (usd)': 'total cost'})
 
     save_to_new_excel([
@@ -71,14 +76,3 @@ def add_units_to_columns(df: pd.DataFrame) -> None:
         unit = '' if not isinstance(value, Quantity) or value.units.dimensionless else f'({value.units})'.replace(' ', '')
         unitted_column_name = f'{column_name} {unit}'.replace('_', ' ').strip()
         df.rename(columns={column_name: unitted_column_name}, inplace=True)
-
-
-def create_standardized_dummies_from_categorical_variables(df: pd.DataFrame, column_name: str, categorical_variable: pd.Series | ndarray) -> pd.DataFrame:
-
-    df_copy = df.copy()
-    for i, value in enumerate(categorical_variable):
-        if i < len(categorical_variable) - 1:
-            df_copy[f'Is {value}'] = df_copy.apply(lambda row: 1 if row[f'{column_name}'] == value else 0, axis=1)
-            df_copy[f'{value}'] = df_copy[f'Is {value}'].apply(lambda binary_value: standardize(binary_value, df_copy[f'Is {value}'].mean(), df_copy[f'Is {value}'].std()))
-
-    return df_copy

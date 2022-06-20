@@ -4,7 +4,7 @@ import pandas as pd
 from global_constants import COST_TAB, DETAILED_COST_TAB, EXCEL_FILE, ROOT_PATH
 from helpers._common import (H_from_pH, mass_oxide_from_mol_atom, org_concentrations)
 from mass_balance._solver import solver
-from projects.nd_sm_cut import project_d2ehpa_002, project_d2ehpa_010
+from projects.nd_sm_cut import project_d2ehpa_006
 from templates._classes import Proton
 from visualization._compare_surfaces import compare_surfaces
 from visualization._detailed_cost_chart import detailed_cost_chart
@@ -16,9 +16,9 @@ def isotherm_wrapper():
 
     pHi, ao_ratio, n_cells = cost_df.loc[0, ['pHi', 'ao ratio', 'n cells']]
     proton = Proton(feed_concentration = H_from_pH(pHi))
-    rees = project_d2ehpa_010.rees
+    rees = project_d2ehpa_006.rees # make sure you get the correct project
 
-    solver(project_d2ehpa_002.distribution_ratio_model, rees, proton, ao_ratio, n_cells)
+    solver(project_d2ehpa_006.distribution_ratio_model, rees, proton, ao_ratio, n_cells)
 
     for ree in rees:
         ree.aq_feed_concentration = mass_oxide_from_mol_atom(ree.aq_feed_concentration, ree.stoichiometric_proportion, ree.oxide_molar_mass)
@@ -29,7 +29,7 @@ def isotherm_wrapper():
 
         ree.cells_org_concentrations = org_concentrations(ree.cells_aq_concentrations, ree.distribution_ratios)
 
-    isotherm_chart(rees)
+    isotherm_chart(rees, True)
 
 
 def concentration_effects_wrapper():

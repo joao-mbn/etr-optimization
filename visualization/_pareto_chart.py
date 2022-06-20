@@ -36,14 +36,11 @@ def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extracta
 
 def get_regression_comprehensive_coefficients_table(standardized_df: pd.DataFrame) -> pd.DataFrame:
 
-    df_slice_copy = standardized_df.rename(columns={'extractant concentration': '[Ext]'})
+    df_slice_copy = standardized_df.copy()
     df_slice_copy.columns = df_slice_copy.columns.str.replace(' ', '_')
 
-    extractants = df_slice_copy['extractant'].apply(lambda name: name.replace(' ', '')).sort_values(ascending = False).unique()
-    df_slice_copy = create_standardized_dummies_from_categorical_variables(df_slice_copy, 'extractant', extractants)
-
     dependent_variable = df_slice_copy['total_cost']
-    independent_variables = df_slice_copy[['n_cells', 'ao_ratio', 'pHi', '[Ext]'] + extractants[:-1].tolist()]
+    independent_variables = df_slice_copy[df_slice_copy.columns.difference(['total_cost', 'extractant', 'extractant_concentration'])]
 
     remove_invariants_from_independent_variables(independent_variables)
 

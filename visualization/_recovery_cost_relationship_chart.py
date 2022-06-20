@@ -23,8 +23,8 @@ def recovery_cost_relationship_chart(df: pd.DataFrame, save_fig: bool = False):
 
     plt.xlabel('Recuperação (%)')
     plt.ylabel('Custo total (USD)')
-    plt.text(70, 4e6, r'$y = a \cdot x^{-1}$ + b', fontdict = FONT)
-    plt.text(70, 3.7e6, f'R² = {score:.2f}', fontdict = FONT)
+    plt.text(new_df['recovery'].max() * 0.7, new_df['total cost (usd)'].max() * 0.7, r'$y = a \cdot x^{-1}$ + b', fontdict = FONT)
+    plt.text(new_df['recovery'].max() * 0.7, new_df['total cost (usd)'].max() * 0.65, f'R² = {score:.2f}', fontdict = FONT)
     plt.gca().xaxis.set_major_formatter(PercentFormatter())
     plt.gca().yaxis.set_major_formatter(StrMethodFormatter('${x:,.0f}'))
 
