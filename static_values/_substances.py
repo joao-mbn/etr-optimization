@@ -1,9 +1,8 @@
 from templates._units import quantity as Q
 
 HCL = {
-    # price and volumetric concentration as loosely estimated average from
+    # Price and volumetric concentration as loosely estimated average from
     # https://www.made-in-china.com/products-search/hot-china-products/Hydrochloric_Acid_Price.html
-
     # Other properties taken from a flask of Vetec's analytical grade HCl.
     'PRICE': Q(200, 'usd/ton'),
     'DENSITY': Q(1.17, 'kg/L'),
@@ -17,7 +16,6 @@ WATER = {
 }
 
 ISOPARAFFIN = {
-
     # Kerosene average properties used
     # https://en.wikipedia.org/wiki/Kerosene#:~:text=Kerosene%20is%20a%20low%2Dviscosity,10%20and%2016%20carbon%20atoms
 
@@ -52,14 +50,12 @@ P507 = {
 }
 
 CYANEX_572 = {
-
     # PAVÓN, S., KUTUCU, M., COLL, T., et al. "Comparison of Cyanex 272 and Cyanex 572 on the separation of Neodymium from a Nd/Tb/Dy mixture by pertraction",
     # Journal of Chemical Technology and Biotechnology, v. 93, 1 set. 2017. DOI: 10.1002/jctb.5458.
 
     # pKa hasn't been disclosed, but it has been guessed in the literature that Cyanex 572 might be a mixture of
     # Cyanex 272 (pKa = 6.37; phosphinic acid) and a phosphonic acid (like P507, pKa = 4.10).
     # An average value of 5 has been taken as a first guess.
-
     'NAME': 'Cyanex 572',
     'PRICE': Q(208.5, 'usd/L'),
     'DENSITY': Q(0.933, 'kg/L'),

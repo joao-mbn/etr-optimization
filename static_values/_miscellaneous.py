@@ -47,7 +47,7 @@ PUMP_EFFICIENCY = Q(0.7) # Assumed
 NUMBER_OF_CELLS_IN_STRIPPING_SECTION = Q(3) # Overestimation of what has been seen on bench scale experiments.
 AO_RATIO_IN_STRIPPING_SECTION = Q(1) # Commonly used ratio when no previous optimization has been conducted.
 # Estimated based on Qi's reports
-# # QI, D.,  Hydrometallurgy of Rare Earths, [S.l.], Elsevier, 2018. p. 187–389. DOI: 10.1016/B978-0-12-813920-2.00002-7.
+# QI, D.,  Hydrometallurgy of Rare Earths, [S.l.], Elsevier, 2018. p. 187–389. DOI: 10.1016/B978-0-12-813920-2.00002-7.
 STRIPPING_SOLUTION_ACID_CONCENTRATION = Q('3 mol/L')
 
 HEAD_LOSS_BETWEEN_CELLS = Q('0.1 m') # Assumed

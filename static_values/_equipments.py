@@ -149,58 +149,68 @@ MIXER_SETTLERS = [
 ]
 
 PUMPS = [
+    # Max Head means how high it can lift the liquid up. At max head, flow = 0.
     {
+        # https://www.alibaba.com/product-detail/Industrial-Pump-Water-Pump-Centrifugal-Pump_62037031674.html?spm=a2700.galleryofferlist.topad_classic.d_title.ca3c286a1ONltR
         'NAME': 'Seabord\'s SBS100-310',
         'PRICE': Q(1500, 'usd'),
-        'MAX_FLOW': Q(3100, 'L/s'),
-        'MAX_HEAD': Q(200, 'm'), # How high it can lift the liquid up. At max head, flow = 0.
+        'MAX_FLOW': Q(600, 'm^3/h'),
+        'MAX_HEAD': Q(200, 'm'),
         'PUMP_DISCHARGE_DIAMETER_RANGE': (Q(80, 'mm'), Q(800, 'mm')),
         'MAX_POWER': Q(60, 'hp'),
     },
     {
+        # https://www.alibaba.com/product-detail/Manufacturers-provide-steel-lined-fluorine-plastic_1600202001025.html?spm=a2700.galleryofferlist.normal_offer.d_title.ca3c286a1ONltR&s=p
         'NAME': 'Shuanglian\'s 100FIU60-30',
         'PRICE': Q(620, 'usd'),
         'MAX_FLOW': Q(60, 'm^3/h'),
         'OPERATING_POWER_RANGE': (Q(11, 'kW'), Q(15, 'kW'))
     },
     {
+        # https://www.alibaba.com/product-detail/Industrial-Pump-Industrial-Pump-Industrial-CNP_1600268231668.html?spm=a2700.galleryofferlist.normal_offer.d_title.ca3c286a1ONltR&s=ps
         'NAME': 'CNP\'s ZS50',
         'PRICE': Q(682, 'usd'),
         'MAX_FLOW': Q(20, 'm^3/h'),
-        'MAX_HEAD': Q(57.5, 'm'), # How high it can lift the liquid up. At max head, flow = 0.
+        'MAX_HEAD': Q(57.5, 'm'),
         'OPERATING_POWER_RANGE': (Q(1.1, 'kW'), Q(5.5, 'kW'))
     },
     {
-        'NAME': 'CNP\'s TD',
+        # https://www.alibaba.com/product-detail/Energy-Efficient-60HZ-TD200-Vertical-Inline_1600292517902.html?spm=a2700.galleryofferlist.normal_offer.d_title.ca3c286a1ONltR
+        'NAME': 'CNP\'s TD 200',
         'PRICE': Q(4050, 'usd'),
         'MAX_FLOW': Q(480, 'm^3/h'),
-        'MAX_HEAD': Q(53.2, 'm'), # How high it can lift the liquid up. At max head, flow = 0.
+        'MAX_HEAD': Q(53.2, 'm'),
         'PUMP_DISCHARGE_DIAMETER': Q(200, 'mm'),
         'OPERATING_POWER_RANGE': (Q(20, 'kW'), Q(90, 'kW'))
     },
     {
+        # https://www.alibaba.com/product-detail/Methane-Alcohol-SS304-Magnetic-Drive-Chemical_1600466010674.html?spm=a2700.galleryofferlist.normal_offer.d_title.ca3c286a1ONltR
         'NAME': 'TEFLOW PUMP\'s TMC-P',
         'PRICE': Q(500, 'usd'),
         'MAX_FLOW': Q(100, 'm^3/h'),
-        'MAX_HEAD': Q(80, 'm'), # How high it can lift the liquid up. At max head, flow = 0.
+        'MAX_HEAD': Q(80, 'm'),
         'PUMP_DISCHARGE_DIAMETER_RANGE': (Q(25, 'mm'), Q(80, 'mm')),
         'OPERATING_POWER_RANGE': (Q(22, 'kW'), Q(55, 'kW'))
     },
 ]
 
 PH_SENSOR_AND_TRANSMITTER = [
+    # Only pH meters that could operate in pH 0 or lower were chosen. It should come with the apparatus to in-line integration.
     {
+        # https://www.alibaba.com/product-detail/BOQU-PHG-3081water-Industrial-On-line_1401924723.html?spm=a2700.7724857.normal_offer.d_title.43fbb9e7ip5hKp
         'PRICE': Q('700 usd'),
     },
     {
-        'PRICE': Q('165 usd'),
+        # https://www.alibaba.com/product-detail/CS1753D-Industrial-online-RS485-Digital-pH_1600277869773.html?spm=a2700.details.0.0.10011ac1erxGvg
+        'PRICE': Q('200 usd'),
     }
 ]
 
 FLOW_SENSORS = [
-    # Magnetic flow meters are desired because they head losses are comparable to a straight pipe.
+    # Magnetic flow meters are desired because their head losses are comparable to a straight pipe.
     # https://www.omega.com/en-us/resources/magmeter
     {
+        # https://www.alibaba.com/product-detail/Magnetic-Meter-Flow-Electromagnetic-Flowmeter-Manufacturers_1600329314132.html?spm=a2700.galleryofferlist.topad_creative.d_title.59f46a9dhw6Vm0
         'MATERIALS': ['Stainless Steel'],
         'TYPE': 'MAGNETIC',
         'NAME': 'KF700FA',
@@ -214,6 +224,7 @@ FLOW_SENSORS = [
         'PIPE_DIAMETER_RANGE': (Q(2, 'mm'), Q(200, 'mm')),
     },
     {
+        # https://www.alibaba.com/product-detail/Magnetic-Flow-Meter-Rs485-Flange-Inch_1600431101158.html?spm=a2700.galleryofferlist.normal_offer.d_title.780e6a9dpiW2GA&s=p
         'MATERIALS': ['Stainless Steel', 'Carbon Steel', 'PP/PVC'],
         'TYPE': 'MAGNETIC',
         'NAME': 'RS485',
@@ -225,11 +236,13 @@ FLOW_SENSORS = [
 
 FLOW_CONTROLLERS = [
     {
+        # https://www.alibaba.com/product-detail/Flow-Control-Valve-Price-Motor-Flow_1600300320799.html?spm=a2700.galleryofferlist.topad_creative.d_title.14782cfasAuao0
         'NAME': '150 Class PVC SS304',
         'PRICE': Q(70, 'usd'),
         'DIAMETER_RANGE': (Q(0.25, 'in'), Q(0.75, 'in'))
     },
     {
+        # https://www.alibaba.com/product-detail/CWX-15N-stainless-steel-brass-BSP_62017606015.html?spm=a2700.galleryofferlist.normal_offer.d_title.14782cfaJNcNg2
         'NAME': 'CWX-15N',
         'PRICE': Q(20, 'usd'),
         'DIAMETER_RANGE': (Q(0.25, 'in'), Q(1, 'in'))
@@ -239,6 +252,7 @@ FLOW_CONTROLLERS = [
 TANKS = [
     # PVC and PP are adequate to deal with very acidic solutions.
     {
+        # https://www.alibaba.com/product-detail/Explosion-proof-PVC-Plastic-Mixer-Chemical_1600342631801.html?spm=a2700.galleryofferlist.normal_offer.d_title.137475a9tuqE3U&s=p
         'NAME': 'AILUSI', # Company name
         'MATERIAL': 'PP',
         'PRICE': Q(3000, 'usd'),
@@ -247,6 +261,7 @@ TANKS = [
         'MAX_POWER': Q(27, 'kW'),
     },
     {
+        # https://www.alibaba.com/product-detail/PP-PVC-Anticorrosive-Polypropylene-Tank-Bleach_1600437508978.html?spm=a2700.galleryofferlist.normal_offer.d_title.137475a9tuqE3U
         'NAME': 'LIENM', # Company name
         'MATERIAL': 'PP/PVC',
         'PRICE': Q(8000, 'usd'),
@@ -254,6 +269,7 @@ TANKS = [
         'MAX_POWER': Q(1.5, 'kW'),
     },
     {
+        # https://yalian.en.made-in-china.com/product/xFoEiAlJuIVm/China-Strong-Acid-Resistance-100-500-Litre-PP-Plastic-Water-Mixing-Tanks.html
         'NAME': 'YUALIAN\'s YPC',
         'MATERIAL': 'PP/PVC',
         'PRICE': Q(2968, 'usd'),
@@ -266,11 +282,13 @@ TANKS = [
 PIPES = [
     # PVC and PVDF are adequate to deal with very acidic solutions.
     {
+        # https://www.alibaba.com/product-detail/PVDF-tube-PVDF-pipe_827747646.html?spm=a2700.galleryofferlist.normal_offer.d_title.64b04033XvSCwz
         'MATERIAL': 'PVDF',
         'DIAMETER_RANGE': (Q(16, 'mm'), Q(30, 'mm')),
         'PRICE_PER_LENGTH': Q(4, 'usd/m'),
     },
     {
+        # https://www.alibaba.com/product-detail/Pipe-Pvc-Pipe-Conduit-Factory-Orange_60511738938.html?spm=a2700.galleryofferlist.normal_offer.d_title.64b04033XvSCwz&s=p
         'MATERIAL': 'PVC',
         'DIAMETER_RANGE': (Q(20, 'mm'), Q(30, 'mm')),
         'PRICE_PER_LENGTH': Q(0.3, 'usd/m'),
