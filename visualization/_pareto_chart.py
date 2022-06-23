@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-from numpy import ndarray
 import pandas as pd
 from global_constants import CHARTS_RESULTS_FOLDER_PATH, MAX_P_VALUE
 from matplotlib.ticker import PercentFormatter
+from numpy import ndarray
 
 from visualization._regression import get_complete_regression_coefficients_table
-from visualization._table_manipulation import create_standardized_dummies_from_categorical_variables
+
 
 def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extractant_name: str = '', extractant_concentration: int = 0) -> None:
 

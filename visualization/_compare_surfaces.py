@@ -20,7 +20,7 @@ def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: boo
         create_surface(ax, regression, df_slice, i)
 
     plt.suptitle('Efeito da concentração da corrente no custo', fontsize = 12)
-    ax.set_title('Concentrado 2x (azul) e concentração original (vermelho) para D2EHPA 2%', fontsize = 9)
+    ax.set_title('Concentrado 2x (azul) e concentração original (vermelho) para D2EHPA 10%', fontsize = 9)
     ax.set_xlabel('Nº Células')
     ax.set_ylabel('Razão A/O')
     ax.set_zlabel('Custo Total (mil USD)', labelpad = 14)
