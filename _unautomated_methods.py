@@ -1,7 +1,8 @@
 # Methods that aren't yet fully integrated to the workflow of data generation and visualization
+from matplotlib import pyplot as plt
 import pandas as pd
 
-from global_constants import COST_TAB, DETAILED_COST_TAB, EXCEL_FILE, ROOT_PATH
+from global_constants import COMPLETE_RESULTS_TAB, COST_TAB, DETAILED_COST_TAB, EXCEL_FILE, ROOT_PATH
 from helpers._common import (H_from_pH, mass_oxide_from_mol_atom, org_concentrations)
 from mass_balance._solver import solver
 from projects.nd_sm_cut import project_d2ehpa_006
@@ -9,6 +10,7 @@ from templates._classes import Proton
 from visualization._compare_surfaces import compare_surfaces
 from visualization._detailed_cost_chart import detailed_cost_chart
 from visualization._isotherm_chart import isotherm_chart
+from visualization._variables_histogram import variables_histogram
 
 
 def isotherm_wrapper():
@@ -42,3 +44,17 @@ def concentration_effects_wrapper():
     cost_df_slice = cost_df.query(f'extractant == "D2EHPA" and `extractant concentration` == 0.1')
     concentrated_cost_df_slice = concentrated_cost_df.query(f'extractant == "D2EHPA" and `extractant concentration` == 0.1')
     compare_surfaces([cost_df_slice, concentrated_cost_df_slice], True)
+
+def histogram_wrapper():
+    cost_df = pd.read_excel(f'{ROOT_PATH}{EXCEL_FILE}', COST_TAB)
+    variables_histogram(cost_df, True)
+
+
+def grouped_separation_factor_histogram_wrapper():
+    cost_df = pd.read_excel(f'{ROOT_PATH}{EXCEL_FILE}', COMPLETE_RESULTS_TAB)
+    cost_df['extractant concentration'] = cost_df['extractant concentration'].apply(lambda x: f'{x:.2%}')
+    cost_df.hist(column = 'separation factor', bins=5, by = ['extractant', 'extractant concentration'], grid = False)
+
+    plt.text(0.04, 0.5, 'Frequência', va='center', rotation='vertical', fontsize = 14)
+    plt.subplots_adjust(hspace=0.8)
+    plt.show()
