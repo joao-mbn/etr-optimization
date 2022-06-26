@@ -38,7 +38,7 @@ def isotherm_chart(rees: list[Ree], save_fig: bool = False):
 
         ax.set_xlabel('Concentração na Fase Aquosa (g/L)')
         ax.set_ylabel('Concentração na Fase Orgânica (g/L)')
-        ax.set_ylim([min(operating_line_y_axis) - average_y_step, max(operating_line_y_axis) + average_y_step])
+        ax.set_ylim([0, max(operating_line_y_axis) + average_y_step])
         ax.set_xlim([min(operating_line_x_axis) - average_x_step, max(operating_line_x_axis) + average_x_step])
         ax.grid(True)
         ax.legend(loc = 0)

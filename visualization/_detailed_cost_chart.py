@@ -31,7 +31,7 @@ def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
 
         r, g, b, _ = color
         text_color = 'white' if r * g * b < 0.5 else 'black'
-        bar_labels = [x if x > 3 else '' for x in widths.values]
+        bar_labels = [x if x > 3 else '' for x in widths.values] # Ignore value's label if it represents less then 3% of total.
         ax.bar_label(bar, label_type = 'center', color = text_color, labels = bar_labels)
 
     ax2 = ax.twinx()
@@ -44,8 +44,10 @@ def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
 def get_detailed_cost_info_for_chart(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 
     df_size = len(df)
-    one_tenth_interval = m.floor(df_size * 0.1)
+    one_tenth_interval = m.ceil(df_size * 0.1)
     evenly_spaced_results = df[::one_tenth_interval]
+
+    if df_size % one_tenth_interval != 0: evenly_spaced_results.loc[len(evenly_spaced_results)] = df.iloc[-1]
 
     total_cost = evenly_spaced_results['total cost (usd)']
     raw_total_cost = evenly_spaced_results['raw total cost (usd)']
