@@ -1,7 +1,11 @@
 ROOT_PATH = 'C:/Users/joao.batista/Desktop/My Repos/etr-optimization/'
 CHARTS_RESULTS_FOLDER_PATH = ROOT_PATH + 'charts_results/'
-EXCEL_FILE = 'resultados da simulação.xlsx'
-TEST_EXCEL_FILE = 'test.xlsx'
+PARETO_FOLDER = CHARTS_RESULTS_FOLDER_PATH + 'pareto/'
+TRI_SURFACES_FOLDER = CHARTS_RESULTS_FOLDER_PATH + 'tri_surfaces/'
+COST_SURFACES = CHARTS_RESULTS_FOLDER_PATH + 'cost_surfaces/'
+
+APPROVEDS_ONLY_EXCEL = 'resultados da simulação.xlsx'
+ALL_CONDITIONS_EXCEL = 'resultados da simulação completos.xlsx'
 
 
 COST_TAB = 'Custos'
@@ -24,4 +28,4 @@ FONT = {
 
 MAX_P_VALUE = 0.05
 MODEL_DEGREE = 2
-INTERACTION_ONLY = False
+INTERACTION_ONLY = True

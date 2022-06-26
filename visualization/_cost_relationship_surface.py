@@ -2,7 +2,7 @@ import matplotlib.colors as mpl_colors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from global_constants import CHARTS_RESULTS_FOLDER_PATH
+from global_constants import COST_SURFACES
 from matplotlib.cm import ScalarMappable
 from matplotlib.ticker import StrMethodFormatter
 from sklearn.linear_model import LinearRegression
@@ -36,8 +36,8 @@ def cost_relationship_surface(df_slice: pd.DataFrame, save_fig: bool = False):
     plt.colorbar(mappable, shrink = 0.5)
     plt.tight_layout()
 
-    plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Superfície {extractant_name} {round(extractant_concentration * 100)}%.png',
-                                                bbox_inches='tight')
+    plt.show() if not save_fig else plt.savefig(f'{COST_SURFACES}Superfície {extractant_name} {round(extractant_concentration * 100)}%.png', bbox_inches='tight')
+
 
 def create_surface(ax, regression: LinearRegression, df: pd.DataFrame, mappable: ScalarMappable):
     n_cells, ao_ratio = np.meshgrid(np.linspace(df['n cells'].min(), df['n cells'].max(), 100), np.linspace(df['ao ratio'].min(), df['ao ratio'].max(), 100))
@@ -55,12 +55,14 @@ def create_surface(ax, regression: LinearRegression, df: pd.DataFrame, mappable:
     plot._facecolors2d = plot._facecolor3d
     plot._edgecolors2d = plot._edgecolor3d
 
+
 def create_scatter_plot(df: pd.DataFrame, ax):
     transparencies = create_property_scale(df, 'pHi', (0, 0))
     marker_sizes = create_property_scale(df, 'pHi', (0.5, 1), False)
     colors = create_property_scale(df, 'extractant').apply(lambda hue: mpl_colors.hsv_to_rgb((hue, 0, 0)))
 
     ax.scatter(df['n cells'], df['ao ratio'], df['total cost (1000 usd)'], color = colors, alpha = transparencies, s = marker_sizes)
+
 
 def create_property_scale(df: pd.DataFrame, reference_column: str,
                           scale_range: tuple[Number, Number] = (0, 1),

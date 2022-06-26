@@ -32,7 +32,6 @@ def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: boo
 
 def create_surface(ax, regression: LinearRegression, df: pd.DataFrame, index: int):
 
-    # Creates data for surface, predicting results from the model
     n_cells, ao_ratio = np.meshgrid(np.linspace(df['n cells'].min(), df['n cells'].max(), 100), np.linspace(df['ao ratio'].min(), df['ao ratio'].max(), 100))
     pHi = df['pHi'].mode().values[0]
 

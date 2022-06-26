@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from global_constants import CHARTS_RESULTS_FOLDER_PATH, MAX_P_VALUE
+from global_constants import MAX_P_VALUE, PARETO_FOLDER
 from matplotlib.ticker import PercentFormatter
 from numpy import ndarray
 
@@ -30,8 +30,7 @@ def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extracta
     ax2.set_ylabel('Importância Absoluta Acumulada (%)')
 
     fig.autofmt_xdate(rotation=60)
-    plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Pareto {extractant_name} {round(extractant_concentration * 100)}%.png',
-                                                bbox_inches='tight')
+    plt.show() if not save_fig else plt.savefig(f'{PARETO_FOLDER}Pareto {extractant_name} {round(extractant_concentration * 100)}%.png', bbox_inches='tight')
 
 
 def get_regression_comprehensive_coefficients_table(standardized_df: pd.DataFrame) -> pd.DataFrame:
