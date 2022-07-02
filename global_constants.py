@@ -26,6 +26,7 @@ FONT = {
 }
 
 
-MAX_P_VALUE = 0.05
+MAX_P_VALUE = 0.05 # Alpha value for statistical significance
+CONFIDENCE_LEVEL_VALUE_95 = 1.960 # Z for 95% confidence level
 MODEL_DEGREE = 2
 INTERACTION_ONLY = True

@@ -2,7 +2,7 @@
 from matplotlib import pyplot as plt
 import pandas as pd
 
-from global_constants import COMPLETE_RESULTS_TAB, COST_TAB, DETAILED_COST_TAB, APPROVEDS_ONLY_EXCEL, ROOT_PATH
+from global_constants import ALL_CONDITIONS_EXCEL, COMPLETE_RESULTS_TAB, COST_TAB, DETAILED_COST_TAB, APPROVEDS_ONLY_EXCEL, ROOT_PATH
 from helpers._common import (H_from_pH, mass_oxide_from_mol_atom, org_concentrations)
 from mass_balance._solver import solver
 from projects.nd_sm_cut import project_d2ehpa_006
@@ -51,7 +51,7 @@ def histogram_wrapper():
 
 
 def grouped_separation_factor_histogram_wrapper():
-    cost_df = pd.read_excel(f'{ROOT_PATH}{APPROVEDS_ONLY_EXCEL}', COMPLETE_RESULTS_TAB)
+    cost_df = pd.read_excel(f'{ROOT_PATH}{ALL_CONDITIONS_EXCEL}', COMPLETE_RESULTS_TAB)
     cost_df['extractant concentration'] = cost_df['extractant concentration'].apply(lambda x: f'{x:.2%}')
     cost_df.hist(column = 'separation factor', bins=5, by = ['extractant', 'extractant concentration'], grid = False)
 

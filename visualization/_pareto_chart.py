@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from global_constants import MAX_P_VALUE, PARETO_FOLDER
+from global_constants import MAX_P_VALUE, PARETO_FOLDER, CONFIDENCE_LEVEL_VALUE_95
 from matplotlib.ticker import PercentFormatter
 from numpy import ndarray
 
@@ -18,8 +18,9 @@ def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extracta
     ax.set_ylabel('Importância Absoluta (%)')
     ax.bar_label(bars, labels = coefficients_df['value (%)'].apply(lambda x: f'{x:.0f}%'), label_type = 'center')
 
-    _, caps, _ = plt.errorbar(coefficients_df['name'], coefficients_df['absolute value (%)'], yerr = coefficients_df['std error (%)'],
-                 ecolor = 'black', ls = 'none', capsize = 5)
+    _, caps, _ = plt.errorbar(coefficients_df['name'], coefficients_df['absolute value (%)'],
+                              yerr = coefficients_df['std error (%)'].apply(lambda std_error: std_error * CONFIDENCE_LEVEL_VALUE_95),
+                              ecolor = 'black', ls = 'none', capsize = 5)
     _ = [cap.set_marker('_') for cap in caps]
     _ = [cap.set_markeredgewidth(1) for cap in caps]
 
