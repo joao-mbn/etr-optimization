@@ -35,4 +35,6 @@ def has_any_substring(substrings: list[str], string: str) -> bool:
 
 def format_to_currency(value: Number) -> str:
     locale.setlocale( locale.LC_ALL, 'en_US' )
-    return locale.currency(value, grouping = True)
+    cost = locale.currency(value / 10000, grouping = True)
+    return f'{cost} USD/Kg'
+

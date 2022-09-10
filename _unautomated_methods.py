@@ -36,8 +36,8 @@ def isotherm_wrapper():
 
 def concentration_effects_wrapper():
 
-    concentrated_detailed_cost_df = pd.read_excel(f'{ROOT_PATH}concentrated.xlsx', DETAILED_COST_TAB)
-    detailed_cost_chart(concentrated_detailed_cost_df, True)
+    # concentrated_detailed_cost_df = pd.read_excel(f'{ROOT_PATH}concentrated.xlsx', DETAILED_COST_TAB)
+    # detailed_cost_chart(concentrated_detailed_cost_df, True)
 
     concentrated_cost_df = pd.read_excel(f'{ROOT_PATH}concentrated.xlsx', COST_TAB)
     cost_df = pd.read_excel(f'{ROOT_PATH}{APPROVEDS_ONLY_EXCEL}', COST_TAB)

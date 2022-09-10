@@ -1,10 +1,10 @@
-from matplotlib import projections
 import matplotlib.pyplot as plt
-import pandas as pd
 import numpy as np
+import pandas as pd
+from global_constants import TRI_SURFACES_FOLDER
+from matplotlib import projections
 from matplotlib.ticker import StrMethodFormatter
 
-from global_constants import TRI_SURFACES_FOLDER
 from visualization._regression import get_regression, predict
 
 
@@ -15,7 +15,7 @@ def create_multiple_costs_tri_surface(df: pd.DataFrame, save_fig: bool = False):
 
     only_one_slice = len(extractants) == 1 and len(extractant_concentrations) == 1
 
-    fig, axs = plt.subplots(len(extractants), len(extractant_concentrations), figsize=(16, 16), subplot_kw = { 'projection': '3d' })
+    fig, axs = plt.subplots(len(extractants), len(extractant_concentrations), figsize=(8, 8), subplot_kw = { 'projection': '3d' })
 
     for i, extractant_name in enumerate(extractants):
         for j, extractant_concentration in enumerate(extractant_concentrations):
@@ -32,7 +32,7 @@ def create_multiple_costs_tri_surface(df: pd.DataFrame, save_fig: bool = False):
 def costs_tri_surface(df_slice: pd.DataFrame, ax: plt.Axes):
 
     df_slice_copy = df_slice.copy()
-    df_slice_copy['total cost (1000 usd)'] = df_slice_copy['total cost (usd)'] / 1000
+    df_slice_copy['total cost (1000 usd)'] = df_slice_copy['total cost (usd)'] / 10000
     df_slice_copy.drop('total cost (usd)', axis = 1, inplace = True)
 
     extractant_name, extractant_concentration = df_slice_copy[['extractant', 'extractant concentration']].mode().values[0]
@@ -42,7 +42,7 @@ def costs_tri_surface(df_slice: pd.DataFrame, ax: plt.Axes):
 
     ax.set_xlabel('Nº Células')
     ax.set_ylabel('Razão A/O')
-    ax.set_zlabel('Custo Total (mil USD)', labelpad = 14)
+    ax.set_zlabel('Custo Total (USD/Kg)', labelpad = 14)
     ax.view_init(elev=35, azim=45)
     ax.set_xticks(np.arange(2, 21, 2))
 
