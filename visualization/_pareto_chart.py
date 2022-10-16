@@ -1,10 +1,12 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-from global_constants import MAX_P_VALUE, PARETO_FOLDER, CONFIDENCE_LEVEL_VALUE_95
+from global_constants import (CONFIDENCE_LEVEL_VALUE_95, MAX_P_VALUE,
+                              PARETO_FOLDER)
 from matplotlib.ticker import PercentFormatter
 from numpy import ndarray
 
-from visualization._regression import get_complete_regression_coefficients_table
+from visualization._regression import \
+    get_complete_regression_coefficients_table
 
 
 def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extractant_name: str = '', extractant_concentration: int = 0) -> None:
@@ -12,10 +14,10 @@ def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extracta
     fig, ax = plt.subplots(figsize=(16, 10))
 
     bars = ax.bar(coefficients_df['name'], coefficients_df['absolute value (%)'], color = '#6ddbfc')
-    ax.set_title('Importância das Variáveis no Custo Total de Produção')
+    ax.set_title('Importância das Variáveis no Custo Total de Produção', fontsize = 16)
     ax.yaxis.set_major_formatter(PercentFormatter())
-    ax.set_xlabel('Efeitos Padronizados')
-    ax.set_ylabel('Importância Absoluta (%)')
+    ax.set_xlabel('Efeitos Padronizados', fontsize = 16)
+    ax.set_ylabel('Importância Absoluta (%)', fontsize = 16)
     ax.bar_label(bars, labels = coefficients_df['value (%)'].apply(lambda x: f'{x:.0f}%'), label_type = 'center')
 
     _, caps, _ = plt.errorbar(coefficients_df['name'], coefficients_df['absolute value (%)'],
@@ -28,7 +30,7 @@ def pareto_chart(coefficients_df: pd.DataFrame, save_fig: bool = False, extracta
     ax2.plot(coefficients_df['name'], coefficients_df['accumulated absolute value (%)'], color='red', marker='D', ms=7)
     ax2.axhline(80, color = 'orange', linestyle = 'dashed')
     ax2.yaxis.set_major_formatter(PercentFormatter())
-    ax2.set_ylabel('Importância Absoluta Acumulada (%)')
+    ax2.set_ylabel('Importância Absoluta Acumulada (%)', fontsize = 16)
 
     fig.autofmt_xdate(rotation=60)
     plt.show() if not save_fig else plt.savefig(f'{PARETO_FOLDER}Pareto {extractant_name} {round(extractant_concentration * 100)}%.png', bbox_inches='tight')

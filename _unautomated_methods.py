@@ -1,9 +1,12 @@
 # Methods that aren't yet fully integrated to the workflow of data generation and visualization
-from matplotlib import pyplot as plt
 import pandas as pd
+from matplotlib import pyplot as plt
 
-from global_constants import ALL_CONDITIONS_EXCEL, COMPLETE_RESULTS_TAB, COST_TAB, DETAILED_COST_TAB, APPROVEDS_ONLY_EXCEL, ROOT_PATH
-from helpers._common import (H_from_pH, mass_oxide_from_mol_atom, org_concentrations)
+from global_constants import (ALL_CONDITIONS_EXCEL, APPROVEDS_ONLY_EXCEL,
+                              COMPLETE_RESULTS_TAB, CONCENTRATED_FEED_EXCEL,
+                              COST_TAB, DETAILED_COST_TAB, ROOT_PATH)
+from helpers._common import (H_from_pH, mass_oxide_from_mol_atom,
+                             org_concentrations)
 from mass_balance._solver import solver
 from projects.nd_sm_cut import project_d2ehpa_006
 from templates._classes import Proton
@@ -39,7 +42,7 @@ def concentration_effects_wrapper():
     # concentrated_detailed_cost_df = pd.read_excel(f'{ROOT_PATH}concentrated.xlsx', DETAILED_COST_TAB)
     # detailed_cost_chart(concentrated_detailed_cost_df, True)
 
-    concentrated_cost_df = pd.read_excel(f'{ROOT_PATH}concentrated.xlsx', COST_TAB)
+    concentrated_cost_df = pd.read_excel(f'{ROOT_PATH}{CONCENTRATED_FEED_EXCEL}', COST_TAB)
     cost_df = pd.read_excel(f'{ROOT_PATH}{APPROVEDS_ONLY_EXCEL}', COST_TAB)
     cost_df_slice = cost_df.query(f'extractant == "D2EHPA" and `extractant concentration` == 0.1')
     concentrated_cost_df_slice = concentrated_cost_df.query(f'extractant == "D2EHPA" and `extractant concentration` == 0.1')

@@ -6,6 +6,7 @@ COST_SURFACES = CHARTS_RESULTS_FOLDER_PATH + 'cost_surfaces/'
 
 APPROVEDS_ONLY_EXCEL = 'aprovados sem extrapolação.xlsx'
 ALL_CONDITIONS_EXCEL = 'aprovados e reprovados sem extrapolação sem valores absurdos.xlsx'
+CONCENTRATED_FEED_EXCEL = 'simulação alimentação concentrada.xlsx'
 
 
 COST_TAB = 'Custos'

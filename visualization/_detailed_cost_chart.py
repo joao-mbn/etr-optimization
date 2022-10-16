@@ -3,9 +3,9 @@ import math as m
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from global_constants import CHARTS_RESULTS_FOLDER_PATH
 from helpers._common import create_sub_dataframe
 from helpers._utils import format_to_currency
-from global_constants import CHARTS_RESULTS_FOLDER_PATH
 
 
 def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
@@ -38,7 +38,7 @@ def detailed_cost_chart(df: pd.DataFrame, save_fig: bool = False) -> None:
     ax2.barh(total_cost.apply(format_to_currency), np.zeros(len(total_cost)), height = 0.5)
 
     ax.legend(ncol = m.ceil(len(different_costs) / 2), bbox_to_anchor = (0, 1), loc = 'lower left', fontsize = 'small')
-    plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Custos Detalhados.png', bbox_inches='tight')
+    plt.show() if not save_fig else plt.savefig(f'{CHARTS_RESULTS_FOLDER_PATH}Custos Detalhados Concentrados.png', bbox_inches='tight')
 
 
 def get_detailed_cost_info_for_chart(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:

@@ -1,8 +1,8 @@
 import pandas as pd
 
 from global_constants import (ALL_CONDITIONS_EXCEL, APPROVEDS_ONLY_EXCEL,
-                              COMPLETE_RESULTS_TAB, COST_TAB,
-                              DETAILED_COST_TAB, ROOT_PATH,
+                              COMPLETE_RESULTS_TAB, CONCENTRATED_FEED_EXCEL,
+                              COST_TAB, DETAILED_COST_TAB, ROOT_PATH,
                               STANDARDIZED_COST_TAB)
 from visualization._cost_relationship_surface import cost_relationship_surface
 from visualization._costs_tri_surface import create_multiple_costs_tri_surface
@@ -15,19 +15,19 @@ from visualization._recovery_cost_relationship_chart import \
 
 def generate_charts(save_fig: bool = False) -> None:
 
-    detailed_cost_df = pd.read_excel(f'{ROOT_PATH}{APPROVEDS_ONLY_EXCEL}', DETAILED_COST_TAB)
+    detailed_cost_df = pd.read_excel(f'{ROOT_PATH}{CONCENTRATED_FEED_EXCEL}', DETAILED_COST_TAB)
     complete_results_df = pd.read_excel(f'{ROOT_PATH}{APPROVEDS_ONLY_EXCEL}', COMPLETE_RESULTS_TAB)
 
     all_conditions_cost_df = pd.read_excel(f'{ROOT_PATH}{ALL_CONDITIONS_EXCEL}', COST_TAB)
     all_conditions_standardized_cost_df = pd.read_excel(f'{ROOT_PATH}{ALL_CONDITIONS_EXCEL}', STANDARDIZED_COST_TAB)
     all_conditions_complete_results_df = pd.read_excel(f'{ROOT_PATH}{ALL_CONDITIONS_EXCEL}', COMPLETE_RESULTS_TAB)
 
-    detailed_cost_chart(detailed_cost_df, save_fig)
+    # detailed_cost_chart(detailed_cost_df, save_fig)
     # recovery_cost_relationship_chart(complete_results_df, save_fig)
-    # pareto_chart(get_regression_comprehensive_coefficients_table(all_conditions_standardized_cost_df), save_fig)
+    pareto_chart(get_regression_comprehensive_coefficients_table(all_conditions_standardized_cost_df), save_fig)
     # create_multiple_costs_tri_surface(all_conditions_complete_results_df, save_fig)
 
-    sliced_charts(all_conditions_cost_df, all_conditions_standardized_cost_df, all_conditions_complete_results_df, save_fig)
+    # sliced_charts(all_conditions_cost_df, all_conditions_standardized_cost_df, all_conditions_complete_results_df, save_fig)
 
 
 def sliced_charts(cost_df, standardized_cost_df, complete_results_df, save_fig):

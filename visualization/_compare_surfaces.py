@@ -14,7 +14,7 @@ def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: boo
     ax = fig.add_subplot(111, projection='3d')
 
     for df_slice, color in zip(df_slices, ('red', 'blue')):
-        df_slice['total cost (1000 usd)'] = df_slice['total cost (usd)'] / 1000
+        df_slice['total cost (1000 usd)'] = df_slice['total cost (usd)'] / 10000
         df_slice.drop('total cost (usd)', axis = 1, inplace = True)
         pHi = df_slice['pHi'].mode().values[0]
         df_scatter = df_slice.query(f'pHi == {pHi}')
@@ -24,7 +24,7 @@ def compare_surfaces(df_slices: tuple[pd.DataFrame, pd.DataFrame], save_fig: boo
     ax.set_title('Concentrado 2x (azul) e concentração original (vermelho) para D2EHPA 10%', fontsize = 9)
     ax.set_xlabel('Nº Células')
     ax.set_ylabel('Razão A/O')
-    ax.set_zlabel('Custo Total (mil USD)', labelpad = 14)
+    ax.set_zlabel('Custo Total (USD/Kg)', labelpad = 14)
     ax.view_init(elev=35, azim=45)
     ax.zaxis.set_major_formatter(StrMethodFormatter('${x:,.0f}'))
     plt.tight_layout()
